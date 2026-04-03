@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="AdminUI/AdminTest.csproj" />
+  <Project Path="BL/BL.csproj" />
+  <Project Path="DL/DL.csproj" />
+  <Project Path="UserInterface/UserInterface.csproj" />
+</Solution>
