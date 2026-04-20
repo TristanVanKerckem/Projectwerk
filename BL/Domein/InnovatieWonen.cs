@@ -6,5 +6,6 @@ namespace ProjectbeheerBL.Domein
 {
     public class InnovatieWonen : Project
     {
+       
     }
 }
