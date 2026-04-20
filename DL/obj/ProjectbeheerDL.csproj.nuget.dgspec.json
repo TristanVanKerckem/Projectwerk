@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\trist\\source\\repos\\Projectwerk\\DL\\ProjectbeheerDL.csproj": {}
+    "C:\\Users\\dell\\source\\repos\\Projectwerk_pg1\\Projectwerk\\DL\\ProjectbeheerDL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\trist\\source\\repos\\Projectwerk\\DL\\ProjectbeheerDL.csproj": {
+    "C:\\Users\\dell\\source\\repos\\Projectwerk_pg1\\Projectwerk\\DL\\ProjectbeheerDL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\trist\\source\\repos\\Projectwerk\\DL\\ProjectbeheerDL.csproj",
+        "projectUniqueName": "C:\\Users\\dell\\source\\repos\\Projectwerk_pg1\\Projectwerk\\DL\\ProjectbeheerDL.csproj",
         "projectName": "ProjectbeheerDL",
-        "projectPath": "C:\\Users\\trist\\source\\repos\\Projectwerk\\DL\\ProjectbeheerDL.csproj",
-        "packagesPath": "C:\\Users\\trist\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\trist\\source\\repos\\Projectwerk\\DL\\obj\\",
+        "projectPath": "C:\\Users\\dell\\source\\repos\\Projectwerk_pg1\\Projectwerk\\DL\\ProjectbeheerDL.csproj",
+        "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\dell\\source\\repos\\Projectwerk_pg1\\Projectwerk\\DL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\trist\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
