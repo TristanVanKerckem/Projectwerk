@@ -6,6 +6,7 @@ namespace ProjectbeheerBL.Domein
 {
     public class Gebruiker
     {
+        public int Id { get; set; }
         public string Naam {  get; set; }
         public string Email { get; set; }
         public bool IsBeheerder { get; set; }
@@ -15,6 +16,7 @@ namespace ProjectbeheerBL.Domein
             Email = email;
             IsBeheerder = isBeheerder;
         }
+        public Gebruiker() { }
 
     }
 }
