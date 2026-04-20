@@ -1,3 +1,7 @@
 .vs/
 *.cache
 project.assets.json
+bin/
+obj/
+*.user
+*.suo
