@@ -6,7 +6,6 @@ namespace ProjectbeheerBL.Domein
 {
     public class ProjectPartner
     {
-        public int Id { get; set; }
         public List<string> Rollen { get; set; } = new List<string>();
         public Partner Partner { get; set; }
         public Project Project { get; set; }

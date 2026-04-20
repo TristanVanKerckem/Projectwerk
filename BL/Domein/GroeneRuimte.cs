@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ProjectbeheerBL.Domein.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Timers;
 
 namespace ProjectbeheerBL.Domein
 {
@@ -12,8 +14,7 @@ namespace ProjectbeheerBL.Domein
         public List<BeschikbareFaciliteiten> BeschikbareFaciliteiten { get; set; }
         public bool IsInToeristWandelroute { get; set; }
         public double Beoordeling { get; set; }
-        public GroeneRuimte(double oppervlakte, double biodiversiteit, int aantalWandelpaden, List<BeschikbareFaciliteiten> beschikbareFaciliteiten, bool isInToeristWandelroute, double beoordeling)
-        {
+        public GroeneRuimte(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie, double oppervlakte, double biodiversiteit, int aantalWandelpaden, List<BeschikbareFaciliteiten> beschikbareFaciliteiten, bool isInToeristWandelroute, double beoordeling) : base(titel, startDatum, beschrijving, status, locatie) {
             Oppervlakte = oppervlakte;
             Biodiversiteit = biodiversiteit;
             AantalWandelpaden = aantalWandelpaden;

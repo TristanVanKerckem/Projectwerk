@@ -10,16 +10,16 @@ namespace ProjectbeheerBL.Domein
             Bouwfirmas = bouwfirmas;
             VergunningStatus = vergunningStatus;
             Toegankelijkheid = toegankelijkheid;
-            this.isBezienswaardig = isBezienswaardig;
-            this.heeftInfo = heeftInfo;
-            this.heeftArchitecturaleWaarde = heeftArchitecturaleWaarde;
+            IsBezienswaardig = isBezienswaardig;
+            HeeftInfo = heeftInfo;
+            HeeftArchitecturaleWaarde = heeftArchitecturaleWaarde;
         }
 
         public List<Bouwfirma> Bouwfirmas { get; set; }
         public VergunningStatus VergunningStatus { get; set; }
         public Toegankelijkheid Toegankelijkheid { get; set; }
-        public bool isBezienswaardig { get; set; }
-        public bool heeftInfo { get; set; }
-        public bool heeftArchitecturaleWaarde { get; set; }
+        public bool IsBezienswaardig { get; set; }
+        public bool HeeftInfo { get; set; }
+        public bool HeeftArchitecturaleWaarde { get; set; }
     }
 }

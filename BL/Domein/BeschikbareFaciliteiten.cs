@@ -8,13 +8,13 @@ namespace ProjectbeheerBL.Domein
     {
         public int Id;
         public string Naam;
-        public bool BeschikbareFaciliteit;
+        public bool IsGeverifieerd;
 
-        public BeschikbareFaciliteiten(int id, string naam, bool beschikbareFaciliteit)
+        public BeschikbareFaciliteiten(int id, string naam, bool isGeverifieerd)
         {
             Id = id;
             Naam = naam;
-            BeschikbareFaciliteit = beschikbareFaciliteit;
+            IsGeverifieerd = isGeverifieerd;
         }
     }
 }

@@ -6,7 +6,6 @@ namespace ProjectbeheerBL.Domein
 {
     public class Locatie
     {
-        public int Id { get; set; }
         public string Wijk { get; set; }
         public string Straat { get; set; }
         public string Gemeente { get; set; }

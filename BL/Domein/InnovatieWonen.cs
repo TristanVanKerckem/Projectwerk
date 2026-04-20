@@ -1,4 +1,7 @@
 ﻿using ProjectbeheerBL.Domein;
+using ProjectbeheerBL.Domein.Enums;
+using System.Net.NetworkInformation;
+using System.Timers;
 
 public class InnovatieWonen : Project
 {
@@ -9,8 +12,8 @@ public class InnovatieWonen : Project
     public double ArchitectuurScore { get; set; }
     public bool HeeftSamenwerkingErfgoedOfToerisme { get; set; }
 
-    public InnovatieWonen(string titel, DateTime startDatum, string beschrijving, ProjectFase fase, Locatie locatie, int aantalWooneenheden, bool heeftRondleiding, bool heeftShowcase, double architectuurScore, bool heeftSamenwerkingErfgoedOfToerisme)
-        : base(titel, startDatum, beschrijving, fase, locatie)
+    public InnovatieWonen(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie, int aantalWooneenheden, bool heeftRondleiding, bool heeftShowcase, double architectuurScore, bool heeftSamenwerkingErfgoedOfToerisme)
+        : base(titel, startDatum, beschrijving, status, locatie)
     {
         AantalWooneenheden = aantalWooneenheden;
         HeeftRondleiding = heeftRondleiding;
@@ -19,5 +22,5 @@ public class InnovatieWonen : Project
         HeeftSamenwerkingErfgoedOfToerisme = heeftSamenwerkingErfgoedOfToerisme;
     }
 
-    public InnovatieWonen() { }
+    public InnovatieWonen(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie) : base(titel, startDatum, beschrijving, status, locatie) { }
 }
