@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProjectbeheerUtil
 {
-    internal class ReaderFactory
+    internal class SchrijverFactory
     {
     }
 }
