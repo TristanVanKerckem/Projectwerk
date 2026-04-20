@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectbeheerBL.Domein.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,7 +23,5 @@ namespace ProjectbeheerBL.Domein
             Status = status;
             Locatie = locatie;
         }
-
-        protected Project() { }
     }
 }
