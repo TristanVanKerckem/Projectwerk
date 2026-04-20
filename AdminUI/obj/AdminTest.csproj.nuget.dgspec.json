@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\trist\\source\\repos\\Projectwerk\\AdminUI\\AdminTest.csproj": {}
+    "C:\\Users\\trist\\source\\repos\\Project\\AdminUI\\AdminTest.csproj": {}
   },
   "projects": {
-    "C:\\Users\\trist\\source\\repos\\Projectwerk\\AdminUI\\AdminTest.csproj": {
+    "C:\\Users\\trist\\source\\repos\\Project\\AdminUI\\AdminTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\trist\\source\\repos\\Projectwerk\\AdminUI\\AdminTest.csproj",
+        "projectUniqueName": "C:\\Users\\trist\\source\\repos\\Project\\AdminUI\\AdminTest.csproj",
         "projectName": "AdminTest",
-        "projectPath": "C:\\Users\\trist\\source\\repos\\Projectwerk\\AdminUI\\AdminTest.csproj",
+        "projectPath": "C:\\Users\\trist\\source\\repos\\Project\\AdminUI\\AdminTest.csproj",
         "packagesPath": "C:\\Users\\trist\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\trist\\source\\repos\\Projectwerk\\AdminUI\\obj\\",
+        "outputPath": "C:\\Users\\trist\\source\\repos\\Project\\AdminUI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
