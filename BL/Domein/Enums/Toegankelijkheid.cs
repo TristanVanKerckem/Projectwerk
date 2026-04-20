@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProjectbeheerBL.Domein.Enums
 {
-    enum VergunningStatus
+    public enum Toegankelijkheid
     {
         VolledigOpenbaar,
         Gedeeltelijk,

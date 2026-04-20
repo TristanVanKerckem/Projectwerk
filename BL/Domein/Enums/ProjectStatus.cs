@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProjectbeheerBL.Domein.Enums
 {
-    enum ProjectStatus
+    public enum ProjectStatus
     {
         Planning,
         Uitvoering,
