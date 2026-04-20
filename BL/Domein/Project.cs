@@ -4,7 +4,25 @@ using System.Text;
 
 namespace ProjectbeheerBL.Domein
 {
-    abstract class Project
+    public abstract class Project
     {
+        public int Id { get; set; }
+        public string Titel { get; set; }
+        public DateTime StartDatum { get; set; }
+        public string Beschrijving { get; set; }
+        public ProjectStatus Status { get; set; } // Aangepast van Status
+        public Locatie Locatie { get; set; }
+        public List<ProjectPartner> ProjectPartners { get; set; } = new List<ProjectPartner>();
+
+        protected Project(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie)
+        {
+            Titel = titel;
+            StartDatum = startDatum;
+            Beschrijving = beschrijving;
+            Status = status;
+            Locatie = locatie;
+        }
+
+        protected Project() { }
     }
 }
