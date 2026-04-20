@@ -4,7 +4,17 @@ using System.Text;
 
 namespace ProjectbeheerBL.Domein
 {
-    internal class BeschikbareFaciliteiten
+    public class BeschikbareFaciliteiten
     {
+        public int Id;
+        public string Naam;
+        public bool BeschikbareFaciliteit;
+
+        public BeschikbareFaciliteiten(int id, string naam, bool beschikbareFaciliteit)
+        {
+            Id = id;
+            Naam = naam;
+            BeschikbareFaciliteit = beschikbareFaciliteit;
+        }
     }
 }
