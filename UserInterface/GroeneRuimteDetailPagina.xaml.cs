@@ -1,4 +1,6 @@
-﻿using ProjectbeheerUserInterface;
+﻿using ProjectbeheerBL.Domein;
+using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,17 +12,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace UserInterface
+namespace ProjectbeheerUserInterface
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for DetailPagina.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class DetailPagina : Page
     {
-        public MainWindow()
+        public DetailPagina(GroeneRuimte groeneruimte)
         {
             InitializeComponent();
-            MainFrame.Navigate(new LogIn());
-        }        
+            this.DataContext = groeneruimte;
+        }
     }
 }

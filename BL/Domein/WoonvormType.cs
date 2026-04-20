@@ -6,7 +6,7 @@ namespace ProjectbeheerBL.Domein
 {
     public class WoonvormType {
         public WoonvormType(int id, string naam, bool isGeverifieerd) {
-            Id = id;
+            Id = id;            ;
             Naam = naam;
             IsGeverifieerd = isGeverifieerd;
         }
