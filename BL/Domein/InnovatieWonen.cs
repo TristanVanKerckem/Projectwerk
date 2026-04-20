@@ -15,15 +15,11 @@ public class InnovatieWonen : Project
     public InnovatieWonen(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie, int aantalWooneenheden, bool heeftRondleiding, bool heeftShowcase, double architectuurScore, bool heeftSamenwerkingErfgoedOfToerisme)
         : base(titel, startDatum, beschrijving, status, locatie)
     {
-<<<<<<< HEAD
-       
-=======
         AantalWooneenheden = aantalWooneenheden;
         HeeftRondleiding = heeftRondleiding;
         HeeftShowcase = heeftShowcase;
         ArchitectuurScore = architectuurScore;
         HeeftSamenwerkingErfgoedOfToerisme = heeftSamenwerkingErfgoedOfToerisme;
->>>>>>> 8065b7090dd2c901a78e0df9569cb95bcd6d4475
     }
 
     public InnovatieWonen(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie) : base(titel, startDatum, beschrijving, status, locatie) { }
