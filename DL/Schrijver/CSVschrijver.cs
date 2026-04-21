@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ProjectbeheerDL.Schrijver {
     public class CSVschrijver : ICSVschrijver {
-        public byte[] maakCSV(List<ProjectCombinatie> projecten) {
+        public byte[] SchrijfProjectenNaarCSV(List<ProjectCombinatie> projecten) {
 
             // Voor de naam van PDF bestand worden telkens de eerste 3 letters van de Titel van het Project genomen.
             string projectenComboNaam = "";
