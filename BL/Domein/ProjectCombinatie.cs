@@ -12,6 +12,10 @@ namespace ProjectbeheerBL.Domein
 
         public string ReadFiche(List<Project> projectComboLijst)
         {
+
+            foreach (Project project in projectComboLijst) {
+
+            }
             return $"Fiche bevat {projectComboLijst.Count} projecten voor gebruiker {Gebruiker?.Naam}.";
         }
     }
