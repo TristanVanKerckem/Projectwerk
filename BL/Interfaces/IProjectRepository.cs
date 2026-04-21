@@ -13,7 +13,7 @@ namespace ProjectbeheerBL.Interfaces {
         //Voeg hier methodes toe voor specifieke filters indien nodig
 
         List<ProjectCombinatie> GeefProjectCombinaties();
-        Project GeefProject(int id);
+        ProjectCombinatie GeefProject(int id);
         List<ProjectCombinatie> GeefAlleProjecten();
         void VoegProjectToe(Project project);
     }

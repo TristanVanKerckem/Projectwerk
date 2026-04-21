@@ -22,5 +22,11 @@ namespace ProjectbeheerBL.Domein
         }
 
         public Locatie() { } // Lege constructor voor de database
+
+
+        public override string ToString()
+        {
+            return $"{Straat} {HuisNummer}, {Postcode} {Gemeente}";
+        }
     }
 }

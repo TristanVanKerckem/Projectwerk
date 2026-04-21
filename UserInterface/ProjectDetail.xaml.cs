@@ -1,6 +1,8 @@
 ﻿using ProjectbeheerBL.Domein;
+using ProjectbeheerBL.Domein.Enums;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,16 +15,14 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ProjectbeheerUserInterface
-{
-    /// <summary>
-    /// Interaction logic for DetailPagina.xaml
-    /// </summary>
-    public partial class DetailPagina : Page
+{    
+    public partial class ProjectDetail : Page
     {
-        public DetailPagina(GroeneRuimte groeneruimte)
+        public ProjectDetail(ProjectCombinatie projectCombinatie)
         {
             InitializeComponent();
-            this.DataContext = groeneruimte;
+            var project = projectCombinatie.ProjectComboLijst.FirstOrDefault();            
+                this.DataContext = project;            
         }
     }
 }

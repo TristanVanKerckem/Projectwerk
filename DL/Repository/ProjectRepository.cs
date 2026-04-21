@@ -18,112 +18,112 @@ namespace ProjectbeheerDL.Repository {
 
         public void VoegProjectToe(Project project) {
             // Code om project toe te voegen aan database
-            using(sqlConnection conn = new sqlConnection(connectionstring)) {
-                // SQL code om project toe te voegen
-                // De ID wordt gegenereerd door de database (Identity)
-                string sql = "INSERT INTO Project (titel, startDatum, beschrijving, status, locatieId) " +
-                             "OUTPUT INSERTED.id VALUES (@titel, @start, @desc, @status, @locId)";
+            //using(sqlConnection conn = new sqlConnection(connectionstring)) {
+            //    // SQL code om project toe te voegen
+            //    // De ID wordt gegenereerd door de database (Identity)
+            //    string sql = "INSERT INTO Project (titel, startDatum, beschrijving, status, locatieId) " +
+            //                 "OUTPUT INSERTED.id VALUES (@titel, @start, @desc, @status, @locId)";
 
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@titel", project.Titel);
-                cmd.Parameters.AddWithValue("@start", project.StartDatum);
-                cmd.Parameters.AddWithValue("@desc", project.Beschrijving);
-                cmd.Parameters.AddWithValue("@status", project.Status);
-                cmd.Parameters.AddWithValue("@locId", (int)project.Locatie.Id);
+            //    SqlCommand cmd = new SqlCommand(sql, conn);
+            //    cmd.Parameters.AddWithValue("@titel", project.Titel);
+            //    cmd.Parameters.AddWithValue("@start", project.StartDatum);
+            //    cmd.Parameters.AddWithValue("@desc", project.Beschrijving);
+            //    cmd.Parameters.AddWithValue("@status", project.Status);
+            //    cmd.Parameters.AddWithValue("@locId", (int)project.Locatie.Id);
 
-                conn.Open();
-                project.Id = (int)cmd.ExecuteScalar();
-            }
+            //    conn.Open();
+            //    project.Id = (int)cmd.ExecuteScalar();
+            //}
         }
 
-        public List<Project> GeefAlleProjecten() {
-            List<Project> projecten = new List<Project>();
-            using (sqlConnection conn = new sqlConnection(connectionstring)) {
-                string sql = "SELECT * FROM Project";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read()) {
-                    // Code om project te maken van database gegevens
-                    // Locatie moet ook opgehaald worden
-                    int locId = (int)reader["locatieId"];
-                    Locatie locatie = GeefLocatie(locId); // Methode om locatie op te halen
-                    Project project = new Project(
-                        (string)reader["titel"],
-                        (DateTime)reader["startDatum"],
-                        (string)reader["beschrijving"],
-                        (ProjectStatus)(int)reader["status"],
-                        locatie
-                    );
-                    project.Id = (int)reader["id"];
-                    projecten.Add(project);
-                }
-            }
+        public List<ProjectCombinatie> GeefAlleProjecten() {
+            List<ProjectCombinatie> projecten = new List<ProjectCombinatie>();
+            //using (sqlConnection conn = new sqlConnection(connectionstring)) {
+            //    string sql = "SELECT * FROM Project";
+            //    SqlCommand cmd = new SqlCommand(sql, conn);
+            //    conn.Open();
+            //    SqlDataReader reader = cmd.ExecuteReader();
+            //    while (reader.Read()) {
+            //        // Code om project te maken van database gegevens
+            //        // Locatie moet ook opgehaald worden
+            //        int locId = (int)reader["locatieId"];
+            //        Locatie locatie = GeefLocatie(locId); // Methode om locatie op te halen
+            //        Project project = new Project(
+            //            (string)reader["titel"],
+            //            (DateTime)reader["startDatum"],
+            //            (string)reader["beschrijving"],
+            //            (ProjectStatus)(int)reader["status"],
+            //            locatie
+            //        );
+            //        project.Id = (int)reader["id"];
+            //        projecten.Add(project);
+            //    }
+            //}
             return projecten;
         }
 
-       public Project GeefProject(int id) {
-            Project project = null;
-            using (sqlConnection conn = new sqlConnection(connectionstring)) {
-                string sql = "SELECT * FROM Project WHERE id = @id";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@id", id);
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read()) {
-                    int locId = (int)reader["locatieId"];
-                    Locatie locatie = GeefLocatie(locId);
-                    project = new Project(
-                        (string)reader["titel"],
-                        (DateTime)reader["startDatum"],
-                        (string)reader["beschrijving"],
-                        (ProjectStatus)(int)reader["status"],
-                        locatie
-                    );
-                    project.Id = (int)reader["id"];
-                }
-            }
+       public ProjectCombinatie GeefProject(int id) {
+            ProjectCombinatie project = new ProjectCombinatie();
+            //using (sqlConnection conn = new sqlConnection(connectionstring)) {
+            //    string sql = "SELECT * FROM Project WHERE id = @id";
+            //    SqlCommand cmd = new SqlCommand(sql, conn);
+            //    cmd.Parameters.AddWithValue("@id", id);
+            //    conn.Open();
+            //    SqlDataReader reader = cmd.ExecuteReader();
+            //    if (reader.Read()) {
+            //        int locId = (int)reader["locatieId"];
+            //        Locatie locatie = GeefLocatie(locId);
+            //        project = new Project(
+            //            (string)reader["titel"],
+            //            (DateTime)reader["startDatum"],
+            //            (string)reader["beschrijving"],
+            //            (ProjectStatus)(int)reader["status"],
+            //            locatie
+            //        );
+            //        project.Id = (int)reader["id"];
+            //    }
+            //}
             return project;
         }
 
         public List<ProjectCombinatie> GeefProjectCombinaties()
         {
             Dictionary<int, ProjectCombinatie> combinatiesDict = new Dictionary<int, ProjectCombinatie>();
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                // SQL met LEFT JOINs om alle types (Stads, Groen, Wonen) tegelijk te laden
-                string sql = @"SELECT pc.Id AS ComboId, p.*, s.VergunningStatus, s.HeeftArchitecturaleWaarde, 
-                       g.Oppervlakte, i.AantalWooneenheden, i.HeeftRondleiding 
-                       FROM ProjectCombinatie pc
-                       JOIN Project p ON pc.Id = p.CombinatieId 
-                       LEFT JOIN StadsOntwikkeling s ON p.Id = s.Id
-                       LEFT JOIN GroeneRuimte g ON p.Id = g.Id
-                       LEFT JOIN InnovatieWonen i ON p.Id = i.Id";
+            //using (SqlConnection conn = new SqlConnection(_connectionString))
+            //{
+                //// SQL met LEFT JOINs om alle types (Stads, Groen, Wonen) tegelijk te laden
+                //string sql = @"SELECT pc.Id AS ComboId, p.*, s.VergunningStatus, s.HeeftArchitecturaleWaarde, 
+                //       g.Oppervlakte, i.AantalWooneenheden, i.HeeftRondleiding 
+                //       FROM ProjectCombinatie pc
+                //       JOIN Project p ON pc.Id = p.CombinatieId 
+                //       LEFT JOIN StadsOntwikkeling s ON p.Id = s.Id
+                //       LEFT JOIN GroeneRuimte g ON p.Id = g.Id
+                //       LEFT JOIN InnovatieWonen i ON p.Id = i.Id";
 
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                conn.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        int cId = (int)reader["ComboId"];
-                        if (!combinatiesDict.ContainsKey(cId))
-                            combinatiesDict.Add(cId, new ProjectCombinatie { Id = cId, ProjectComboLijst = new List<Project>() });
+                //SqlCommand cmd = new SqlCommand(sql, conn);
+                //conn.Open();
+                //using (SqlDataReader reader = cmd.ExecuteReader())
+                //{
+                //    while (reader.Read())
+                //    {
+                //        int cId = (int)reader["ComboId"];
+                //        if (!combinatiesDict.ContainsKey(cId))
+                //            combinatiesDict.Add(cId, new ProjectCombinatie { Id = cId, ProjectComboLijst = new List<Project>() });
 
-                        Project p;
-                        if (reader["VergunningStatus"] != DBNull.Value)
-                            p = new Stadsontwikkeling { HeeftArchitecturaleWaarde = (bool)reader["HeeftArchitecturaleWaarde"] };
-                        else if (reader["Oppervlakte"] != DBNull.Value)
-                            p = new GroeneRuimte { Oppervlakte = (double)reader["Oppervlakte"] };
-                        else
-                            p = new InnovatieWonen { HeeftRondleiding = (bool)reader["HeeftRondleiding"] };
+                //        Project p;
+            //            if (reader["VergunningStatus"] != DBNull.Value)
+            //                p = new Stadsontwikkeling { HeeftArchitecturaleWaarde = (bool)reader["HeeftArchitecturaleWaarde"] };
+            //            else if (reader["Oppervlakte"] != DBNull.Value)
+            //                p = new GroeneRuimte { Oppervlakte = (double)reader["Oppervlakte"] };
+            //            else
+            //                p = new InnovatieWonen { HeeftRondleiding = (bool)reader["HeeftRondleiding"] };
 
-                        p.Id = (int)reader["Id"];
-                        p.Titel = reader["Titel"].ToString();
-                        combinatiesDict[cId].ProjectComboLijst.Add(p);
-                    }
-                }
-            }
+            //            p.Id = (int)reader["Id"];
+            //            p.Titel = reader["Titel"].ToString();
+            //            combinatiesDict[cId].ProjectComboLijst.Add(p);
+            //        }
+            //    }
+            //}
             return combinatiesDict.Values.ToList();
         }
 

@@ -49,7 +49,7 @@ namespace ProjectbeheerBL.Beheerder
                 {
                     throw new ProjectException("Er zijn geen projecten om te exporteren.");
                 }
-                _csvSchrijver.SchrijfProjectenNaarCSV(projecten, pad);
+                _csvSchrijver.MaakCSV(projecten, pad);
             }
             catch (Exception ex)
             {
@@ -58,14 +58,14 @@ namespace ProjectbeheerBL.Beheerder
         }
         public void MaakProjectFiche(int id, string pad)
         {
-            var project = _repo.GeefProject(id);
+            ProjectCombinatie project = _repo.GeefProject(id);
             if (project == null)
             {
                 throw new ProjectException("Project niet gevonden.");
             }
             try
             {
-                _pdfSchrijver.SchrijfProjectenFiche(project, pad);
+                _pdfSchrijver.MaakPDFEenProject(project, pad);
             }
             catch (Exception ex)
             {
