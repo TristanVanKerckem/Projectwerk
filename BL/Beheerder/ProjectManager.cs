@@ -44,7 +44,7 @@ namespace ProjectbeheerBL.Beheerder
         {
             try
             {
-                List<Project> projecten = _repo.GeefAlleProjecten();
+                List<ProjectCombinatie> projecten = _repo.GeefAlleProjecten();
                 if (projecten == null || projecten.Count == 0)
                 {
                     throw new ProjectException("Er zijn geen projecten om te exporteren.");

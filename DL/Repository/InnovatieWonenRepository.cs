@@ -10,7 +10,7 @@ namespace ProjectbeheerDL.Repository {
     {
         public InnovatieWonenRepository(string connectionstring) : base(connectionstring) { }
 
-        public override void VoegProjectToe(Project project)
+        public void VoegProjectToe(Project project)
         {
             // Specifieke code voor innovatie wonen projecten
             base.VoegProjectToe(project);

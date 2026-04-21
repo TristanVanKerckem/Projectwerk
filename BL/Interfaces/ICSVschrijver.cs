@@ -7,6 +7,6 @@ using ProjectbeheerBL.Domein;
 namespace ProjectbeheerBL.Interfaces {
     public interface ICSVschrijver 
     {
-        public byte[] SchrijfProjectenNaarCSV(List<ProjectCombinatie> projecten);
+        public string SchrijfProjectenNaarCSV(List<ProjectCombinatie> projecten, string pad);
     }
 }

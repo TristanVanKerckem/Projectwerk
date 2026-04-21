@@ -8,7 +8,7 @@ namespace ProjectbeheerBL.Interfaces {
     public interface IProjectRepository 
     {
         Project GeefProject(int id);
-        List<Project> GeefAlleProjecten();
+        List<ProjectCombinatie> GeefAlleProjecten();
         void VoegProjectToe(Project project);
         //Voeg hier methodes toe voor specifieke filters indien nodig
     }

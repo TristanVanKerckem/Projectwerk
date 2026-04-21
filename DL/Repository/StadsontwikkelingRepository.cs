@@ -8,7 +8,7 @@ namespace ProjectbeheerDL.Repository {
     public class StadsontwikkelingRepository : ProjectRepository {
         public StadsontwikkelingRepository(string connectionstring) : base(connectionstring) {}
 
-        public override void VoegProjectToe(Project project) {
+        public void VoegProjectToe(Project project) {
             // Specifieke code voor stadsontwikkeling projecten
             base.VoegProjectToe(project);
             StadOntwikkeling s= (StadOntwikkeling)project;

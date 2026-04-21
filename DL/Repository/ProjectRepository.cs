@@ -16,7 +16,7 @@ namespace ProjectbeheerDL.Repository {
 
 
 
-        public virtual void VoegProjectToe(Project project) {
+        public void VoegProjectToe(Project project) {
             // Code om project toe te voegen aan database
             using(sqlConnection conn = new sqlConnection(connectionstring)) {
                 // SQL code om project toe te voegen
@@ -28,15 +28,15 @@ namespace ProjectbeheerDL.Repository {
                 cmd.Parameters.AddWithValue("@titel", project.Titel);
                 cmd.Parameters.AddWithValue("@start", project.StartDatum);
                 cmd.Parameters.AddWithValue("@desc", project.Beschrijving);
-                cmd.Parameters.AddWithValue("@status", (int)project.Fase);
-                cmd.Parameters.AddWithValue("@locId", project.Locatie.Id);
+                cmd.Parameters.AddWithValue("@status", project.Status);
+                cmd.Parameters.AddWithValue("@locId", (int)project.Locatie.Id);
 
                 conn.Open();
                 project.Id = (int)cmd.ExecuteScalar();
             }
         }
 
-        public virtual List<Project> GeefAlleProjecten() {
+        public List<Project> GeefAlleProjecten() {
             List<Project> projecten = new List<Project>();
             using (sqlConnection conn = new sqlConnection(connectionstring)) {
                 string sql = "SELECT * FROM Project";
@@ -62,7 +62,7 @@ namespace ProjectbeheerDL.Repository {
             return projecten;
         }
 
-       public virtual Project GeefProject(int id) {
+       public Project GeefProject(int id) {
             Project project = null;
             using (sqlConnection conn = new sqlConnection(connectionstring)) {
                 string sql = "SELECT * FROM Project WHERE id = @id";

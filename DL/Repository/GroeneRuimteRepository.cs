@@ -8,7 +8,7 @@ namespace ProjectbeheerDL.Repository {
     public class GroeneRuimteRepository : ProjectRepository {
         public GroeneRuimteRepository(string connectionstring) : base(connectionstring) {}
 
-        public override void VoegProjectToe(Project project) 
+        public void VoegProjectToe(Project project) 
         {
             // Specifieke code voor groene ruimte projecten
             base.VoegProjectToe(project);

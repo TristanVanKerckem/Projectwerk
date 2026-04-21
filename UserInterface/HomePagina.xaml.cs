@@ -29,7 +29,7 @@ namespace ProjectbeheerUserInterface
             List<BeschikbareFaciliteiten> faciliteiten = new List<BeschikbareFaciliteiten>{faciliteit1,faciliteit2,faciliteit3};
             Locatie locatie = new Locatie("Goeferdinge", "Waaienberg", "Geraardsbergen", 9500, "77C");
             GroeneRuimte groeneRuimteProject = new GroeneRuimte("TestProject", DateTime.Now, "Een testproject", ProjectStatus.Planning, locatie, 20, 8.3, 4, faciliteiten, true, 7);
-            GroeneRuimte groeneRuimteProject1 = new GroeneRuimte("TestProject", DateTime.Now, "Een testproject", ProjectStatus.Planning, locatie, 21, 8.3, 4, faciliteiten, true, 7);
+            GroeneRuimte groeneRuimteProject1 = new GroeneRuimte("TestProjectug", DateTime.Now, "Een testproject", ProjectStatus.Planning, locatie, 21, 8.3, 4, faciliteiten, true, 7);
             List<GroeneRuimte> projecten = new List<GroeneRuimte> { groeneRuimteProject, groeneRuimteProject1};
             DataGrid.ItemsSource = projecten;
         }
