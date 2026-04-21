@@ -29,7 +29,7 @@ namespace ProjectbeheerDL.Repository {
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 } catch (Exception ex) {
-
+                    throw new Exception();
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace ProjectbeheerDL.Repository {
                     con.Open();
                     cmd.ExecuteNonQuery();
                 } catch (Exception ex) {
-
+                    throw new Exception();
                 }
             }
         }
@@ -138,7 +138,8 @@ namespace ProjectbeheerDL.Repository {
                         transaction.Commit();
                     }
                 } catch (Exception ex) {
-
+                    transaction.Rollback();
+                    throw new Exception();
                 }
             }
 
