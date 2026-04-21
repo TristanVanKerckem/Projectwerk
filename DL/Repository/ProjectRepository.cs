@@ -1,27 +1,25 @@
-﻿using ProjectbeheerBL.Domein;
-using ProjectbeheerBL.Interfaces;
+﻿using Microsoft.Data.SqlClient;
+using ProjectbeheerBL.Domein;
+using ProjectbeheerBL.Domein.Enums; // Zorg dat de namespace voor enums klopt
 using System;
 using System.Collections.Generic;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.Data.SqlClient;
+using System.Data;
 
-namespace ProjectbeheerDL.Repository {
-    public class ProjectRepository : IProjectRepository {
+namespace ProjectbeheerDL.Repository
+{
+    public class ProjectRepo
+    {
+        private readonly string _connectionString;
 
-        string connectionstring;
-        public ProjectRepository(string connectionstring) {
-            this.connectionstring = connectionstring;
+        public ProjectRepo(string connectionString)
+        {
+            _connectionString = connectionString;
         }
 
         // ===========================================================================
         // 1. TOEVOEGEN METHODES (TPT-Structuur met Transacties)
         // ===========================================================================
 
-
-        /// <summary>
-        /// Hoofdmethode: Roept de specifieke kindmethodes aan op basis van het type project.
-        /// </summary>
         public void VoegProjectToe(Project project)
         {
             if (project is Stadsontwikkeling s) VoegStadsOntwikkelingToe(s);
@@ -57,7 +55,6 @@ namespace ProjectbeheerDL.Repository {
             }
         }
 
-
         public void VoegGroeneRuimteToe(GroeneRuimte g)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -84,7 +81,6 @@ namespace ProjectbeheerDL.Repository {
                 }
             }
         }
-
 
         public void VoegInnovatieWonenToe(InnovatieWonen i)
         {
@@ -115,17 +111,14 @@ namespace ProjectbeheerDL.Repository {
 
         private int InvoegenBasisProject(Project p, SqlConnection conn, SqlTransaction trans)
         {
-            string sql = "INSERT INTO Project (Titel, StartDatum, Beschrijving, Status, LocatieId) OUTPUT INSERTED.Id VALUES (@titel, @datum, @desc, @status, @locId)";
+            string sql = "INSERT INTO Project (Titel, StartDatum, Beschrijving, Status) OUTPUT INSERTED.Id VALUES (@titel, @datum, @desc, @status)";
             SqlCommand cmd = new SqlCommand(sql, conn, trans);
             cmd.Parameters.AddWithValue("@titel", p.Titel);
             cmd.Parameters.AddWithValue("@datum", p.StartDatum);
             cmd.Parameters.AddWithValue("@desc", p.Beschrijving);
             cmd.Parameters.AddWithValue("@status", (int)p.Status);
-            cmd.Parameters.AddWithValue("@locId", p.Locatie.Id);
             return (int)cmd.ExecuteScalar();
         }
-
-
 
         // ===========================================================================
         // 2. OPHALEN METHODES (Verkeersregelaar)
@@ -168,7 +161,7 @@ namespace ProjectbeheerDL.Repository {
                 using (SqlDataReader r = cmd.ExecuteReader())
                 {
                     if (!r.Read()) return null;
-                    var s = new Stadsontwikkeling(r["Titel"].ToString(), (DateTime)r["StartDatum"], r["Beschrijving"].ToString(), (ProjectStatus)r["Status"], null, null, (VergunningStatus)r["VergunningStatus"], (Toegankelijkheidheid)r["Toegankelijkheid"], (bool)r["IsBezienswaardig"], (bool)r["HeeftInfo"], (bool)r["HeeftArchitecturaleWaarde"]);
+                    var s = new Stadsontwikkeling(r["Titel"].ToString(), (DateTime)r["StartDatum"], r["Beschrijving"].ToString(), (ProjectStatus)r["Status"], null, null, (VergunningStatus)r["VergunningStatus"], (Toegankelijkheid)r["Toegankelijkheid"], (bool)r["IsBezienswaardig"], (bool)r["HeeftInfo"], (bool)r["HeeftArchitecturaleWaarde"]);
                     s.Id = (int)r["Id"];
                     return s;
                 }
@@ -284,6 +277,9 @@ namespace ProjectbeheerDL.Repository {
         }
     }
 }
+
+
+
 
 
 // ===========================================================================
