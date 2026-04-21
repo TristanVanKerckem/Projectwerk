@@ -3,6 +3,7 @@ using ProjectbeheerBL.Exeptions;
 using ProjectbeheerBL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ProjectbeheerBL.Beheerder
@@ -56,21 +57,53 @@ namespace ProjectbeheerBL.Beheerder
                 throw new ProjectException("Fout bij het exporteren van projecten naar CSV: " + ex.Message);
             }
         }
+
+
+
         public void MaakProjectFiche(int id, string pad)
         {
-            ProjectCombinatie project = _repo.GeefProject(id);
-            if (project == null)
+            // Ophalen van projectcombinaties volgens de interface
+            var projecten = _repo.GeefAlleProjecten();
+
+            if (projecten == null || !projecten.Any(p => p.Id == id))
             {
                 throw new ProjectException("Project niet gevonden.");
             }
+
             try
             {
-                _pdfSchrijver.MaakPDFEenProject(project, pad);
+                // De interface IPDFschrijver verwacht een List<ProjectCombinatie>
+                // We geven de volledige lijst mee (of een gefilterde lijst)
+                byte[] pdfData = _pdfSchrijver.MaakPDF(projecten);
+
+                // Schrijf de byte array naar een bestand op het opgegeven pad
+                System.IO.File.WriteAllBytes(pad, pdfData);
             }
             catch (Exception ex)
             {
                 throw new ProjectException("Fout bij het maken van de projectfiche: " + ex.Message);
             }
         }
+
+
+        //public void MaakProjectFiche(int id, string pad)
+        //{
+        //    var project = _repo.GeefProject(id);
+        //    if (project == null)
+        //    {
+        //        throw new ProjectException("Project niet gevonden.");
+        //    }
+
+
+        //    try
+        //    {
+        //        _pdfSchrijver.MaakPDF(projecten);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new ProjectException("Fout bij het maken van de projectfiche: " + ex.Message);
+        //    }
+        //}
     }
 }
