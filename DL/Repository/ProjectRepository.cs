@@ -49,7 +49,7 @@ namespace ProjectbeheerDL.Repository {
                     int locId = (int)reader["locatieId"];
                     Locatie locatie = GeefLocatie(locId); // Methode om locatie op te halen
                     Project project = new Project(
-                        (string)reader["titel"],
+                        (string)reader["titel"],            :// meteen met index werken ipv zoeken op naam
                         (DateTime)reader["startDatum"],
                         (string)reader["beschrijving"],
                         (ProjectStatus)(int)reader["status"],
