@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ProjectbeheerDL.Schrijver {
     public class CSVschrijver : ICSVschrijver {
-        public byte[] SchrijfProjectenNaarCSV(List<ProjectCombinatie> projecten) {
+        public string SchrijfProjectenNaarCSV(List<ProjectCombinatie> projecten, string pad) {
 
             // Voor de naam van PDF bestand worden telkens de eerste 3 letters van de Titel van het Project genomen.
             string projectenComboNaam = "";
@@ -74,7 +74,9 @@ namespace ProjectbeheerDL.Schrijver {
             using (StreamWriter writer = File.CreateText($"InnovatiefWonenOverzicht_{projectenComboNaam}.csv")) {
                 // header csv Innovatief Wonen
                 writer.WriteLine("Titel;Aantal Wooneenheden;Types Woonvormen;Mogelijkheid Rondleiding;Showwoning voor Bezoekers;Score Arch. Innovatie;Samenwerking erfgoed/toerisme Gent");
-            }
+                
+            }            
+            return " ";
         }
     }
 }

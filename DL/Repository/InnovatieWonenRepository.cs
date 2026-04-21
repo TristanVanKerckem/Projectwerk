@@ -10,7 +10,7 @@ namespace ProjectbeheerDL.Repository {
     {
         public InnovatieWonenRepository(string connectionstring) : base(connectionstring) { }
 
-        public override void VoegProjectToe(Project project)
+        public void VoegProjectToe(Project project)
         {
             // Specifieke code voor innovatie wonen projecten
             base.VoegProjectToe(project);
@@ -33,6 +33,35 @@ namespace ProjectbeheerDL.Repository {
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        public List<InnovatieWonen> GeefInnovatieWonen()
+        {
+            List<InnovatieWonen> lijst = new List<InnovatieWonen>();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string sql = @"SELECT p.*, i.* FROM InnovatieWonen i 
+                       JOIN Project p ON i.Id = p.Id";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var i = new InnovatieWonen
+                        {
+                            Id = (int)reader["Id"],
+                            Titel = reader["Titel"].ToString(),
+                            AantalWooneenheden = (int)reader["AantalWooneenheden"],
+                            HeeftRondleiding = (bool)reader["HeeftRondleiding"], 
+                            HeeftShowcase = (bool)reader["HeeftShowcase"]       
+                        };
+                        lijst.Add(i);
+                    }
+                }
+            }
+            return lijst;
         }
     }
 }
