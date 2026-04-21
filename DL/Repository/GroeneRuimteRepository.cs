@@ -6,6 +6,8 @@ using Microsoft.Data.SqlClient;
 
 namespace ProjectbeheerDL.Repository {
     public class GroeneRuimteRepository : ProjectRepository {
+
+
         public GroeneRuimteRepository(string connectionstring) : base(connectionstring) {}
 
         public void VoegProjectToe(Project project) 
