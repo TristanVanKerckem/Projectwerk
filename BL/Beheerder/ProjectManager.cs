@@ -49,7 +49,7 @@ namespace ProjectbeheerBL.Beheerder
                 {
                     throw new ProjectException("Er zijn geen projecten om te exporteren.");
                 }
-                _csvSchrijver.SchrijfProjectenNaarCSV(projecten, pad);
+                _csvSchrijver.MaakCSV(projecten, pad);
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@ namespace ProjectbeheerBL.Beheerder
             }
             try
             {
-                _pdfSchrijver.SchrijfProjectenFiche(project, pad);
+                _pdfSchrijver.MaakPDF(projecten);
             }
             catch (Exception ex)
             {
