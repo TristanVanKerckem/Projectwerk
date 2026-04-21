@@ -1,0 +1,22 @@
+﻿<Page x:Class="ProjectbeheerUserInterface.RegistratiePagina"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ProjectbeheerUserInterface"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="RegistratiePagina">
+
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Margin="95,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Language="nl-nl" Text="Naam"/></TextBlock>
+        <TextBox HorizontalAlignment="Left" Margin="95,88,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBlock HorizontalAlignment="Left" Margin="95,144,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Language="nl-nl" Text="Email"/></TextBlock>
+        <TextBox HorizontalAlignment="Left" Margin="95,189,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBlock HorizontalAlignment="Left" Margin="95,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="95,240,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <CheckBox Content="Admin" HorizontalAlignment="Left" Margin="95,288,0,0" VerticalAlignment="Top" Checked="CheckBox_Checked"/>
+        <Button Content="Registreer" HorizontalAlignment="Left" Margin="95,339,0,0" VerticalAlignment="Top" Width="60"/>
+        <Button Content="Log in" HorizontalAlignment="Left" Margin="509,339,0,0" VerticalAlignment="Top" Width="60"/>
+    </Grid>
+</Page>

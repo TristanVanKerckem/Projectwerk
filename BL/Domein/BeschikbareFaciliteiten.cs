@@ -6,9 +6,9 @@ namespace ProjectbeheerBL.Domein
 {
     public class BeschikbareFaciliteiten
     {
-        public int Id;
-        public string Naam;
-        public bool IsGeverifieerd;
+        public int Id { get; set; }
+        public string Naam { get; set; }
+        public bool IsGeverifieerd { get; set; }
 
         public BeschikbareFaciliteiten(int id, string naam, bool isGeverifieerd)
         {

@@ -15,13 +15,14 @@ namespace ProjectbeheerBL.Domein
         public Locatie Locatie { get; set; }
         public List<ProjectPartner> ProjectPartners { get; set; } = new List<ProjectPartner>();
 
-        protected Project(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie)
+        protected Project(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie, List<ProjectPartner> projectPartners = null)
         {
             Titel = titel;
             StartDatum = startDatum;
             Beschrijving = beschrijving;
             Status = status;
             Locatie = locatie;
+            this.ProjectPartners = ProjectPartners ?? new List<ProjectPartner>();
         }
     }
 }
