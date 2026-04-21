@@ -42,5 +42,36 @@ namespace ProjectbeheerDL.Repository {
                 }
             }
         }
+
+        public List<Stadsontwikkeling> GeefStadsontwikkelingen()
+        {
+            List<Stadsontwikkeling> lijst = new List<Stadsontwikkeling>();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                // SQL-query met JOIN om zowel basisdata als specifieke data op te halen
+                string sql = @"SELECT p.*, s.* FROM StadsOntwikkeling s 
+                       JOIN Project p ON s.Id = p.Id";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var s = new Stadsontwikkeling();
+                        // Mapping van algemene velden
+                        s.Id = (int)reader["Id"];
+                        s.Titel = reader["Titel"].ToString();
+
+                        // Mapping van specifieke velden 
+                        s.HeeftArchitecturaleWaarde = (bool)reader["HeeftArchitecturaleWaarde"];
+                        s.VergunningStatus = (VergunningStatus)reader["VergunningStatus"];
+
+                        lijst.Add(s);
+                    }
+                }
+            }
+            return lijst;
+        }
     }
 }
