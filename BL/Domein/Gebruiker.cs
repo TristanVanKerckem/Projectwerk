@@ -7,10 +7,10 @@ namespace ProjectbeheerBL.Domein
 {
     public class Gebruiker
     {
-        private int _id;
+        private int _id; 
         private string _naam;
         private string _email;
-        private bool _isBeheerder;
+        private bool _isBeheerder; 
 
         public int Id
         {

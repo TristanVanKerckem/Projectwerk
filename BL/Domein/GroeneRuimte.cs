@@ -32,7 +32,7 @@ namespace ProjectbeheerBL.Domein
             get { return _biodiversiteit; }
             set
             {
-                if (value <= 0)
+                if (value < 0 || value > 10)
                     throw new GroeneRuimteException("Biodiversiteit mag niet 0 of minder zijn");
                 else
                     _biodiversiteit= value;
@@ -44,9 +44,9 @@ namespace ProjectbeheerBL.Domein
             set
             {
                 if (value <= 0)
-                    throw new GroeneRuimteException("Oppervlakte mag niet 0 of minder zijn");
+                    throw new GroeneRuimteException("aantalwandelpaden mag niet 0 of minder zijn");
                 else
-                    _oppervlakte = value;
+                    _aantalWandelpaden = value;
             }
         }
         public List<BeschikbareFaciliteiten> BeschikbareFaciliteiten { get; set; }
@@ -60,7 +60,7 @@ namespace ProjectbeheerBL.Domein
                 if (value <= 0)
                     throw new GroeneRuimteException("Beoordeling mag niet 0 of minder zijn");
                 else
-                    _oppervlakte = value;
+                    _beoordeling = value;
             }
         }
         public GroeneRuimte(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie, double oppervlakte, double biodiversiteit, int aantalWandelpaden, List<BeschikbareFaciliteiten> beschikbareFaciliteiten, bool isInToeristWandelroute, double beoordeling) : base(titel, startDatum, beschrijving, status, locatie) {
