@@ -52,7 +52,7 @@ namespace ProjectbeheerDL.Repository {
             }
         }
 
-        public void UpdateInformatieProject(Project project, ProjectPartner pp, ProjectCombinatie projecten) {
+        public void UpdateInformatieProject(Project project, ProjectCombinatie projecten) {
             string queryProject = "UPDATE Project SET titel=@titel, startDatum=@startDatum, beschrijving=@beschrijving, status=@status FROM Project WHERE id=@id";
             string queryProjectPartner = "UPDATE ProjectPartner SET rol=@rol FROM ProjectPartner WHERE projectId=@projectId";
             string queryInnoWonen = "UPDATE InnovatieWonen SET aantalWooneenheden=@aantalWooneenheden, rondleiding=@rondleiding, showwoning=@showwoning, architectuurInnovatieScore=@architectuurInnovatieScore, samenwerkingErfgoedOfToerisme=@samenwerkingErfgoedOfToerisme FROM InnovatieWonen WHERE projectId=@projectId";
@@ -93,8 +93,8 @@ namespace ProjectbeheerDL.Repository {
                     cmd1.Parameters.AddWithValue("@id", project.Id);
 
                     // Update ProjectPartners
-                    cmd2.Parameters.AddWithValue("@rol",pp.Rollen);
-                    cmd2.Parameters.AddWithValue("@projectId", project.Id);
+                    //cmd2.Parameters.AddWithValue("@rol",pp.Rollen);
+                    //cmd2.Parameters.AddWithValue("@projectId", project.Id);
                     // Update KindProjecten
                     foreach (Project kind in projecten.ProjectComboLijst) {
                         if (kind is InnovatieWonen) {
