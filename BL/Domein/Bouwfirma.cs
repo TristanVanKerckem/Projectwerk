@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace ProjectbeheerBL.Domein
@@ -53,6 +54,10 @@ namespace ProjectbeheerBL.Domein
             Naam = naam;
             Email = email;
             TelefoonNummer = telefoonNummer;
+        }
+        public override string ToString()
+        {
+            return $"{_naam}, Email: {_email}, Telefoonnummer: {_telefoonNummer}";
         }
     }
 }

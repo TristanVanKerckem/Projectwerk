@@ -16,5 +16,10 @@ namespace ProjectbeheerBL.Domein
             Naam = naam;
             IsGeverifieerd = isGeverifieerd;
         }
+
+        public BeschikbareFaciliteiten(string naam, bool isGeverifieerd) {
+            Naam = naam;
+            IsGeverifieerd = isGeverifieerd;
+        }
     }
 }

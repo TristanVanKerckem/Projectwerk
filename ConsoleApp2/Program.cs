@@ -6,7 +6,7 @@ using ProjectbeheerBL.Domein;
 using ProjectbeheerBL.Domein.Enums;
 using System.Linq;
 
-namespace ConsoleApp3
+namespace ConsoleApp2
 {
     class Program
     {
@@ -184,21 +184,21 @@ namespace ConsoleApp3
                     Console.WriteLine(new string('-', 50));
                 }
 
-               
+
                 Console.WriteLine("\n" + new string('=', 40));
                 Console.WriteLine("        ADVANCED FILTER RESULTS");
                 Console.WriteLine(new string('=', 40));
 
-                
+
                 string filterCity = "Gent";
                 var cityResults = allProjects.Where(p => p.Locatie.Gemeente.Equals(filterCity, StringComparison.OrdinalIgnoreCase)).ToList();
                 Console.WriteLine($"\n> Projects in '{filterCity}': {cityResults.Count}");
 
-               
+
                 var withPartners = allProjects.Where(p => p.ProjectPartners.Any()).ToList();
                 Console.WriteLine($"> Projects with assigned partners: {withPartners.Count}");
 
-                
+
                 string partnerName = "Build-It NV";
                 var specificPartner = allProjects.Where(p => p.ProjectPartners.Keys.Any(k => k.Naam.Contains(partnerName))).ToList();
                 Console.WriteLine($"> Projects involving '{partnerName}': {specificPartner.Count}");

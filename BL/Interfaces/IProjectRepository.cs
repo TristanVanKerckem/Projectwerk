@@ -13,6 +13,7 @@ namespace ProjectbeheerBL.Interfaces {
     //    //void VoegProjectToe(Project project);
     //    //Voeg hier methodes toe voor specifieke filters indien nodig
 
+
     //    List<ProjectCombinatie> GeefProjectCombinaties();
     //    ProjectCombinatie GeefProject(int id);
     //    List<ProjectCombinatie> GeefAlleProjecten();
@@ -29,7 +30,12 @@ namespace ProjectbeheerBL.Interfaces {
        
         List<Project> GeefProjectenMetFilters(string? type, string? wijk, ProjectStatus? status, DateTime? start, DateTime? eind, string? partner);
 
+
         void VoegProjectToe(Project project);
+
+        //Project GeefProject(int id); // moet nog ProjectCombinatie worden?
+
+        //List<Project> GeefAlleProjecten(); // Moet nog List van ProjectCombinatie worden
     }
    
 }

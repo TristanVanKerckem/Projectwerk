@@ -31,5 +31,18 @@ namespace ProjectbeheerUserInterface
         {
             NavigationService.Navigate(new AanpassenPagina(ProjectCombinatie));
         }
+        private void Card_Click(object sender, RoutedEventArgs e)
+        {
+            var border = sender as Border;
+            if (border == null) return;
+
+            var item = (KeyValuePair<Partner, List<string>>)border.DataContext;
+
+            Partner partner = item.Key;
+            List<string> rollen = item.Value;
+
+            var window = new DetailPartnerPagina(partner, rollen);
+            window.Show();
+        }
     }
 }
