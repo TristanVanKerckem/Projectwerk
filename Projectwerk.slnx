@@ -1,9 +1,7 @@
 <Solution>
   <Project Path="BL/ProjectbeheerBL.csproj" />
+  <Project Path="ConsoleApp1/ConsoleApp1.csproj" Id="6a4cf110-00b4-453a-9411-4fc513cf89a3" />
   <Project Path="DL/ProjectbeheerDL.csproj" />
   <Project Path="ProjectbeheerUtil/ProjectbeheerUtil.csproj" Id="3babca6d-487c-4ee5-8685-f6b7c32b6735" />
-  <Project Path="TestConsoleApp/TestConsoleApp.csproj" Id="1b91c4c8-91d0-46bc-9ae7-3129db2fb940">
-    <Build Solution="Debug|*" Project="false" />
-  </Project>
   <Project Path="UserInterface/ProjectbeheerUserInterface.csproj" />
 </Solution>

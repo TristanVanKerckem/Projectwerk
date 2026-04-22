@@ -13,16 +13,45 @@ namespace ProjectbeheerBL.Domein
         public string Beschrijving { get; set; }
         public ProjectStatus Status { get; set; } // Aangepast van Status
         public Locatie Locatie { get; set; }
-        public List<ProjectPartner> ProjectPartners { get; set; } = new List<ProjectPartner>();
+        public Dictionary<Partner, List<string>> ProjectPartners { get; set; } = new Dictionary<Partner, List<string>>();
 
-        protected Project(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie, List<ProjectPartner> projectPartners = null)
+        protected Project(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie, Dictionary<Partner, List<String>> projectPartners)
         {
             Titel = titel;
             StartDatum = startDatum;
             Beschrijving = beschrijving;
             Status = status;
             Locatie = locatie;
-            this.ProjectPartners = ProjectPartners ?? new List<ProjectPartner>();
+            ProjectPartners = projectPartners;
+        }
+        protected Project(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie)
+        {
+            Titel = titel;
+            StartDatum = startDatum;
+            Beschrijving = beschrijving;
+            Status = status;
+            Locatie = locatie;
+        }
+        public void VoegPartnerToe(Partner partner, List<string> rollen)
+        {
+            if (!ProjectPartners.ContainsKey(partner))
+            {
+                ProjectPartners[partner] = new List<string>();
+            }
+            foreach (var rol in rollen)
+            {
+                if (!ProjectPartners[partner].Contains(rol))
+                {
+                    ProjectPartners[partner].Add(rol);
+                }
+            }
+        }
+        public void VoegRolToe(Partner partner, string rol)
+        {
+            if (!ProjectPartners[partner].Contains(rol))
+            {
+                ProjectPartners[partner].Add(rol);
+            }
         }
     }
 }
