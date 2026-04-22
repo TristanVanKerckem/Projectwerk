@@ -1,8 +1,6 @@
 ﻿using ProjectbeheerBL.Domein;
-using ProjectbeheerBL.Domein.Enums;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,21 +13,19 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ProjectbeheerUserInterface
-{    
-    public partial class ProjectDetail : Page
+{
+    /// <summary>
+    /// Interaction logic for AanpassenPagina.xaml
+    /// </summary>
+    public partial class AanpassenPagina : Page
     {
-        public ProjectCombinatie ProjectCombinatie { get; set; }
-        public ProjectDetail(ProjectCombinatie projectCombinatie)
+        public AanpassenPagina(ProjectCombinatie projectCombinatie)
         {
-            ProjectCombinatie = projectCombinatie;
-            InitializeComponent();
             this.DataContext = projectCombinatie.ProjectComboLijst;
         }
-        
-
-        private void Aanpassen_Click(object sender, RoutedEventArgs e)
+        public void OnSubmit(object sender, EventArgs e)
         {
-            NavigationService.Navigate(new AanpassenPagina(ProjectCombinatie));
+
         }
     }
 }
