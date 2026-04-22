@@ -1,13 +1,14 @@
 ﻿using Microsoft.Data.SqlClient;
 using ProjectbeheerBL.Domein;
 using ProjectbeheerBL.Domein.Enums; // Zorg dat de namespace voor enums klopt
+using ProjectbeheerBL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
 
 namespace ProjectbeheerDL.Repository
 {
-    public class ProjectRepo
+    public class ProjectRepo : IProjectRepository
     {
         private readonly string _connectionString;
 

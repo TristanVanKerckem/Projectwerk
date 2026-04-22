@@ -3,6 +3,7 @@ using ProjectbeheerBL.Domein;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace ProjectbeheerDL.Repository {
@@ -76,7 +77,7 @@ namespace ProjectbeheerDL.Repository {
                 cmd5.Transaction = transaction;
                 cmd6.Transaction = transaction;
 
-                
+                cmd1.CommandText = queryProject;
                 cmd2.CommandText = queryProjectPartner;
                 cmd3.CommandText = queryInnoWonen;
                 cmd4.CommandText = queryGroenRuimte;
@@ -85,7 +86,6 @@ namespace ProjectbeheerDL.Repository {
 
                 try {
                     // Update Project
-                    cmd1.CommandText = queryProject;
                     cmd1.Parameters.AddWithValue("@titel", project.Titel);
                     cmd1.Parameters.AddWithValue("@startDatum", project.StartDatum);
                     cmd1.Parameters.AddWithValue("@beschrijving", project.Beschrijving);
@@ -93,9 +93,9 @@ namespace ProjectbeheerDL.Repository {
                     cmd1.Parameters.AddWithValue("@id", project.Id);
 
                     // Update ProjectPartners
-                    //cmd2.Parameters.AddWithValue("@rol",pp.Rollen);
-                    //cmd2.Parameters.AddWithValue("@projectId", project.Id);
-                    // Update KindProjecten
+                    cmd2.Parameters.AddWithValue("@rol", project.ProjectPartners);
+                    cmd2.Parameters.AddWithValue("@projectId", project.Id);
+                    //Update KindProjecten
                     foreach (Project kind in projecten.ProjectComboLijst) {
                         if (kind is InnovatieWonen) {
                             //Update InnoWonen
@@ -143,8 +143,10 @@ namespace ProjectbeheerDL.Repository {
                 }
             }
 
+        }
 
-
+        public void VerwijderPartnerVanProject(Project project) {
+            string queryProject = "DELETE ProjectPartner WHERE id=@projectPartnerId";
         }
 
 
