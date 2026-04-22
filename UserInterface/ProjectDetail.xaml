@@ -10,12 +10,8 @@
       Title="ProjectDetail">
 
 
-    <Grid Margin="30">
+    <Grid Margin="30,10,30,30" Width="1200">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -28,13 +24,13 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>        
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <TextBlock Text="Project Details" FontSize="28" FontWeight="Bold" Margin="0,0,0,25" Grid.Row="0"/>
 
         <TextBlock Text="Projectnaam:" Grid.Row="1" Grid.Column="0"/>
         <TextBlock Text="{Binding Titel}" Grid.Row="1" Grid.Column="1" />
-        
+
         <TextBlock Text="Beschrijving:" Grid.Row="2" Grid.Column="0" />
         <TextBlock Text="{Binding Beschrijving}" Grid.Row="2" Grid.Column="1" TextWrapping="Wrap"/>
 
@@ -84,16 +80,29 @@
             </ItemsControl.ItemTemplate>
 
         </ItemsControl>
-        <TextBlock Text=" " Grid.Row="8" Grid.Column="0" />
 
-        <ContentControl Content="{Binding}" Grid.Row="8" Grid.ColumnSpan="2"/>
+        <ItemsControl Grid.Row="8" Grid.ColumnSpan="2"
+              ItemsSource="{Binding}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ContentControl Content="{Binding}" Margin="10"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Button Grid.Column="1" Content="Aanpassen" HorizontalAlignment="Left" Height="28" Margin="259,85,0,0" Grid.Row="8" VerticalAlignment="Top" Width="112" Click="Aanpassen_Click"/>
     </Grid>
     <Page.Resources>
         <DataTemplate DataType="{x:Type l:GroeneRuimte}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -106,8 +115,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <TextBlock Text="Groene Ruimte: " Grid.Row="0" Grid.Column="0" />
 
-                <TextBlock Text="{Binding Oppervlakte, PresentationTraceSources.TraceLevel=High}" />
                 <TextBlock Text="Oppervlakte:" Grid.Row="1" Grid.Column="0" />
                 <TextBlock Text="{Binding Oppervlakte}" Grid.Row="1" Grid.Column="1"/>
 
@@ -122,17 +131,13 @@
 
                 <TextBlock Text="Beoordeling:" Grid.Row="5" Grid.Column="0" />
                 <TextBlock Text="{Binding Beoordeling}" Grid.Row="5" Grid.Column="1"/>
-
-                <TextBlock Text="Oppervlakte" Grid.Row="6" Grid.Column="0" />
-                <TextBlock Text="{Binding Oppervlakte}" Grid.Row="6" Grid.Column="1"/>
-
             </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type l:Stadsontwikkeling}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -145,6 +150,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <TextBlock Text="Stadsontwikkeling: " Grid.Row="0" Grid.Column="0" />
                 <TextBlock Text="Bouwfirmas:" Grid.Row="1" Grid.Column="0" />
                 <ItemsControl Grid.Row="1" Grid.Column="1"
               ItemsSource="{Binding Bouwfirmas}">
@@ -175,7 +181,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -184,34 +190,23 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Text="Bouwfirmas:" Grid.Row="1" Grid.Column="0" />
-                <ItemsControl Grid.Row="1" Grid.Column="1"
-      ItemsSource="{Binding Bouwfirmas}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Naam}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <TextBlock Text="InnovatieWonen: " Grid.Row="0" Grid.Column="0" />
 
-                <TextBlock Text="VergunningStatus:" Grid.Row="2" Grid.Column="0" />
-                <TextBlock Text="{Binding VergunningStatus}" Grid.Row="2" Grid.Column="1"/>
+                <TextBlock Text="Aantal WoonEenheden:" Grid.Row="1" Grid.Column="0"/>
+                <TextBlock Text="{Binding AantalWooneenheden}" Grid.Row="1" Grid.Column="1"/>
 
-                <TextBlock Text="Aantal Toegankelijkheid:" Grid.Row="3" Grid.Column="0" />
-                <TextBlock Text="{Binding Toegankelijkheid}" Grid.Row="3" Grid.Column="1"/>
+                <TextBlock Text="Is Energiezuinig:" Grid.Row="2" Grid.Column="0"/>
+                <TextBlock Text="{Binding HeeftRondleiding}" Grid.Row="2" Grid.Column="1"/>
 
-                <TextBlock Text="Is Bezienswaardig" Grid.Row="4" Grid.Column="0" />
-                <TextBlock Text="{Binding IsBezienswaardig}" Grid.Row="4" Grid.Column="1"/>
+                <TextBlock Text="Heeft Showcase:" Grid.Row="3" Grid.Column="0"/>
+                <TextBlock Text="{Binding HeeftShowcase}" Grid.Row="3" Grid.Column="1"/>
 
-                <TextBlock Text="Heeft Info:" Grid.Row="5" Grid.Column="0" />
-                <TextBlock Text="{Binding HeeftInfo}" Grid.Row="5" Grid.Column="1"/>
+                <TextBlock Text="ArchitectuurScore:" Grid.Row="4" Grid.Column="0"/>
+                <TextBlock Text="{Binding ArchitectuurScore}" Grid.Row="4" Grid.Column="1"/>
 
-                <TextBlock Text="Heeft Architecturele Waarde" Grid.Row="6" Grid.Column="0" />
-                <TextBlock Text="{Binding HeeftArchitecturaleWaarde}" Grid.Row="6" Grid.Column="1"/>
+                <TextBlock Text="Heeft Samenwerking Erfgoed Of Toerisme:" Grid.Row="5" Grid.Column="0"/>
+                <TextBlock Text="{Binding HeeftSamenwerkingErfgoedOfToerisme}" Grid.Row="5" Grid.Column="1"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
