@@ -48,6 +48,7 @@ namespace ProjectbeheerDL.Repository {
                     cmd.ExecuteNonQuery();
                 } catch (Exception ex) {
                     throw new Exception();
+                    //throw new Exception("Fout bij database operatie: " + ex.Message);
                 }
             }
         }

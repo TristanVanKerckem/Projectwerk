@@ -60,23 +60,23 @@ namespace ProjectbeheerBL.Beheerder
 
 
 
+       
         public void MaakProjectFiche(int id, string pad)
         {
-            // Ophalen van projectcombinaties volgens de interface
-            var projecten = _repo.GeefAlleProjecten();
+            
+            var project = _repo.GeefProject(id);
 
-            if (projecten == null || !projecten.Any(p => p.Id == id))
+            if (project == null)
             {
                 throw new ProjectException("Project niet gevonden.");
             }
 
             try
             {
-                // De interface IPDFschrijver verwacht een List<ProjectCombinatie>
-                // We geven de volledige lijst mee (of een gefilterde lijst)
-                byte[] pdfData = _pdfSchrijver.MaakPDF(projecten);
+                // PDFSchrijver
+                var projectLijst = new List<ProjectCombinatie> { project };
+                byte[] pdfData = _pdfSchrijver.MaakPDF(projectLijst);
 
-                // Schrijf de byte array naar een bestand op het opgegeven pad
                 System.IO.File.WriteAllBytes(pad, pdfData);
             }
             catch (Exception ex)
@@ -85,6 +85,31 @@ namespace ProjectbeheerBL.Beheerder
             }
         }
 
+
+        //public void MaakProjectFiche(int id, string pad)
+        //{
+        //    // Ophalen van projectcombinaties volgens de interface
+        //    var projecten = _repo.GeefAlleProjecten();
+
+        //    if (projecten == null || !projecten.Any(p => p.Id == id))
+        //    {
+        //        throw new ProjectException("Project niet gevonden.");
+        //    }
+
+        //    try
+        //    {
+        //        // De interface IPDFschrijver verwacht een List<ProjectCombinatie>
+        //        // We geven de volledige lijst mee (of een gefilterde lijst)
+        //        byte[] pdfData = _pdfSchrijver.MaakPDF(projecten);
+
+        //        // Schrijf de byte array naar een bestand op het opgegeven pad
+        //        System.IO.File.WriteAllBytes(pad, pdfData);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new ProjectException("Fout bij het maken van de projectfiche: " + ex.Message);
+        //    }
+        //}
 
         //public void MaakProjectFiche(int id, string pad)
         //{

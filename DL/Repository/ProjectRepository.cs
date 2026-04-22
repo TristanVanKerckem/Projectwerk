@@ -38,8 +38,8 @@ namespace ProjectbeheerDL.Repository
                     try
                     {
                         //int id = InvoegenBasisProject(s, conn, trans);
-                        string sql = @"INSERT INTO StadsOntwikkeling (Id, VergunningStatus, Toegankelijkheid, IsBezienswaardig, HeeftInfo, HeeftArchitecturaleWaarde) 
-                                       VALUES (@id, @verg, @toeg, @beziens, @info, @arch)";
+                        string sql = @"INSERT INTO StadsOntwikkeling (vergunningStatus, toegankelijkheid, bezienswaardigheid, info, archtitectueleWaarde) 
+                                       VALUES (@verg, @toeg, @beziens, @info, @arch)";
                         SqlCommand cmd = new SqlCommand(sql, conn, trans);
                         //cmd.Parameters.AddWithValue("@id", id);
                         cmd.Parameters.AddWithValue("@verg", (int)s.VergunningStatus);
@@ -131,9 +131,9 @@ namespace ProjectbeheerDL.Repository
                 conn.Open();
                 string sql = @"SELECT 
                     CASE 
-                        WHEN EXISTS (SELECT 1 FROM StadsOntwikkeling WHERE Id = @id) THEN 'STADS'
-                        WHEN EXISTS (SELECT 1 FROM GroeneRuimte WHERE Id = @id) THEN 'GROEN'
-                        WHEN EXISTS (SELECT 1 FROM InnovatieWonen WHERE Id = @id) THEN 'WONEN'
+                        WHEN EXISTS (SELECT 1 FROM StadsOntwikkeling WHERE id = @id) THEN 'STADS'
+                        WHEN EXISTS (SELECT 1 FROM GroeneRuimte WHERE id = @id) THEN 'GROEN'
+                        WHEN EXISTS (SELECT 1 FROM InnovatieWonen WHERE id = @id) THEN 'WONEN'
                         ELSE 'BASIS'
                     END";
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -154,15 +154,15 @@ namespace ProjectbeheerDL.Repository
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT p.*, s.* FROM Project p JOIN StadsOntwikkeling s ON p.Id = s.Id WHERE p.Id = @id";
+                string sql = "SELECT p.*, s.* FROM Project p JOIN StadsOntwikkeling s ON p.id = s.id WHERE p.id = @id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@id", id);
                 conn.Open();
                 using (SqlDataReader r = cmd.ExecuteReader())
                 {
                     if (!r.Read()) return null;
-                    var s = new Stadsontwikkeling(r["Titel"].ToString(), (DateTime)r["StartDatum"], r["Beschrijving"].ToString(), (ProjectStatus)r["Status"], null, null, (VergunningStatus)r["VergunningStatus"], (Toegankelijkheid)r["Toegankelijkheid"], (bool)r["IsBezienswaardig"], (bool)r["HeeftInfo"], (bool)r["HeeftArchitecturaleWaarde"]);
-                    s.Id = (int)r["Id"];
+                    var s = new Stadsontwikkeling(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), (ProjectStatus)r["status"], null, null, (VergunningStatus)r["vergunningsStatus"], (Toegankelijkheid)r["toegankelijkheid"], (bool)r["bezienswaardigheid"], (bool)r["info"], (bool)r["archtitectueleWaarde"]);
+                    s.Id = (int)r["id"];
                     return s;
                 }
             }
@@ -172,49 +172,51 @@ namespace ProjectbeheerDL.Repository
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT p.*, g.* FROM Project p JOIN GroeneRuimte g ON p.Id = g.Id WHERE p.Id = @id";
+                string sql = "SELECT p.*, g.* FROM Project p JOIN GroeneRuimte g ON p.id = g.id WHERE p.id = @id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@id", id);
                 conn.Open();
                 using (SqlDataReader r = cmd.ExecuteReader())
                 {
                     if (!r.Read()) return null;
-                    var g = new GroeneRuimte(r["Titel"].ToString(), (DateTime)r["StartDatum"], r["Beschrijving"].ToString(), (ProjectStatus)r["Status"], null, (double)r["Oppervlakte"], (double)r["Biodiversiteit"], (int)r["AantalWandelpaden"], null, (bool)r["IsInToeristWandelroute"], (double)r["Beoordeling"]);
-                    g.Id = (int)r["Id"];
+                    var g = new GroeneRuimte(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), (ProjectStatus)r["status"], null, (double)r["oppervlakte"], (double)r["biodiversiteit"], (int)r["aantalWandelpaden"], null, (bool)r["inToeristischeWandelroute"], (double)r["beoordeling"]);
+                    g.Id = (int)r["id"];
                     return g;
                 }
             }
         }
+       
+    
 
         public InnovatieWonen GeefInnovatieWonenProject(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT p.*, i.* FROM Project p JOIN InnovatieWonen i ON p.Id = i.Id WHERE p.Id = @id";
+                string sql = "SELECT p.*, i.* FROM Project p JOIN InnovatieWonen i ON p.id = i.id WHERE p.id = @id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@id", id);
                 conn.Open();
                 using (SqlDataReader r = cmd.ExecuteReader())
                 {
                     if (!r.Read()) return null;
-                    var i = new InnovatieWonen(r["Titel"].ToString(), (DateTime)r["StartDatum"], r["Beschrijving"].ToString(), (ProjectStatus)r["Status"], null, (int)r["AantalWooneenheden"], (bool)r["HeeftRondleiding"], (bool)r["HeeftShowcase"], (double)r["ArchitectuurScore"], (bool)r["HeeftSamenwerkingErfgoedOfToerisme"]);
-                    i.Id = (int)r["Id"];
+                    var i = new InnovatieWonen(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), (ProjectStatus)r["status"], null, (int)r["aantalWooneenheden"], (bool)r["rondleiding"], (bool)r["showwoning"], (double)r["architectuurInnovatieScore"], (bool)r["samenwerkingErfgoedOfToerisme"]);
+                    i.Id = (int)r["id"];
                     return i;
                 }
             }
         }
 
-        public List<Project> GeefAlleProjecten()
+        public List<ProjectCombinatie> GeefAlleProjecten()
         {
-            List<Project> lijst = new List<Project>();
+            List<ProjectCombinatie> lijst = new List<ProjectCombinatie>();
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT Id FROM Project";
+                string sql = "SELECT * FROM Project_Gebruiker";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 conn.Open();
                 using (SqlDataReader r = cmd.ExecuteReader())
                 {
-                    while (r.Read()) lijst.Add(GeefProject((int)r["Id"]));
+                    while (r.Read()) lijst.Add(GeefProject((int)r["id"]));
                 }
             }
             return lijst;
