@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ProjectbeheerDL.Schrijver {
     public class CSVschrijver  {
-        public string SchrijfProjectenNaarCSV(List<ProjectCombinatie> projecten, string pad) {
+        public void SchrijfProjectenNaarCSV(List<ProjectCombinatie> projecten, string pad) {
 
             // Voor de naam van PDF bestand worden telkens de eerste 3 letters van de Titel van het Project genomen.
             string projectenComboNaam = "";
@@ -28,15 +28,15 @@ namespace ProjectbeheerDL.Schrijver {
                     string projectStatus = AlgemeneInfo.Status.ToString(); // niet vergeten om de .ToString aan te passen in domein
                     string locatie = AlgemeneInfo.Locatie.ToString(); // idem hier
 
-                    string projectPartnersEnRollen = "";
-                    if (AlgemeneInfo.ProjectPartners.Count() == 0) {
-                        projectPartnersEnRollen += "Geen";
-                    } else {
-                        foreach (ProjectPartner partner in AlgemeneInfo.ProjectPartners) {
-                            projectPartnersEnRollen += $"|{partner.Partner.Naam}: {partner.Rollen}"; // rollen gaan mogelijks nog verder uitgewerkt moeten worden (aangezien er meerdere kunnen zijn per project)
-                        }
-                        projectPartnersEnRollen = projectPartnersEnRollen.Substring(1); // om de voorste | weg te halen
-                    }
+                    //string projectPartnersEnRollen = "";
+                    //if (AlgemeneInfo.ProjectPartners.Count() == 0) {
+                    //    projectPartnersEnRollen += "Geen";
+                    //} else {
+                    //    foreach (ProjectPartner partner in AlgemeneInfo.ProjectPartners) {
+                    //        projectPartnersEnRollen += $"|{partner.Partner.Naam}: {partner.Rollen}"; // rollen gaan mogelijks nog verder uitgewerkt moeten worden (aangezien er meerdere kunnen zijn per project)
+                    //    }
+                    //    projectPartnersEnRollen = projectPartnersEnRollen.Substring(1); // om de voorste | weg te halen
+                    //}
 
                     string isStadsontwikkeling = "Nee";
                     string isGroeneRuimte = "Nee";
@@ -56,7 +56,7 @@ namespace ProjectbeheerDL.Schrijver {
                         }
                     }
 
-                    writer.WriteLine($"{titel};{startDatum};{beschrijving};{projectStatus};{locatie};{projectPartnersEnRollen};{isStadsontwikkeling};{isGroeneRuimte};{isInnovatiefWonen}");
+                    //writer.WriteLine($"{titel};{startDatum};{beschrijving};{projectStatus};{locatie};{projectPartnersEnRollen};{isStadsontwikkeling};{isGroeneRuimte};{isInnovatiefWonen}");
                 }
 
             }

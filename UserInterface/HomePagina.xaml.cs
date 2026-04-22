@@ -31,7 +31,7 @@ namespace ProjectbeheerUserInterface
             Bouwfirma bouwfirma2 = new Bouwfirma("Bouwfirma2", "Example@gmail.com", "0471561847");
             Bouwfirma bouwfirma3 = new Bouwfirma("Bouwfirma3", "Example@gmail.com", "0471561847");
             List<Bouwfirma> bouwfirmas = new List<Bouwfirma> { bouwfirma1, bouwfirma2, bouwfirma3 };
-            Locatie locatie = new Locatie("Goeferdinge", "Waaienberg", "Geraardsbergen", 9500, "77C");
+            Locatie locatie = new Locatie(1,"Goeferdinge", "Waaienberg", "Geraardsbergen", 9500, "77C");
             Partner partner1 = new Partner("Tristan","Tristan.Van.Kerckem@gmail.com",locatie);
             Partner partner2 = new Partner("Laure", "ZIHDB", locatie);
             

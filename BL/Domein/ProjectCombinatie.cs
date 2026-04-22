@@ -9,6 +9,10 @@ namespace ProjectbeheerBL.Domein
         public int Id { get; set; }
         public Gebruiker Gebruiker { get; set; }
         public List<Project> ProjectComboLijst { get; set; } = new List<Project>();
+        public ProjectCombinatie() 
+        {
+            ProjectComboLijst = new List<Project>(); 
+        }
 
         public string ReadFiche(List<Project> projectComboLijst)
         {
