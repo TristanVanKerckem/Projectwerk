@@ -1,0 +1,57 @@
+﻿<Window x:Class="ProjectbeheerUserInterface.DetailPartnerPagina"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjectbeheerUserInterface"
+        mc:Ignorable="d"
+        Title="DetailPartnerPagina" Height="450" Width="800"
+WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Naam" Grid.Row="1" Grid.Column="0"/>
+        <TextBlock Text="{Binding Key.Naam}" Grid.Row="1" Grid.Column="2"/>
+
+        <TextBlock Text="Email" Grid.Row="2" Grid.Column="0"/>
+        <TextBlock Text="{Binding Key.Email}" Grid.Row="2" Grid.Column="1"/>
+
+        <TextBlock Text="Wijk" Grid.Row="3" Grid.Column="0"/>
+        <TextBlock Text="{Binding Key.Vestiging.Wijk}" Grid.Row="3" Grid.Column="1"/>
+
+        <TextBlock Text="Straat" Grid.Row="4" Grid.Column="0"/>
+        <TextBlock Text="{Binding Key.Vestiging.Straat}" Grid.Row="4" Grid.Column="1"/>
+
+        <TextBlock Text="Gemeente" Grid.Row="5" Grid.Column="0"/>
+        <TextBlock Text="{Binding Key.Vestiging.Gemeente}" Grid.Row="5" Grid.Column="1"/>
+
+        <TextBlock Text="Postcode" Grid.Row="6" Grid.Column="0"/>
+        <TextBlock Text="{Binding Key.Vestiging.Postcode}" Grid.Row="6" Grid.Column="1"/>
+
+        <TextBlock Text="Huisnummer" Grid.Row="7" Grid.Column="0"/>
+        <TextBlock Text="{Binding Key.Vestiging.Huisnummer}" Grid.Row="7" Grid.Column="1"/>
+
+        <TextBlock Text="Rollen:" Grid.Row="8" Grid.Column="0"/>
+        <ItemsControl ItemsSource="{Binding Value}" Grid.Row="8" Grid.Column="1">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+    </Grid>
+</Window>
