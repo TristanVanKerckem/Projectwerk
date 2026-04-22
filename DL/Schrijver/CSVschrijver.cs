@@ -76,7 +76,6 @@ namespace ProjectbeheerDL.Schrijver {
                 writer.WriteLine("Titel;Aantal Wooneenheden;Types Woonvormen;Mogelijkheid Rondleiding;Showwoning voor Bezoekers;Score Arch. Innovatie;Samenwerking erfgoed/toerisme Gent");
                 
             }            
-            return " ";
         }
     }
 }

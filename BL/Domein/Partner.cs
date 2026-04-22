@@ -9,7 +9,7 @@ namespace ProjectbeheerBL.Domein
         public string Naam { get; set; }
         public string Email { get; set; }
         public Locatie Vestiging { get; set; }
-        public List<ProjectPartner> Projecten { get; set; } = new List<ProjectPartner>();
+        public List<Project> Projecten { get; set; } = new List<Project>();
 
         public Partner(string naam, string email, Locatie vestiging)
         {

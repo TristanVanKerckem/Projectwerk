@@ -9,13 +9,15 @@
       Title="HomePagina">
 
     <Grid>
-        <DataGrid ItemsSource="{Binding Projecten}" AutoGenerateColumns="False" Name="DataGrid">
+        <DataGrid ItemsSource="{Binding ProjectComboLijst}" AutoGenerateColumns="False" Name="DataGrid" CanUserAddRows="False">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Titel" Binding="{Binding Titel}" />
-                <DataGridTextColumn Header="StartDatum" Binding="{Binding StartDatum}" />
-                <DataGridTextColumn Header="Beschrijving" Binding="{Binding Beschrijving}" />
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                <DataGridTextColumn Header="Titel" Binding="{Binding ProjectComboLijst[0].Titel}" />
+                <DataGridTextColumn Header="StartDatum" Binding="{Binding ProjectComboLijst[0].StartDatum}" />
+                <DataGridTextColumn Header="Beschrijving" Binding="{Binding ProjectComboLijst[0].Beschrijving}" />
+                <DataGridTextColumn Header="Status" Binding="{Binding ProjectComboLijst[0].Status}" />
+                <DataGridTextColumn Header="Adres" Binding="{Binding ProjectComboLijst[0].Locatie}" />
+                <DataGridTextColumn Header="Wijk" Binding="{Binding ProjectComboLijst[0].Locatie.Wijk}" />
                 <DataGridTemplateColumn Header="Acties">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
