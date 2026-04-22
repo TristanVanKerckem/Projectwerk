@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using ProjectbeheerBL.Domein;
-using ProjectbeheerBL.Domein.Enums; // Zorg dat de namespace voor enums klopt
+using ProjectbeheerBL.Domein.Enums; 
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,9 +16,9 @@ namespace ProjectbeheerDL.Repository
             _connectionString = connectionString;
         }
 
-        // ===========================================================================
-        // 1. TOEVOEGEN METHODES (TPT-Structuur met Transacties)
-        // ===========================================================================
+        
+        // TOEVOEGEN METHODES 
+       
 
         public void VoegProjectToe(Project project)
         {
@@ -120,9 +120,9 @@ namespace ProjectbeheerDL.Repository
             return (int)cmd.ExecuteScalar();
         }
 
-        // ===========================================================================
-        // 2. OPHALEN METHODES (Verkeersregelaar)
-        // ===========================================================================
+        
+        // OPHALEN METHODES 
+        
 
         public Project GeefProject(int id)
         {
@@ -220,9 +220,9 @@ namespace ProjectbeheerDL.Repository
             return lijst;
         }
 
-        // ===========================================================================
+
         // 3. FILTER METHODES
-        // ===========================================================================
+
 
         public List<Project> GeefProjectFilterType(string type)
         {
@@ -281,10 +281,8 @@ namespace ProjectbeheerDL.Repository
 
 
 
-
-// ===========================================================================
 // de oude versies van de methodes zijn hier nog 
-// ===========================================================================
+
 
 // public void VoegProjectToe(Project project) {
 //     // Code om project toe te voegen aan database
