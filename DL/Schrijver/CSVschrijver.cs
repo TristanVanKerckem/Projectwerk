@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace ProjectbeheerDL.Schrijver {
-    public class CSVschrijver : ICSVschrijver {
+    public class CSVschrijver  {
         public string SchrijfProjectenNaarCSV(List<ProjectCombinatie> projecten, string pad) {
 
             // Voor de naam van PDF bestand worden telkens de eerste 3 letters van de Titel van het Project genomen.

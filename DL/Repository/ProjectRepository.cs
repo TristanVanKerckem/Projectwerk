@@ -37,11 +37,11 @@ namespace ProjectbeheerDL.Repository
                 {
                     try
                     {
-                        int id = InvoegenBasisProject(s, conn, trans);
+                        //int id = InvoegenBasisProject(s, conn, trans);
                         string sql = @"INSERT INTO StadsOntwikkeling (Id, VergunningStatus, Toegankelijkheid, IsBezienswaardig, HeeftInfo, HeeftArchitecturaleWaarde) 
                                        VALUES (@id, @verg, @toeg, @beziens, @info, @arch)";
                         SqlCommand cmd = new SqlCommand(sql, conn, trans);
-                        cmd.Parameters.AddWithValue("@id", id);
+                        //cmd.Parameters.AddWithValue("@id", id);
                         cmd.Parameters.AddWithValue("@verg", (int)s.VergunningStatus);
                         cmd.Parameters.AddWithValue("@toeg", (int)s.Toegankelijkheid);
                         cmd.Parameters.AddWithValue("@beziens", s.IsBezienswaardig);
@@ -64,11 +64,11 @@ namespace ProjectbeheerDL.Repository
                 {
                     try
                     {
-                        int id = InvoegenBasisProject(g, conn, trans);
+                        //int id = InvoegenBasisProject(g, conn, trans);
                         string sql = @"INSERT INTO GroeneRuimte (Id, Oppervlakte, Biodiversiteit, AantalWandelpaden, IsInToeristWandelroute, Beoordeling) 
                                        VALUES (@id, @opp, @bio, @wandel, @route, @beoordeling)";
                         SqlCommand cmd = new SqlCommand(sql, conn, trans);
-                        cmd.Parameters.AddWithValue("@id", id);
+                        //cmd.Parameters.AddWithValue("@id", id);
                         cmd.Parameters.AddWithValue("@opp", g.Oppervlakte);
                         cmd.Parameters.AddWithValue("@bio", g.Biodiversiteit);
                         cmd.Parameters.AddWithValue("@wandel", g.AantalWandelpaden);
@@ -91,11 +91,11 @@ namespace ProjectbeheerDL.Repository
                 {
                     try
                     {
-                        int id = InvoegenBasisProject(i, conn, trans);
-                        string sql = @"INSERT INTO InnovatieWonen (Id, AantalWooneenheden, HeeftRondleiding, HeeftShowcase, ArchitectuurScore, HeeftSamenwerkingErfgoedOfToerisme) 
-                                       VALUES (@id, @aantal, @rond, @show, @score, @samen)";
+                        //int id = InvoegenBasisProject(i, conn, trans);
+                        string sql = @"INSERT INTO InnovatieWonen (aantalWooneenheden, rondleiding, showwoning, ArchitectuurScore, HeeftSamenwerkingErfgoedOfToerisme) 
+                                       VALUES (@aantal, @rond, @show, @score, @samen)";
                         SqlCommand cmd = new SqlCommand(sql, conn, trans);
-                        cmd.Parameters.AddWithValue("@id", id);
+                        //cmd.Parameters.AddWithValue("@id", id);
                         cmd.Parameters.AddWithValue("@aantal", i.AantalWooneenheden);
                         cmd.Parameters.AddWithValue("@rond", i.HeeftRondleiding);
                         cmd.Parameters.AddWithValue("@show", i.HeeftShowcase);
@@ -109,16 +109,16 @@ namespace ProjectbeheerDL.Repository
             }
         }
 
-        private int InvoegenBasisProject(Project p, SqlConnection conn, SqlTransaction trans)
-        {
-            string sql = "INSERT INTO Project (Titel, StartDatum, Beschrijving, Status) OUTPUT INSERTED.Id VALUES (@titel, @datum, @desc, @status)";
-            SqlCommand cmd = new SqlCommand(sql, conn, trans);
-            cmd.Parameters.AddWithValue("@titel", p.Titel);
-            cmd.Parameters.AddWithValue("@datum", p.StartDatum);
-            cmd.Parameters.AddWithValue("@desc", p.Beschrijving);
-            cmd.Parameters.AddWithValue("@status", (int)p.Status);
-            return (int)cmd.ExecuteScalar();
-        }
+        //private int InvoegenBasisProject(Project p, SqlConnection conn, SqlTransaction trans)
+        //{
+        //    string sql = "INSERT INTO Project (Titel, StartDatum, Beschrijving, Status) OUTPUT INSERTED.Id VALUES (@titel, @datum, @desc, @status)";
+        //    SqlCommand cmd = new SqlCommand(sql, conn, trans);
+        //    cmd.Parameters.AddWithValue("@titel", p.Titel);
+        //    cmd.Parameters.AddWithValue("@datum", p.StartDatum);
+        //    cmd.Parameters.AddWithValue("@desc", p.Beschrijving);
+        //    cmd.Parameters.AddWithValue("@status", (int)p.Status);
+        //    return (int)cmd.ExecuteScalar();
+        //}
 
         // ===========================================================================
         // 2. OPHALEN METHODES (Verkeersregelaar)
@@ -274,6 +274,17 @@ namespace ProjectbeheerDL.Repository
                 }
             }
             return lijst;
+        }
+
+        public List<ProjectCombinatie> GeefProjectenMetFilters(ProjectStatus? status, string? wijk, Project? project, DateTime? voorsteDatum, DateTime? laatsteDatum, string? partnerNaam) {
+            if (status != null) {
+
+            }
+
+            string query = "SELECT * FROM Project, ";
+
+            List<ProjectCombinatie> projectjes = new List<ProjectCombinatie>();
+            return projectjes;
         }
     }
 }

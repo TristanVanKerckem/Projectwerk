@@ -10,7 +10,7 @@ using QuestPDF.Infrastructure;
 namespace ProjectbeheerDL.Schrijver {
 
 
-    public class PDFSchrijver : IPDFschrijver {
+    public class PDFSchrijver  {
         public PDFSchrijver() {
             QuestPDF.Settings.License = LicenseType.Community;
         }
