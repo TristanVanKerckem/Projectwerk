@@ -40,7 +40,8 @@ namespace ProjectbeheerDL.Repository {
         }
 
 
-        public void VerwijderProject(int projectId) { // we zijn voor een volledige delete uit de database gegaan ipv de data op non-actief te zetten
+        public void VerwijderProject(int projectId) { 
+            // we zijn voor een volledige delete uit de database gegaan ipv de data op non-actief te zetten
             // Door CASCADE te gebruiken in de database voor de foreign keys die een verwijzing naar Project hebben, moeten er veel minder queries opgesteld worden om gerelateerde gegevens te verwwijderen
             string queryProject = "DELETE FROM Project WHERE id=@projectId";
             using (SqlConnection con = new SqlConnection(_connectionString))
@@ -102,6 +103,13 @@ namespace ProjectbeheerDL.Repository {
                     cmd1.Parameters.AddWithValue("@id", project.Id);
 
                     // Update ProjectPartners
+                    foreach (KeyValuePair<Partner, List<string>> partner in project.ProjectPartners) {
+                        foreach (string rol in partner.Value) {
+                            cmd2.Parameters.AddWithValue("@rol", project.ProjectPartners);
+                            cmd2.Parameters.AddWithValue("@projectId", project.Id);
+                        }
+
+                    }
                     cmd2.Parameters.AddWithValue("@rol", project.ProjectPartners);
                     cmd2.Parameters.AddWithValue("@projectId", project.Id);
                     //Update KindProjecten
@@ -154,18 +162,76 @@ namespace ProjectbeheerDL.Repository {
 
         }
 
-        public void VerwijderPartnerVanProject(int projectId, int partnerId) { // verwijderd enkel de koppeltabel, niet de partner uit de Partner tabel
+        private void VerwijderPartnerVanProject(int projectId, int partnerId, IDbConnection interfaceConn, IDbTransaction interfaceTrans) { // verwijderd enkel de koppeltabel, niet de partner uit de Partner tabel
+            SqlConnection conn = (SqlConnection)interfaceConn;
+            SqlTransaction trans = (SqlTransaction)interfaceTrans;
+
             string queryProjectPartner = "DELETE FROM ProjectPartner WHERE projectId=@projectId AND partnerId=@partnerId";
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand cmd = con.CreateCommand()) {
+
+            using (SqlCommand cmd =  new SqlCommand(queryProjectPartner, conn, trans)) {
                 try {
-                    con.Open();
-                    cmd.CommandText = queryProjectPartner;
                     cmd.Parameters.Add(new SqlParameter("@projectId", SqlDbType.Int));
                     cmd.Parameters.Add(new SqlParameter("@partnerId", SqlDbType.Int));
 
                     cmd.Parameters["@projectId"].Value = projectId;
                     cmd.Parameters["@partnerId"].Value = partnerId;
+                    cmd.ExecuteNonQuery();
+                } catch (Exception ex) {
+                    throw new Exception();
+                }
+            }
+        }
+
+        private void verwijderFaciliteitVanProject(int groeneRuimteId, int faciliteitId, IDbConnection interfaceConn, IDbTransaction interfaceTrans) { // verwijderd enkel de koppeltabel
+            SqlConnection conn = (SqlConnection)interfaceConn;
+            SqlTransaction trans = (SqlTransaction)interfaceTrans;
+
+            string queryKoppeltabelGroenFac = "DELETE FROM GroeneRuimte_Faciliteit WHERE groeneruimteId=@groeneRuimteId AND faciliteitId=@faciliteitId";
+            using (SqlCommand cmd = new SqlCommand(queryKoppeltabelGroenFac, conn, trans)) {
+                try {
+                    cmd.Parameters.Add(new SqlParameter("@groeneRuimteId", SqlDbType.Int));
+                    cmd.Parameters.Add(new SqlParameter("@faciliteitId", SqlDbType.Int));
+
+                    cmd.Parameters["@groeneRuimteId"].Value = groeneRuimteId;
+                    cmd.Parameters["@faciliteitId"].Value = faciliteitId;
+                    cmd.ExecuteNonQuery();
+                } catch (Exception ex) {
+                    throw new Exception();
+                }
+            }
+        }
+
+        private void verwijderBouwfirmaVanProject(int bouwfirmaId, int stadsontwikkelingsProjectId, IDbConnection interfaceConn, IDbTransaction interfaceTrans) { // verwijderd enkel de koppeltabel
+            SqlConnection conn = (SqlConnection)interfaceConn;
+            SqlTransaction trans = (SqlTransaction)interfaceTrans;
+
+            string queryKoppeltabelBouwStad = "DELETE FROM Bouwfirma_stadsontwikkeling WHERE bouwfirmaId=@bouwfirmaId AND stadsontwikkelingsId=@stadsontwikkelingsId";
+            using (SqlCommand cmd = new SqlCommand(queryKoppeltabelBouwStad, conn, trans)) {
+                try {
+                    cmd.Parameters.Add(new SqlParameter("@bouwfirmaId", SqlDbType.Int));
+                    cmd.Parameters.Add(new SqlParameter("@stadsontwikkelingsId", SqlDbType.Int));
+
+                    cmd.Parameters["@bouwfirmaId"].Value = bouwfirmaId;
+                    cmd.Parameters["@stadsontwikkelingsId"].Value = stadsontwikkelingsProjectId;
+                    cmd.ExecuteNonQuery();
+                } catch (Exception ex) {
+                    throw new Exception();
+                }
+            }
+        }
+
+        private void verwijderWoonvormTypeVanProject(int woonvormTypeId, int innovatieWonenId, IDbConnection interfaceConn, IDbTransaction interfaceTrans) { // verwijderd enkel de koppeltabel
+            SqlConnection conn = (SqlConnection)interfaceConn;
+            SqlTransaction trans = (SqlTransaction)interfaceTrans;
+
+            string queryKoppeltabelInnotype = "DELETE FROM WoonvormType_InnovatieWonen WHERE woonvormTypeId=@woonvormTypeId AND innovatieWonenId=@innovatieWonenId";
+            using (SqlCommand cmd = new SqlCommand(queryKoppeltabelInnotype, conn, trans)) {
+                try {
+                    cmd.Parameters.Add(new SqlParameter("@woonvormTypeId", SqlDbType.Int));
+                    cmd.Parameters.Add(new SqlParameter("@innovatieWonenId", SqlDbType.Int));
+
+                    cmd.Parameters["@woonvormTypeId"].Value = woonvormTypeId;
+                    cmd.Parameters["@innovatieWonenId"].Value = innovatieWonenId;
                     cmd.ExecuteNonQuery();
                 } catch (Exception ex) {
                     throw new Exception();

@@ -17,7 +17,7 @@ namespace ProjectbeheerDL.Repository {
         // returned int om onze ProjectId te kunnen ophalen in de GebruikerVoegtProjectToe methode in de AdminRepo
         // gebruik maken van IDBConnection en IDBTransaction ipv van sqlConn & Trans --> Businesslaag moeten we gescheiden blijven houden
         // wordt ook gebruikt bij de kindklassen voor consistent te blijven
-        // Ook interessante keuze voor uitbreiding/verandering --> repository is makkelijker herbruikbaar indien verandering van gebruikte server a.d.h.v. factories
+        // Ook interessante keuze voor uitbreiding/verandering --> repository is makkelijker herbruikbaar indien verandering van gebruikte server a.d.h.v. onze factories
         public int VoegProjectToe(Project project, IDbConnection interfaceConn, IDbTransaction interfaceTrans) 
         {
             int databaseId;
@@ -347,6 +347,66 @@ namespace ProjectbeheerDL.Repository {
             }
         }
 
+        public List<string> GeefBeschikbareFaciliteiten()
+        {
+            List<string> faciliteiten = new List<string>(); 
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT type FROM BeschikbareFaciliteit"; 
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        faciliteiten.Add(reader["type"].ToString()); 
+                    }
+                }
+            }
+            return faciliteiten;
+        }
+
+        public List<string> GeefBouwfirmas()
+        {
+            List<string> firmas = new List<string>();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT naam FROM Bouwfirma"; 
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        firmas.Add(reader["naam"].ToString());
+                    }
+                }
+            }
+            return firmas;
+        }
+
+        public List<string> GeefWoonvormTypes()
+        {
+            List<string> types = new List<string>();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT naam FROM WoonvormType ORDER BY naam ASC"; 
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        types.Add(reader["naam"].ToString());
+                    }
+                }
+            }
+            return types;
+        }
+
 
         public Project GeefProject(int id)
         {
@@ -437,32 +497,67 @@ namespace ProjectbeheerDL.Repository {
         }
         
 
-        
 
 
+
+        //public List<ProjectCombinatie> GeefAlleProjecten()
+        //{
+        //    List<ProjectCombinatie> resultaat = new List<ProjectCombinatie>();
+        //    using (SqlConnection conn = new SqlConnection(_connectionString))
+        //    {
+        //        string sql = "SELECT id FROM Project";
+        //        SqlCommand cmd = new SqlCommand(sql, conn);
+        //        conn.Open();
+        //        using (SqlDataReader r = cmd.ExecuteReader())
+        //        {
+        //            while (r.Read())
+        //            {
+        //                // We maken voor elk project een virtuele combinatie aan voor de UI
+        //                var project = GeefProject((int)r["id"]);
+        //                var combo = new ProjectCombinatie { Id = project.Id };
+        //                combo.ProjectComboLijst.Add(project);
+        //                resultaat.Add(combo);
+        //            }
+        //        }
+        //    }
+        //    return resultaat;
+        //}
         public List<ProjectCombinatie> GeefAlleProjecten()
         {
             List<ProjectCombinatie> resultaat = new List<ProjectCombinatie>();
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT id FROM Project";
+               
+                string sql = @"SELECT p.*, l.wijk, l.straat, l.gemeente, l.postcode, l.huisnummer 
+                       FROM Project p 
+                       JOIN Locatie l ON p.locatieId = l.id";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 conn.Open();
+
                 using (SqlDataReader r = cmd.ExecuteReader())
                 {
                     while (r.Read())
                     {
-                        // We maken voor elk project een virtuele combinatie aan voor de UI
+                       
                         var project = GeefProject((int)r["id"]);
-                        var combo = new ProjectCombinatie { Id = project.Id };
+
+                      
+                        var combo = new ProjectCombinatie
+                        {
+                            Id = project.Id
+                        };
+
+                        
                         combo.ProjectComboLijst.Add(project);
+
                         resultaat.Add(combo);
                     }
                 }
             }
             return resultaat;
         }
-
 
 
         public List<Project> GeefProjectenMetFilters(string? type, string? wijk, ProjectStatus? status, DateTime? start, DateTime? eind, string? partner)

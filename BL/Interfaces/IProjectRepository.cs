@@ -23,6 +23,14 @@ namespace ProjectbeheerBL.Interfaces {
 
         int VoegProjectToe(Project project, IDbConnection conn, IDbTransaction trans);
 
+        List<string> GeefBeschikbareFaciliteiten();
+
+        
+        List<string> GeefBouwfirmas();
+
+       
+        List<string> GeefWoonvormTypes();
+
     }
    
 }
