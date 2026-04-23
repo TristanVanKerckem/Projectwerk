@@ -25,6 +25,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -233,7 +235,7 @@ Margin="0,0,100,0"
             <ComboBox x:Name="VergunningCombo" Grid.Column="1" Grid.Row="2" Width="200" HorizontalAlignment="Left" />
 
             <TextBlock Text="Toegankelijkheid:" Grid.Row="3" Grid.Column="0"/>
-            <ComboBox x:Name="ToegankelijkheidCombo" Grid.Column="1" Grid.Row="2" Width="200" HorizontalAlignment="Left" />
+            <ComboBox x:Name="ToegankelijkheidCombo" Grid.Column="1" Grid.Row="3" Width="200" HorizontalAlignment="Left" />
 
             <TextBlock Text="Is bezienswaardig:" Grid.Row="4" Grid.Column="0"/>
             <CheckBox x:Name="BezienswaardigCheck" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="200"/>

@@ -1,16 +1,20 @@
 ﻿using Microsoft.Data.SqlClient;
 using ProjectbeheerBL.Domein;
-using ProjectbeheerBL.Domein.Enums; 
+using ProjectbeheerBL.Domein.Enums;
 using ProjectbeheerBL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net.NetworkInformation;
 
-namespace ProjectbeheerDL.Repository {
-    public class ProjectRepo : IProjectRepository {
+namespace ProjectbeheerDL.Repository
+{
+    public class ProjectRepo : IProjectRepository
+    {
         private readonly string _connectionString;
 
-        public ProjectRepo(string connectionString) {
+        public ProjectRepo(string connectionString)
+        {
             _connectionString = connectionString;
         }
 
@@ -107,18 +111,23 @@ namespace ProjectbeheerDL.Repository {
         }
 
         // Nodig voor te checken of ProjectInfo al is aangemaakt door een kindklasse van hetzelfde Project
-        private bool ProjectInfoBestaat(int projectId, IDbConnection interfaceConn, IDbTransaction interfaceTrans) { //conn en trans meegeven, anders error door de connectie als je nieuwe start
+        private bool ProjectInfoBestaat(int projectId, IDbConnection interfaceConn, IDbTransaction interfaceTrans)
+        { //conn en trans meegeven, anders error door de connectie als je nieuwe start
             SqlConnection conn = (SqlConnection)interfaceConn;
             SqlTransaction trans = (SqlTransaction)interfaceTrans;
 
             string query = "SELECT COUNT(1) FROM Project WHERE id = @projectId";
-            using (SqlCommand cmd = new SqlCommand(query, conn, trans)) {
-                try {
+            using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+            {
+                try
+                {
                     cmd.Parameters.AddWithValue("@projectId", projectId);
                     int count = Convert.ToInt32(cmd.ExecuteScalar());
 
                     return count > 0;
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     throw new Exception();
                 }
             }
@@ -128,7 +137,8 @@ namespace ProjectbeheerDL.Repository {
             SqlConnection conn = (SqlConnection)interfaceConn;
             SqlTransaction trans = (SqlTransaction)interfaceTrans;
 
-            try {
+            try
+            {
                 int databaseProjectId;
 
                 // check of Project al bestaat
@@ -152,7 +162,8 @@ namespace ProjectbeheerDL.Repository {
 
                 using (SqlCommand cmd1 = new SqlCommand(queryStadsOntwikkeling, conn, trans))
                 using (SqlCommand cmd2 = new SqlCommand(queryBouwfirma, conn, trans))
-                using (SqlCommand cmd3 = new SqlCommand(queryKoppeltabelStadBouw, conn, trans)) {
+                using (SqlCommand cmd3 = new SqlCommand(queryKoppeltabelStadBouw, conn, trans))
+                {
                     //cmd.Parameters.AddWithValue("@id", id);
                     // Aanvullen Stadsontwikkeling
                     cmd1.Parameters.AddWithValue("@verg", s.VergunningStatus);
@@ -164,7 +175,8 @@ namespace ProjectbeheerDL.Repository {
                     stadsOntwikkelingId = Convert.ToInt32(cmd1.ExecuteScalar());
 
                     // Aanvullen Bouwfirma
-                    foreach (Bouwfirma bouwfirma in bouwfirmas) {
+                    foreach (Bouwfirma bouwfirma in bouwfirmas)
+                    {
                         cmd2.Parameters.Clear(); // Belangrijk voor te kunnen loopen
                         cmd2.Parameters.AddWithValue("@naam", bouwfirma.Naam);
                         cmd2.Parameters.AddWithValue("@email", bouwfirma.Email);
@@ -178,9 +190,10 @@ namespace ProjectbeheerDL.Repository {
                         cmd3.ExecuteNonQuery();
                     }
                 }
-                
+
                 return databaseProjectId;
-            } catch { throw; }
+            }
+            catch { throw; }
 
         }
 
@@ -189,7 +202,8 @@ namespace ProjectbeheerDL.Repository {
             SqlConnection conn = (SqlConnection)interfaceConn;
             SqlTransaction trans = (SqlTransaction)interfaceTrans;
 
-            try {
+            try
+            {
                 int databaseProjectId;
 
                 // check of Project al bestaat
@@ -213,7 +227,8 @@ namespace ProjectbeheerDL.Repository {
 
                 using (SqlCommand cmd1 = new SqlCommand(queryGroeneRuimte, conn, trans))
                 using (SqlCommand cmd2 = new SqlCommand(queryBeschikbareFaciliteit, conn, trans))
-                using (SqlCommand cmd3 = new SqlCommand(queryKoppeltabelGroenFac, conn, trans)) {
+                using (SqlCommand cmd3 = new SqlCommand(queryKoppeltabelGroenFac, conn, trans))
+                {
                     //cmd.Parameters.AddWithValue("@id", id);
                     // GroeneRuimte aanvullen
                     cmd1.Parameters.AddWithValue("@opp", g.Oppervlakte);
@@ -225,7 +240,8 @@ namespace ProjectbeheerDL.Repository {
                     groeneRuimteId = Convert.ToInt32(cmd1.ExecuteScalar()); // Zo vragen we de actuele id op
 
                     // BeschikbareFaciliteiten aanvullen
-                    foreach (BeschikbareFaciliteiten faciliteit in faciliteiten) {
+                    foreach (BeschikbareFaciliteiten faciliteit in faciliteiten)
+                    {
                         cmd2.Parameters.Clear();
                         cmd2.Parameters.AddWithValue("@type", faciliteit.Naam);
                         cmd2.Parameters.AddWithValue("@isGeverifieerd", faciliteit.IsGeverifieerd);
@@ -241,7 +257,8 @@ namespace ProjectbeheerDL.Repository {
                 }
 
                 return databaseProjectId;
-            } catch { throw; }
+            }
+            catch { throw; }
 
 
         }
@@ -250,7 +267,8 @@ namespace ProjectbeheerDL.Repository {
             SqlConnection conn = (SqlConnection)interfaceConn;
             SqlTransaction trans = (SqlTransaction)interfaceTrans;
 
-            try {
+            try
+            {
                 int databaseProjectId;
                 // check of Project al bestaat
                 bool projectBestaatInDataBank = ProjectInfoBestaat(p.Id, conn, trans);
@@ -274,7 +292,8 @@ namespace ProjectbeheerDL.Repository {
 
                 using (SqlCommand cmd1 = new SqlCommand(queryInnovatieWonen, conn, trans))
                 using (SqlCommand cmd2 = new SqlCommand(queryWoonvormType, conn, trans))
-                using (SqlCommand cmd3 = new SqlCommand(queryKoppeltabelInnoWoon, conn, trans)) {
+                using (SqlCommand cmd3 = new SqlCommand(queryKoppeltabelInnoWoon, conn, trans))
+                {
 
                     //cmd.Parameters.AddWithValue("@id", id);
                     // Innovatie Woning aanvullen
@@ -286,7 +305,8 @@ namespace ProjectbeheerDL.Repository {
                     cmd1.Parameters.AddWithValue("@projectId", databaseProjectId);
                     innovatieWonenId = Convert.ToInt32(cmd1.ExecuteScalar());
 
-                    foreach (WoonvormType woonvormType in woonvormTypes) {
+                    foreach (WoonvormType woonvormType in woonvormTypes)
+                    {
                         cmd2.Parameters.Clear();
                         cmd2.Parameters.AddWithValue("@naam", woonvormType.Naam);
                         cmd2.Parameters.AddWithValue("@isGeverifieerd", woonvormType.IsGeverifieerd);
@@ -299,9 +319,10 @@ namespace ProjectbeheerDL.Repository {
                         cmd3.ExecuteNonQuery();
                     }
                 }
-                
+
                 return databaseProjectId;
-            } catch { throw; }
+            }
+            catch { throw; }
 
 
         }
@@ -322,7 +343,7 @@ namespace ProjectbeheerDL.Repository {
 
 
 
-       
+
 
 
 
@@ -361,8 +382,8 @@ namespace ProjectbeheerDL.Repository {
                 }
             }
         }
-       
-    
+
+
 
         public InnovatieWonen GeefInnovatieWonenProject(int id)
         {
@@ -384,10 +405,10 @@ namespace ProjectbeheerDL.Repository {
 
         public List<string> GeefBeschikbareFaciliteiten()
         {
-            List<string> faciliteiten = new List<string>(); 
+            List<string> faciliteiten = new List<string>();
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = "SELECT type FROM BeschikbareFaciliteit"; 
+                string query = "SELECT type FROM BeschikbareFaciliteit";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();
 
@@ -395,7 +416,7 @@ namespace ProjectbeheerDL.Repository {
                 {
                     while (reader.Read())
                     {
-                        faciliteiten.Add(reader["type"].ToString()); 
+                        faciliteiten.Add(reader["type"].ToString());
                     }
                 }
             }
@@ -407,7 +428,7 @@ namespace ProjectbeheerDL.Repository {
             List<string> firmas = new List<string>();
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = "SELECT naam FROM Bouwfirma"; 
+                string query = "SELECT naam FROM Bouwfirma";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();
 
@@ -427,7 +448,7 @@ namespace ProjectbeheerDL.Repository {
             List<string> types = new List<string>();
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = "SELECT naam FROM WoonvormType ORDER BY naam ASC"; 
+                string query = "SELECT naam FROM WoonvormType ORDER BY naam ASC";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();
 
@@ -482,7 +503,7 @@ namespace ProjectbeheerDL.Repository {
                     ProjectStatus status = (ProjectStatus)Enum.Parse(typeof(ProjectStatus), r["status"].ToString());
                     Project projectResult = null;
 
-                   
+
                     if (r["verguningsStatus"] != DBNull.Value)
                     {
                         projectResult = new Stadsontwikkeling(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), status, loc, null,
@@ -500,13 +521,13 @@ namespace ProjectbeheerDL.Repository {
                         projectResult = new InnovatieWonen(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), status, loc, (int)r["aantalWooneenheden"], (bool)r["rondleiding"], (bool)r["showwoning"], (double)r["architectuurInnovatieScore"], (bool)r["samenwerkingErfgoedOfToerisme"]) { Id = id };
                     }
 
-                    
+
                     do
                     {
                         if (r["PartnerNaam"] != DBNull.Value)
-                        { 
-                            
-                            
+                        {
+
+
                             Partner p = new Partner(r["PartnerNaam"].ToString(), r["PartnerEmail"].ToString(), null);
                             string rol = r["rol"].ToString();
 
@@ -524,7 +545,7 @@ namespace ProjectbeheerDL.Repository {
                                 }
                             }
                         }
-                    } while (r.Read()); 
+                    } while (r.Read());
 
                     return projectResult;
                 }
@@ -532,32 +553,96 @@ namespace ProjectbeheerDL.Repository {
         }
 
 
-        
 
 
+
+        //public List<ProjectCombinatie> GeefAlleProjecten()
+        //{
+        //    List<ProjectCombinatie> resultaat = new List<ProjectCombinatie>();
+        //    using (SqlConnection conn = new SqlConnection(_connectionString))
+        //    {
+        //        string sql = "SELECT id FROM Project";
+        //        SqlCommand cmd = new SqlCommand(sql, conn);
+        //        conn.Open();
+        //        using (SqlDataReader r = cmd.ExecuteReader())
+        //        {
+        //            while (r.Read())
+        //            {
+        //                // We maken voor elk project een virtuele combinatie aan voor de UI
+        //                var project = GeefProject((int)r["id"]);
+        //                var combo = new ProjectCombinatie { Id = project.Id };
+        //                combo.ProjectComboLijst.Add(project);
+        //                resultaat.Add(combo);
+        //            }
+        //        }
+        //    }
+        //    return resultaat;
+        //}
         public List<ProjectCombinatie> GeefAlleProjecten()
         {
             List<ProjectCombinatie> resultaat = new List<ProjectCombinatie>();
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT id FROM Project";
+
+                string sql = @"SELECT p.*, l.*, 
+                              s.verguningsStatus, s.toegankelijkheid, s.bezienswaardigheid, s.info, s.archtitectueleWaarde,
+                              g.oppervlakte, g.biodiversiteit, g.aantalWandelpaden, g.inToeristischeWandelroute, g.beoordeling,
+                              i.aantalWooneenheden, i.rondleiding, i.showwoning, i.architectuurInnovatieScore, i.samenwerkingErfgoedOfToerisme,
+                              pr.naam AS PartnerNaam, pr.email AS PartnerEmail, pp.rol
+                       FROM Project p 
+                       JOIN Locatie l ON p.locatieId = l.id
+                       LEFT JOIN StadsOntwikkeling s ON p.id = s.projectId
+                       LEFT JOIN GroeneRuimte g ON p.id = g.projectId
+                       LEFT JOIN InnovatieWonen i ON p.id = i.projectId
+                       LEFT JOIN ProjectPartner pp ON p.id = pp.projectId
+                       LEFT JOIN Partner pr ON pp.partnerId = pr.id";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 conn.Open();
+
                 using (SqlDataReader r = cmd.ExecuteReader())
                 {
                     while (r.Read())
                     {
-                        // We maken voor elk project een virtuele combinatie aan voor de UI
-                        var project = GeefProject((int)r["id"]);
-                        var combo = new ProjectCombinatie { Id = project.Id };
-                        combo.ProjectComboLijst.Add(project);
-                        resultaat.Add(combo);
+                        if (!r.Read()) return null;
+
+                        Locatie loc = new Locatie(
+                            (int)r["locatieId"],
+                            r["wijk"].ToString(),
+                            r["straat"].ToString(),
+                            r["gemeente"].ToString(),
+                            (int)r["postcode"],
+                            r["huisnummer"].ToString()
+                        );
+
+                        ProjectStatus status = (ProjectStatus)Enum.Parse(typeof(ProjectStatus), r["status"].ToString());
+                        if (r["verguningsStatus"] != DBNull.Value)
+                        {
+                            Stadsontwikkeling projectResult = new Stadsontwikkeling(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), status, loc, null,
+                                (VergunningStatus)Enum.Parse(typeof(VergunningStatus), r["verguningsStatus"].ToString()),
+                                (Toegankelijkheid)Enum.Parse(typeof(Toegankelijkheid), r["toegankelijkheid"].ToString()),
+                                (bool)r["bezienswaardigheid"], (bool)r["info"], (bool)r["archtitectueleWaarde"]);
+                            ProjectCombinatie stad = new ProjectCombinatie(projectResult);
+                            resultaat.Add(stad);
+                        }
+                        if (r["oppervlakte"] != DBNull.Value)
+                        {
+                            GroeneRuimte projectResult = new GroeneRuimte(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), status, loc, (double)r["oppervlakte"], (double)r["biodiversiteit"], (int)r["aantalWandelpaden"], null, (bool)r["inToeristischeWandelroute"], (double)r["beoordeling"]);
+                            ProjectCombinatie groen = new ProjectCombinatie(projectResult);
+                            resultaat.Add(groen);
+                        }
+                        if (r["aantalWooneenheden"] != DBNull.Value)
+                        {
+                            InnovatieWonen projectResult = new InnovatieWonen(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), status, loc, (int)r["aantalWooneenheden"], (bool)r["rondleiding"], (bool)r["showwoning"], (double)r["architectuurInnovatieScore"], (bool)r["samenwerkingErfgoedOfToerisme"]);
+                            ProjectCombinatie innovatie = new ProjectCombinatie(projectResult);
+                            resultaat.Add(innovatie);
+                        }
                     }
                 }
             }
             return resultaat;
         }
-
 
 
         public List<Project> GeefProjectenMetFilters(string? type, string? wijk, ProjectStatus? status, DateTime? start, DateTime? eind, string? partner)
@@ -581,7 +666,7 @@ namespace ProjectbeheerDL.Repository {
 
                 SqlCommand cmd = new SqlCommand { Connection = conn };
 
-    
+
                 if (!string.IsNullOrEmpty(type))
                 {
                     if (type.ToLower().Contains("stads")) sql += " AND s.projectId IS NOT NULL";
@@ -598,10 +683,10 @@ namespace ProjectbeheerDL.Repository {
                 {
                     while (r.Read())
                     {
-       
+
                         int id = (int)r["id"];
 
-                       
+
                         if (!gefilterdeLijst.Any(p => p.Id == id))
                         {
                             Locatie loc = new Locatie(
@@ -611,19 +696,19 @@ namespace ProjectbeheerDL.Repository {
                                 r["gemeente"].ToString(),
                                 (int)r["postcode"],
                                 r["huisnummer"].ToString()
-                            ); 
+                            );
 
-                    Project p = null;
+                            Project p = null;
                             ProjectStatus pStatus = (ProjectStatus)Enum.Parse(typeof(ProjectStatus), r["status"].ToString());
 
-                    if (r["verguningsStatus"] != DBNull.Value)
+                            if (r["verguningsStatus"] != DBNull.Value)
                                 p = new Stadsontwikkeling(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), pStatus, loc, null, (VergunningStatus)Enum.Parse(typeof(VergunningStatus), r["verguningsStatus"].ToString()), (Toegankelijkheid)Enum.Parse(typeof(Toegankelijkheid), r["toegankelijkheid"].ToString()), (bool)r["bezienswaardigheid"], (bool)r["info"], (bool)r["archtitectueleWaarde"]) { Id = id };
                             else if (r["oppervlakte"] != DBNull.Value)
                                 p = new GroeneRuimte(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), pStatus, loc, (double)r["oppervlakte"], (double)r["biodiversiteit"], (int)r["aantalWandelpaden"], null, (bool)r["inToeristischeWandelroute"], (double)r["beoordeling"]) { Id = id };
                             else
-                                p = new InnovatieWonen(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), pStatus, loc, (int)r["aantalWooneenheden"], (bool)r["rondleiding"], (bool)r["showwoning"], (double)r["architectuurInnovatieScore"], (bool)r["samenwerkingErfgoedOfToerisme"]) { Id = id }; 
+                                p = new InnovatieWonen(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), pStatus, loc, (int)r["aantalWooneenheden"], (bool)r["rondleiding"], (bool)r["showwoning"], (double)r["architectuurInnovatieScore"], (bool)r["samenwerkingErfgoedOfToerisme"]) { Id = id };
 
-                    gefilterdeLijst.Add(p);
+                            gefilterdeLijst.Add(p);
                         }
                     }
                 }
@@ -631,7 +716,7 @@ namespace ProjectbeheerDL.Repository {
             return gefilterdeLijst;
         }
 
-        
+
     }
 
 }

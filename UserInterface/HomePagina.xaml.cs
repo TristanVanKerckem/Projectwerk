@@ -1,5 +1,7 @@
 ﻿using ProjectbeheerBL.Domein;
 using ProjectbeheerBL.Domein.Enums;
+using ProjectbeheerBL.Interfaces;
+using ProjectbeheerDL.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,7 +24,18 @@ namespace ProjectbeheerUserInterface
     {
         public HomePagina()
         {
+            
             InitializeComponent();
+            string connectionString = "Data Source=localhost\\SQLEXPRESS;Initial Catalog=Projectbeheer;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+            ProjectRepo repo = new ProjectRepo(connectionString);
+            List<ProjectCombinatie> projectenGekregen = repo.GeefAlleProjecten();
+            //List<ProjectCombinatie> projecten = new List<ProjectCombinatie>();
+            //foreach (ProjectCombinatie project in projectenGekregen)
+            //{
+            //    int id = project.Id;
+            //    ProjectCombinatie projectDeze = new ProjectCombinatie(repo.GeefProject(id));
+            //    projecten.Add(projectDeze);
+            //}
             BeschikbareFaciliteiten faciliteit1 = new BeschikbareFaciliteiten(1, "Faciliteit1", true);
             BeschikbareFaciliteiten faciliteit2 = new BeschikbareFaciliteiten(1, "Faciliteit2", true);
             BeschikbareFaciliteiten faciliteit3 = new BeschikbareFaciliteiten(1, "Faciliteit3", true);
@@ -54,9 +67,9 @@ namespace ProjectbeheerUserInterface
             ProjectCombinatie groeneRuimte1 = new ProjectCombinatie(groeneRuimteProject);
             ProjectCombinatie stads = new ProjectCombinatie(stadsontwikkeling);
             
+            List<ProjectCombinatie> test = new List<ProjectCombinatie> { };
 
-            List<ProjectCombinatie> projecten = new List<ProjectCombinatie> { groeneRuimte, innovatie, stads , projectCombinatie, groeneRuimte1 };
-            DataGrid.ItemsSource = projecten;
+            DataGrid.ItemsSource = projectenGekregen;
         }
         public void Meer_Info_Click(object sender, EventArgs e)
         {

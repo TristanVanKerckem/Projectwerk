@@ -23,6 +23,10 @@ namespace ProjectbeheerBL.Domein
             }
             return $"Fiche bevat {projectComboLijst.Count} projecten voor gebruiker {Gebruiker?.Naam}.";
         }
+        public ProjectCombinatie(int id)
+        {
+            Id = id ;
+        }
         public void VoegProjectToe(Project project)
         {
             ProjectComboLijst.Add(project);
