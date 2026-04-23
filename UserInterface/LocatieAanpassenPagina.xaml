@@ -48,8 +48,8 @@
         <Button Content="Pas Aan" Click="Pas_Aan_Click" Grid.Row="8" Grid.Column="1" Width="200" HorizontalAlignment="Left" Tag="Postcode"/>
 
         <TextBlock Text="Huisnummer:" Grid.Row="9" Grid.Column="0"/>
-        <TextBlock x:Name="HuisnummerView" Text="{Binding HuisNummer}" Grid.Row="9" Grid.Column="1"/>
-        <TextBox x:Name="HuisnummerEditBox" Visibility="Collapsed" Grid.Row="9" Grid.Column="1" Width="200" HorizontalAlignment="Left"/>
+        <TextBlock x:Name="HuisNummerView" Text="{Binding HuisNummer}" Grid.Row="9" Grid.Column="1"/>
+        <TextBox x:Name="HuisNummerEditBox" Visibility="Collapsed" Grid.Row="9" Grid.Column="1" Width="200" HorizontalAlignment="Left"/>
         <Button Content="Pas Aan" Click="Pas_Aan_Click" Grid.Row="10" Grid.Column="1" Width="200" HorizontalAlignment="Left" Tag="HuisNummer"/>
         
         <Button Content="Annuleer" HorizontalAlignment="Left" Height="46" Margin="58,71,0,0" Grid.Row="12" VerticalAlignment="Top" Width="90" Click="Annuleer_Click"/>

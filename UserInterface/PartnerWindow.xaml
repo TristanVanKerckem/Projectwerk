@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectbeheerUserInterface"
         mc:Ignorable="d"
-        Height="420" Width="300"
+        Height="450" Width="300"
         WindowStartupLocation="CenterOwner"
         Title="PartnerWindow">
     <StackPanel Margin="10">

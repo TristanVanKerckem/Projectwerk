@@ -67,13 +67,18 @@ namespace ProjectbeheerUserInterface
             {
                 Gemeente = GemeenteEditBox.Text;
             }
-            if (int.TryParse(PostcodeEditBox.Text,out Postcode))
+            if (int.TryParse(PostcodeEditBox.Text,out int postcode))
             {
-
+                Postcode = postcode;
             }
-            if (HuisnummerEditBox.Text != null)
+            else
             {
-                Huisnummer = HuisnummerEditBox.Text;
+                MessageBox.Show("Postcode moet een getal zijn");
+                return;
+            }
+            if (HuisNummerEditBox.Text != null)
+            {
+                Huisnummer = HuisNummerEditBox.Text;
             }
             this.DialogResult = true;
         }

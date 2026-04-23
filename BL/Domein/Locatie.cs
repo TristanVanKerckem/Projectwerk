@@ -33,6 +33,14 @@ namespace ProjectbeheerBL.Domein
             Postcode = postcode;
             HuisNummer = huisNummer;
         }
+        public Locatie(string wijk, string straat, string gemeente, int postcode, string huisNummer)
+        {
+            Wijk = wijk;
+            Straat = straat;
+            Gemeente = gemeente;
+            Postcode = postcode;
+            HuisNummer = huisNummer;
+        }
 
         public override string ToString()
         {

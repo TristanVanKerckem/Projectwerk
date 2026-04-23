@@ -67,5 +67,9 @@ namespace ProjectbeheerUserInterface
                 NavigationService.Navigate(new ProjectDetail(project));
             }
         }
+        public void Project_Aanmaken_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new AanmakenProjectPagina());
+        }
     }
 }
