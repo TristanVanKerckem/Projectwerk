@@ -26,9 +26,9 @@ namespace ProjectbeheerUserInterface
         {
             
             InitializeComponent();
-            string connectionString = "Data Source=localhost\\SQLEXPRESS;Initial Catalog=\"Projectbeheer\";Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+            string connectionString = "Data Source=localhost\\SQLEXPRESS;Initial Catalog=Projectbeheer;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
             ProjectRepo repo = new ProjectRepo(connectionString);
-            Project projectenGekregen = repo.GeefProject(2);
+            List<ProjectCombinatie> projectenGekregen = repo.GeefAlleProjecten();
             //List<ProjectCombinatie> projecten = new List<ProjectCombinatie>();
             //foreach (ProjectCombinatie project in projectenGekregen)
             //{
@@ -66,11 +66,10 @@ namespace ProjectbeheerUserInterface
             ProjectCombinatie groeneRuimte = new ProjectCombinatie(groeneRuimteProject);
             ProjectCombinatie groeneRuimte1 = new ProjectCombinatie(groeneRuimteProject);
             ProjectCombinatie stads = new ProjectCombinatie(stadsontwikkeling);
-            ProjectCombinatie test = new ProjectCombinatie(projectenGekregen);
             
+            List<ProjectCombinatie> test = new List<ProjectCombinatie> { };
 
-            List<ProjectCombinatie> projecten = new List<ProjectCombinatie> { test, test };
-            DataGrid.ItemsSource = projecten;
+            DataGrid.ItemsSource = projectenGekregen;
         }
         public void Meer_Info_Click(object sender, EventArgs e)
         {
