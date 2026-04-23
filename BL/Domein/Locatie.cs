@@ -13,16 +13,8 @@ namespace ProjectbeheerBL.Domein
         public int Postcode { get; set; }
         public string HuisNummer { get; set; }
 
-        //public Locatie(string wijk, string straat, string gemeente, int postcode, string huisNummer)
-        //{
-        //    Wijk = wijk;
-        //    Straat = straat;
-        //    Gemeente = gemeente;
-        //    Postcode = postcode;
-        //    HuisNummer = huisNummer;
-        //}
-
-        public Locatie() { } // Lege constructor voor de database
+       
+        public Locatie() { } 
 
         public Locatie(int id, string wijk, string straat, string gemeente, int postcode, string huisNummer)
         {

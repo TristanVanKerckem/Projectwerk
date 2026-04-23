@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using ProjectbeheerBL.Domein;
-using ProjectbeheerBL.Domein.Enums; // Zorg dat de namespace voor enums klopt
+using ProjectbeheerBL.Domein.Enums; 
 using ProjectbeheerBL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,9 +17,6 @@ namespace ProjectbeheerDL.Repository
             _connectionString = connectionString;
         }
 
-        // ===========================================================================
-        // 1. TOEVOEGEN METHODES (TPT-Structuur met Transacties)
-        // ===========================================================================
 
         public void VoegProjectToe(Project project)
         {
@@ -375,62 +372,7 @@ namespace ProjectbeheerDL.Repository
         }
 
 
-        //public Project GeefProject(int id)
-        //{
-        //    using (SqlConnection conn = new SqlConnection(_connectionString))
-        //    {
-
-        //        string sql = @"SELECT p.*, l.*, 
-        //                              s.verguningsStatus, s.toegankelijkheid, s.bezienswaardigheid, s.info, s.archtitectueleWaarde,
-        //                              g.oppervlakte, g.biodiversiteit, g.aantalWandelpaden, g.inToeristischeWandelroute, g.beoordeling,
-        //                              i.aantalWooneenheden, i.rondleiding, i.showwoning, i.architectuurInnovatieScore, i.samenwerkingErfgoedOfToerisme
-        //                       FROM Project p 
-        //                       JOIN Locatie l ON p.locatieId = l.id
-        //                       LEFT JOIN StadsOntwikkeling s ON p.id = s.projectId
-        //                       LEFT JOIN GroeneRuimte g ON p.id = g.projectId
-        //                       LEFT JOIN InnovatieWonen i ON p.id = i.projectId
-        //                       WHERE p.id = @id";
-
-        //        SqlCommand cmd = new SqlCommand(sql, conn);
-        //        cmd.Parameters.AddWithValue("@id", id);
-        //        conn.Open();
-
-        //        using (SqlDataReader r = cmd.ExecuteReader())
-        //        {
-        //            if (!r.Read()) return null;
-
-        //            Locatie loc = new Locatie(
-        //                (int)r["locatieId"],
-        //                r["wijk"].ToString(),
-        //                r["straat"].ToString(),
-        //                r["gemeente"].ToString(),
-        //                (int)r["postcode"],
-        //                r["huisnummer"].ToString()
-        //            );
-
-
-        //            ProjectStatus status = (ProjectStatus)Enum.Parse(typeof(ProjectStatus), r["status"].ToString());
-
-
-        //            if (r["verguningsStatus"] != DBNull.Value)
-        //            {
-        //                return new Stadsontwikkeling(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), status, loc, null,
-        //                    (VergunningStatus)Enum.Parse(typeof(VergunningStatus), r["verguningsStatus"].ToString()),
-        //                    (Toegankelijkheid)Enum.Parse(typeof(Toegankelijkheid), r["toegankelijkheid"].ToString()),
-        //                    (bool)r["bezienswaardigheid"], (bool)r["info"], (bool)r["archtitectueleWaarde"])
-        //                { Id = id };
-        //            }
-        //            else if (r["oppervlakte"] != DBNull.Value)
-        //            {
-        //                return new GroeneRuimte(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), status, loc, (double)r["oppervlakte"], (double)r["biodiversiteit"], (int)r["aantalWandelpaden"], null, (bool)r["inToeristischeWandelroute"], (double)r["beoordeling"]) { Id = id };
-        //            }
-        //            else
-        //            {
-        //                return new InnovatieWonen(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), status, loc, (int)r["aantalWooneenheden"], (bool)r["rondleiding"], (bool)r["showwoning"], (double)r["architectuurInnovatieScore"], (bool)r["samenwerkingErfgoedOfToerisme"]) { Id = id };
-        //            }
-        //        }
-        //    }
-        //}
+        
 
 
         public List<ProjectCombinatie> GeefAlleProjecten()
@@ -457,68 +399,81 @@ namespace ProjectbeheerDL.Repository
         }
 
 
-       
 
-        
         public List<Project> GeefProjectenMetFilters(string? type, string? wijk, ProjectStatus? status, DateTime? start, DateTime? eind, string? partner)
         {
             List<Project> gefilterdeLijst = new List<Project>();
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = @"SELECT DISTINCT p.id FROM Project p 
-                               LEFT JOIN Locatie l ON p.locatieId = l.id
-                               LEFT JOIN ProjectPartner pp ON p.id = pp.projectId
-                               LEFT JOIN Partner pr ON pp.partnerId = pr.id
-                               LEFT JOIN StadsOntwikkeling s ON p.id = s.projectId
-                               LEFT JOIN GroeneRuimte g ON p.id = g.projectId
-                               LEFT JOIN InnovatieWonen i ON p.id = i.projectId WHERE 1=1";
+
+                string sql = @"SELECT p.*, l.*, 
+                              s.verguningsStatus, s.toegankelijkheid, s.bezienswaardigheid, s.info, s.archtitectueleWaarde,
+                              g.oppervlakte, g.biodiversiteit, g.aantalWandelpaden, g.inToeristischeWandelroute, g.beoordeling,
+                              i.aantalWooneenheden, i.rondleiding, i.showwoning, i.architectuurInnovatieScore, i.samenwerkingErfgoedOfToerisme
+                       FROM Project p 
+                       JOIN Locatie l ON p.locatieId = l.id
+                       LEFT JOIN StadsOntwikkeling s ON p.id = s.projectId
+                       LEFT JOIN GroeneRuimte g ON p.id = g.projectId
+                       LEFT JOIN InnovatieWonen i ON p.id = i.projectId 
+                       LEFT JOIN ProjectPartner pp ON p.id = pp.projectId
+                       LEFT JOIN Partner pr ON pp.partnerId = pr.id
+                       WHERE 1=1";
 
                 SqlCommand cmd = new SqlCommand { Connection = conn };
 
+    
                 if (!string.IsNullOrEmpty(type))
                 {
-                    if (type.ToLower().Contains("stads")) sql += " AND s.id IS NOT NULL";
-                    else if (type.ToLower().Contains("groen")) sql += " AND g.id IS NOT NULL";
-                    else if (type.ToLower().Contains("woon")) sql += " AND i.id IS NOT NULL";
+                    if (type.ToLower().Contains("stads")) sql += " AND s.projectId IS NOT NULL";
+                    else if (type.ToLower().Contains("groen")) sql += " AND g.projectId IS NOT NULL";
+                    else if (type.ToLower().Contains("woon")) sql += " AND i.projectId IS NOT NULL";
                 }
-                if (!string.IsNullOrEmpty(wijk)) { sql += " AND l.wijk LIKE @wijk"; cmd.Parameters.AddWithValue("@wijk", "%" + wijk + "%"); }
+                if (!string.IsNullOrEmpty(wijk)) { sql += " AND (l.gemeente LIKE @loc OR l.wijk LIKE @loc)"; cmd.Parameters.AddWithValue("@loc", "%" + wijk + "%"); }
                 if (status.HasValue) { sql += " AND p.status = @status"; cmd.Parameters.AddWithValue("@status", status.Value.ToString()); }
-                if (start.HasValue) { sql += " AND p.startDatum >= @start"; cmd.Parameters.AddWithValue("@start", start.Value); }
-                if (eind.HasValue) { sql += " AND p.startDatum <= @eind"; cmd.Parameters.AddWithValue("@eind", eind.Value); }
-                if (!string.IsNullOrEmpty(partner)) { sql += " AND pr.naam LIKE @p"; cmd.Parameters.AddWithValue("@p", "%" + partner + "%"); }
 
                 cmd.CommandText = sql;
                 conn.Open();
+
                 using (SqlDataReader r = cmd.ExecuteReader())
                 {
-                    List<int> ids = new List<int>();
-                    while (r.Read()) ids.Add((int)r["id"]);
-                    r.Close();
-                    foreach (int id in ids) gefilterdeLijst.Add(GeefProject(id));
+                    while (r.Read())
+                    {
+       
+                        int id = (int)r["id"];
+
+                       
+                        if (!gefilterdeLijst.Any(p => p.Id == id))
+                        {
+                            Locatie loc = new Locatie(
+                                (int)r["locatieId"],
+                                r["wijk"].ToString(),
+                                r["straat"].ToString(),
+                                r["gemeente"].ToString(),
+                                (int)r["postcode"],
+                                r["huisnummer"].ToString()
+                            ); 
+
+                    Project p = null;
+                            ProjectStatus pStatus = (ProjectStatus)Enum.Parse(typeof(ProjectStatus), r["status"].ToString());
+
+                    if (r["verguningsStatus"] != DBNull.Value)
+                                p = new Stadsontwikkeling(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), pStatus, loc, null, (VergunningStatus)Enum.Parse(typeof(VergunningStatus), r["verguningsStatus"].ToString()), (Toegankelijkheid)Enum.Parse(typeof(Toegankelijkheid), r["toegankelijkheid"].ToString()), (bool)r["bezienswaardigheid"], (bool)r["info"], (bool)r["archtitectueleWaarde"]) { Id = id };
+                            else if (r["oppervlakte"] != DBNull.Value)
+                                p = new GroeneRuimte(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), pStatus, loc, (double)r["oppervlakte"], (double)r["biodiversiteit"], (int)r["aantalWandelpaden"], null, (bool)r["inToeristischeWandelroute"], (double)r["beoordeling"]) { Id = id };
+                            else
+                                p = new InnovatieWonen(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), pStatus, loc, (int)r["aantalWooneenheden"], (bool)r["rondleiding"], (bool)r["showwoning"], (double)r["architectuurInnovatieScore"], (bool)r["samenwerkingErfgoedOfToerisme"]) { Id = id }; 
+
+                    gefilterdeLijst.Add(p);
+                        }
+                    }
                 }
             }
             return gefilterdeLijst;
         }
+
+        
     }
 
-
-    
-
-
-
-
-
-
-    //public List<ProjectCombinatie> GeefProjectenMetFilters(ProjectStatus? status, string? wijk, Project? project, DateTime? voorsteDatum, DateTime? laatsteDatum, string? partnerNaam) {
-    //    if (status != null) {
-
-    //    }
-
-    //    string query = "SELECT * FROM Project, ";
-
-    //    List<ProjectCombinatie> projectjes = new List<ProjectCombinatie>();
-    //    return projectjes;
-    //}
 }
 
 
