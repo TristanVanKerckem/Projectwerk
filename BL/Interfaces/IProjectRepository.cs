@@ -31,6 +31,10 @@ namespace ProjectbeheerBL.Interfaces {
        
         List<string> GeefWoonvormTypes();
 
+        bool BestaatBouwfirma(string naam, IDbConnection conn, IDbTransaction trans);
+
+        int? HaalBouwfirmaIdOp(string naam, IDbConnection con, IDbTransaction transaction);
+
     }
    
 }

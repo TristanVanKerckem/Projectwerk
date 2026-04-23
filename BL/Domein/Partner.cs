@@ -6,6 +6,7 @@ namespace ProjectbeheerBL.Domein
 {
     public class Partner
     {
+        public int Id { get; init; }
         public string Naam { get; set; }
         public string Email { get; set; }
         public Locatie Vestiging { get; set; }

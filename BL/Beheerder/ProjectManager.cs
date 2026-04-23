@@ -27,7 +27,7 @@ namespace ProjectbeheerBL.Beheerder
 
         /// </summary>
         // verder aanvullen voor controle op connectiestring & transactie
-        public void VoegProjectToe(Project project, IDbConnection conn, IDbTransaction trans)
+        public void VoegProjectToe(Project project, Partner? partner, Locatie? locPartner, List<string> rollen, IDbConnection conn, IDbTransaction trans)
         {
             if (project == null)
             {
@@ -45,7 +45,7 @@ namespace ProjectbeheerBL.Beheerder
                     }
                 }
             }
-            _repo.VoegProjectToe(project, conn, trans);
+            _repo.VoegProjectToe(project, partner, locPartner, rollen, conn, trans);
         }
 
 
