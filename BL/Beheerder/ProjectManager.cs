@@ -3,6 +3,7 @@ using ProjectbeheerBL.Exeptions;
 using ProjectbeheerBL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -21,7 +22,8 @@ namespace ProjectbeheerBL.Beheerder
             _csvSchrijver = csvSchrijver;
         }
 
-        public void VoegProjectToe(Project project)
+        // verder aanvullen voor controle op connectiestring & transactie
+        public void VoegProjectToe(Project project, IDbConnection conn, IDbTransaction trans)
         {
             if (project == null)
             {
@@ -38,52 +40,52 @@ namespace ProjectbeheerBL.Beheerder
                     }
                 }
             }
-            _repo.VoegProjectToe(project);
+            _repo.VoegProjectToe(project, conn, trans);
         }
 
-        public void ExporteerProjectenNaarCSV(string pad)
-        {
-            try
-            {
-                List<ProjectCombinatie> projecten = _repo.GeefAlleProjecten();
-                if (projecten == null || projecten.Count == 0)
-                {
-                    throw new ProjectException("Er zijn geen projecten om te exporteren.");
-                }
-                _csvSchrijver.MaakCSV(projecten, pad);
-            }
-            catch (Exception ex)
-            {
-                throw new ProjectException("Fout bij het exporteren van projecten naar CSV: " + ex.Message);
-            }
-        }
+        //public void ExporteerProjectenNaarCSV(string pad)
+        //{
+        //    try
+        //    {
+        //        List<ProjectCombinatie> projecten = _repo.GeefAlleProjecten();
+        //        if (projecten == null || projecten.Count == 0)
+        //        {
+        //            throw new ProjectException("Er zijn geen projecten om te exporteren.");
+        //        }
+        //        _csvSchrijver.MaakCSV(projecten, pad);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new ProjectException("Fout bij het exporteren van projecten naar CSV: " + ex.Message);
+        //    }
+        //}
 
 
 
-        public void MaakProjectFiche(int id, string pad)
-        {
-            // Ophalen van projectcombinaties volgens de interface
-            var projecten = _repo.GeefAlleProjecten();
+        //public void MaakProjectFiche(int id, string pad)
+        //{
+        //    // Ophalen van projectcombinaties volgens de interface
+        //    var projecten = _repo.GeefAlleProjecten();
 
-            if (projecten == null || !projecten.Any(p => p.Id == id))
-            {
-                throw new ProjectException("Project niet gevonden.");
-            }
+        //    if (projecten == null || !projecten.Any(p => p.Id == id))
+        //    {
+        //        throw new ProjectException("Project niet gevonden.");
+        //    }
 
-            try
-            {
-                // De interface IPDFschrijver verwacht een List<ProjectCombinatie>
-                // We geven de volledige lijst mee (of een gefilterde lijst)
-                byte[] pdfData = _pdfSchrijver.MaakPDF(projecten);
+        //    try
+        //    {
+        //        // De interface IPDFschrijver verwacht een List<ProjectCombinatie>
+        //        // We geven de volledige lijst mee (of een gefilterde lijst)
+        //        byte[] pdfData = _pdfSchrijver.MaakPDF(projecten);
 
-                // Schrijf de byte array naar een bestand op het opgegeven pad
-                System.IO.File.WriteAllBytes(pad, pdfData);
-            }
-            catch (Exception ex)
-            {
-                throw new ProjectException("Fout bij het maken van de projectfiche: " + ex.Message);
-            }
-        }
+        //        // Schrijf de byte array naar een bestand op het opgegeven pad
+        //        System.IO.File.WriteAllBytes(pad, pdfData);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new ProjectException("Fout bij het maken van de projectfiche: " + ex.Message);
+        //    }
+        //}
 
 
         //public void MaakProjectFiche(int id, string pad)

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using ProjectbeheerBL.Domein;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Text;
-using ProjectbeheerBL.Domein;
 
 
 namespace ProjectbeheerBL.Interfaces {
@@ -12,7 +14,7 @@ namespace ProjectbeheerBL.Interfaces {
         //void VoegProjectToe(Project project);
         //Voeg hier methodes toe voor specifieke filters indien nodig
 
-        void VoegProjectToe(Project project);
+        int VoegProjectToe(Project project, IDbConnection conn, IDbTransaction trans);
 
         Project GeefProject(int id); // moet nog ProjectCombinatie worden?
 

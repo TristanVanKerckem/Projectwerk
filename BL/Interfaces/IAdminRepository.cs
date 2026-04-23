@@ -6,7 +6,7 @@ using System.Text;
 namespace ProjectbeheerBL.Interfaces {
     public interface IAdminRepository {
         void VoegGebruikerToe(Gebruiker g);
-        void VerwijderProject(Project project);
+        void VerwijderProject(int projectId);
         void UpdateInformatieProject(Project project, ProjectCombinatie projecten);
         void VerwijderPartnerVanProject(Project project);
     }
