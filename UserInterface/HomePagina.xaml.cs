@@ -26,7 +26,7 @@ namespace ProjectbeheerUserInterface
         {
             
             InitializeComponent();
-            string connectionString = @"Data Source=localhost\SQLEXPRESS;Initial Catalog=Projectbeheer;Integrated Security=True;Trust Server Certificate=True";
+            string connectionString = @"Data Source=Laptop_Tristan\SQLEXPRESS;Initial Catalog=Projectbeheer;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
             ProjectRepo repo = new ProjectRepo(connectionString);
             List<ProjectCombinatie> projectenGekregen = repo.GeefAlleProjecten();
             //List<ProjectCombinatie> projecten = new List<ProjectCombinatie>();

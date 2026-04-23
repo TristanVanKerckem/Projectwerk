@@ -2,6 +2,7 @@
   <Project Path="BL/ProjectbeheerBL.csproj" />
   <Project Path="ConsoleApp1/ConsoleApp1.csproj" Id="6a4cf110-00b4-453a-9411-4fc513cf89a3" />
   <Project Path="ConsoleApp2/ConsoleApp2.csproj" Id="8987cdde-2b67-4087-8861-ca35eb565e77" />
+  <Project Path="ConsoleApp3/ConsoleApp3.csproj" Id="cd0b50eb-a6b5-457a-ad4e-6544a977f733" />
   <Project Path="DL/ProjectbeheerDL.csproj" />
   <Project Path="ProjectbeheerUtil/ProjectbeheerUtil.csproj" Id="3babca6d-487c-4ee5-8685-f6b7c32b6735" />
   <Project Path="UserInterface/ProjectbeheerUserInterface.csproj" />

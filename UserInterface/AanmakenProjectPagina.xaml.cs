@@ -1,5 +1,7 @@
-﻿using ProjectbeheerBL.Domein;
+﻿using Microsoft.Data.SqlClient;
+using ProjectbeheerBL.Domein;
 using ProjectbeheerBL.Domein.Enums;
+using ProjectbeheerDL.Repository;
 using System;
 using System.Collections.Generic;
 using System.Collections.Generic;
@@ -72,6 +74,8 @@ namespace ProjectbeheerUserInterface
 
 
             Locatie locatieProject = new Locatie(wijk, straat, gemeente, postcode, huisnummer);
+            string connectionString = @"Data Source=Laptop_Tristan\SQLEXPRESS;Initial Catalog=Projectbeheer;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+            ProjectRepo repo = new ProjectRepo(connectionString);            
             if (GroeneRuimteRB.IsChecked == true)
             {
                 if (
@@ -111,6 +115,24 @@ namespace ProjectbeheerUserInterface
                 List<BeschikbareFaciliteiten> faciliteiten = new List<BeschikbareFaciliteiten> { BeschikbareFaciliteiten };
                 GroeneRuimte groeneruimte = new GroeneRuimte(titel, startDatum, beschrijving, status, locatieProject, oppervlakte, biodiversiteit, wandelpaden, faciliteiten, toeristischeRoute, beoordeling);
                 Projecten.VoegProjectToe(groeneruimte);
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        int id = repo.VoegProjectToe(
+                            groeneruimte,
+                            Partner,
+                            locatieProject,
+                            Rollen,
+                            conn,
+                            trans
+                        );
+
+                        trans.Commit();
+                    }
+                }
             }
             if (InnovatieRB.IsChecked == true)
             {
@@ -136,6 +158,24 @@ namespace ProjectbeheerUserInterface
                 bool samenwerking = (bool)SamenwerkingCheck.IsChecked;
                 InnovatieWonen innovatieWonen = new InnovatieWonen(titel, startDatum, beschrijving, status, locatieProject, aantalWooneenheden, rondleiding, showcase, architectuurScore,samenwerking);
                 Projecten.VoegProjectToe(innovatieWonen);
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        int id = repo.VoegProjectToe(
+                            innovatieWonen,
+                            Partner,
+                            locatieProject,
+                            Rollen,
+                            conn,
+                            trans
+                        );
+
+                        trans.Commit();
+                    }
+                }
             }
             if (StadRB.IsChecked == true)
             {
@@ -147,6 +187,23 @@ namespace ProjectbeheerUserInterface
                 List<Bouwfirma> bouwfirmas = new List<Bouwfirma> { Bouwfirma};
                 Stadsontwikkeling stadsontwikkeling = new Stadsontwikkeling(titel, startDatum, beschrijving, status, locatieProject, bouwfirmas, vergunningstatus, toegankelijkheid, bezienswaardig, info, architectureel);
                 Projecten.VoegProjectToe(stadsontwikkeling);
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        int id = repo.VoegProjectToe(
+                            stadsontwikkeling,
+                            Partner,
+                            locatieProject,
+                            Rollen,
+                            conn,
+                            trans
+                        );
+
+                        trans.Commit();
+                    }
+                }
             }
             NavigationService.Navigate(new ProjectDetail(Projecten));
         }
