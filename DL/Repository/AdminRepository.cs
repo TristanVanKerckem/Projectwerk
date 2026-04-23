@@ -103,15 +103,17 @@ namespace ProjectbeheerDL.Repository {
                     cmd1.Parameters.AddWithValue("@id", project.Id);
 
                     // Update ProjectPartners
+                    cmd2.Parameters.AddWithValue("@projectId", project.Id);
                     foreach (KeyValuePair<Partner, List<string>> partner in project.ProjectPartners) {
                         foreach (string rol in partner.Value) {
-                            cmd2.Parameters.AddWithValue("@rol", project.ProjectPartners);
-                            cmd2.Parameters.AddWithValue("@projectId", project.Id);
-                        }
+                            cmd2.Parameters.Clear();
 
+                            cmd2.Parameters.AddWithValue("@rol", partner.Value);
+                        }
                     }
-                    cmd2.Parameters.AddWithValue("@rol", project.ProjectPartners);
-                    cmd2.Parameters.AddWithValue("@projectId", project.Id);
+
+                    
+                    
                     //Update KindProjecten
                     foreach (Project kind in projecten.ProjectComboLijst) {
                         if (kind is InnovatieWonen) {
@@ -239,7 +241,8 @@ namespace ProjectbeheerDL.Repository {
             }
         }
 
-        public void gebruikerVoegtProjectToe(List<Project> projecten, Gebruiker g) {
+        // had properder gekund zonder Partner, Locatie & rollen toe te voegen. Maar focus ligt op werkende code voor nu
+        public void gebruikerVoegtProjectToe(List<Project> projecten, Gebruiker g, Partner partner, Locatie? locPartner, List<string> rollen) {
             using (IDbConnection conn = new SqlConnection(_connectionString)) {
                 conn.Open();
                 using (IDbTransaction trans = conn.BeginTransaction()) {
@@ -260,7 +263,7 @@ namespace ProjectbeheerDL.Repository {
                             gebruikerId = Convert.ToInt32(cmd1.ExecuteScalar());
 
                             foreach (Project p in projecten) {
-                                projectId = _projectRepository.VoegProjectToe(p, conn, trans);
+                                projectId = _projectRepository.VoegProjectToe(p, partner, locPartner, rollen, conn, trans);
                                 cmd2.Parameters.Clear();
                                 cmd2.Parameters.AddWithValue("@projectId", projectId);
                                 cmd2.Parameters.AddWithValue("@gebruikerId", gebruikerId);
