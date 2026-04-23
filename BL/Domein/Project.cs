@@ -11,7 +11,7 @@ namespace ProjectbeheerBL.Domein
         public string Titel { get; set; }
         public DateTime StartDatum { get; set; }
         public string Beschrijving { get; set; }
-        public ProjectStatus Status { get; set; } // Aangepast van Status
+        public ProjectStatus Status { get; set; }
         public Locatie Locatie { get; set; }
         public Dictionary<Partner, List<string>> ProjectPartners { get; set; } = new Dictionary<Partner, List<string>>();
 

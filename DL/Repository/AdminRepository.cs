@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using ProjectbeheerBL.Domein;
 using ProjectbeheerBL.Exeptions;
+using ProjectbeheerBL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,15 +11,17 @@ using System.Text;
 namespace ProjectbeheerDL.Repository {
     public class AdminRepository {
 
-        string connectionString;
+        private readonly string _connectionString;
+        private readonly IProjectRepository _projectRepository;
 
-        public AdminRepository(string connectionString) {
-            this.connectionString = connectionString;
+        public AdminRepository(string connectionString, IProjectRepository projectrepository) {
+            _connectionString = connectionString;
+            _projectRepository = projectrepository;
         }
 
         public void VoegGebruikerToe(Gebruiker g) {
             string query = "INSERT INTO Gebruiker (naam,email,isAdmin) VALUES(@naam,@email,@isAdmin)";
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand cmd = conn.CreateCommand()) {
                 try {
                     cmd.Parameters.Add(new SqlParameter("@naam", SqlDbType.NVarChar));
@@ -37,17 +40,21 @@ namespace ProjectbeheerDL.Repository {
         }
 
 
-        public void VerwijderProject(Project project) { // we zijn voor een volledige delete uit de database gegaan ipv de data op non-actief te zetten
+        public void VerwijderProject(int projectId) { // we zijn voor een volledige delete uit de database gegaan ipv de data op non-actief te zetten
             // Door CASCADE te gebruiken in de database voor de foreign keys die een verwijzing naar Project hebben, moeten er veel minder queries opgesteld worden om gerelateerde gegevens te verwwijderen
-            string queryProject = "DELETE Project WHERE projectId=@projectId";
-            using (SqlConnection con = new SqlConnection(connectionString))
+            string queryProject = "DELETE FROM Project WHERE id=@projectId";
+            using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand cmd = con.CreateCommand()) {
                 try {
                     cmd.Parameters.Add(new SqlParameter("@projectId", SqlDbType.Int));
                     cmd.CommandText = queryProject;
-                    cmd.Parameters["@projectId"].Value = project.Id;
+                    cmd.Parameters["@projectId"].Value = projectId;
                     con.Open();
                     cmd.ExecuteNonQuery();
+                } catch (SqlException ex) // Specifieke SQL fouten vangen
+        {
+                    // HIER zie je nu de echte reden (bijv. Constraint violation)
+                    throw new Exception($"Database fout bij verwijderen project {projectId}: {ex.Message}", ex);
                 } catch (Exception ex) {
                     throw new Exception();
                     //throw new Exception("Fout bij database operatie: " + ex.Message);
@@ -60,16 +67,16 @@ namespace ProjectbeheerDL.Repository {
             string queryProjectPartner = "UPDATE ProjectPartner SET rol=@rol FROM ProjectPartner WHERE projectId=@projectId";
             string queryInnoWonen = "UPDATE InnovatieWonen SET aantalWooneenheden=@aantalWooneenheden, rondleiding=@rondleiding, showwoning=@showwoning, architectuurInnovatieScore=@architectuurInnovatieScore, samenwerkingErfgoedOfToerisme=@samenwerkingErfgoedOfToerisme FROM InnovatieWonen WHERE projectId=@projectId";
             string queryGroenRuimte = "UPDATE GroeneRuimte SET oppervlakte=@oppervlakte, biodiversiteit=@biodiversiteit, aantalWandelpaden=@aantalWandelpaden, inToeristischeWandelroute=@inToeristischeWandelroute, beoordeling=@beoordeling FROM GroeneRuimte WHERE projectId=@projectId";
-            string queryStadOntw = "UPDATE StadsOntwikkeling SET vergunningsStatus=@vergunningsStatus, architectueleWaarde=@architectuelewaarde, toegankelijkheid=@toegankelijkheid, bezienswaardigheid=@bezienswaardigheid, info=@info FROM StadsOntwikkeling WHERE projectId=@projectId";
+            string queryStadOntw = "UPDATE StadsOntwikkeling SET verguningsStatus=@vergunningsStatus, archtitectueleWaarde=@architectuelewaarde, toegankelijkheid=@toegankelijkheid, bezienswaardigheid=@bezienswaardigheid, info=@info FROM StadsOntwikkeling WHERE projectId=@projectId";
             string queryLocatie = "UPDATE Locatie SET wijk=@wijk, straat=@straat, gemeente=@gemeente, postcode=@postcode, huisnummer=@huisnummer FROM Locatie INNER JOIN Project ON Locatie.id=Project.locatieId WHERE Project.id=@projectId";
 
-            using(SqlConnection con = new SqlConnection(connectionString))
-            using(SqlCommand cmd1 = con.CreateCommand())
-            using(SqlCommand cmd2 = con.CreateCommand())
-            using(SqlCommand cmd3 = con.CreateCommand())
-            using(SqlCommand cmd4 = con.CreateCommand())
-            using(SqlCommand cmd5 = con.CreateCommand())
-            using(SqlCommand cmd6 = con.CreateCommand()) {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand cmd1 = con.CreateCommand())
+            using (SqlCommand cmd2 = con.CreateCommand())
+            using (SqlCommand cmd3 = con.CreateCommand())
+            using (SqlCommand cmd4 = con.CreateCommand())
+            using (SqlCommand cmd5 = con.CreateCommand())
+            using (SqlCommand cmd6 = con.CreateCommand()) {
                 con.Open();
                 SqlTransaction transaction = con.BeginTransaction();
                 cmd1.Transaction = transaction;
@@ -147,10 +154,63 @@ namespace ProjectbeheerDL.Repository {
 
         }
 
-        public void VerwijderPartnerVanProject(Project project) {
-            string queryProject = "DELETE ProjectPartner WHERE id=@projectPartnerId";
+        public void VerwijderPartnerVanProject(int projectId, int partnerId) { // verwijderd enkel de koppeltabel, niet de partner uit de Partner tabel
+            string queryProjectPartner = "DELETE FROM ProjectPartner WHERE projectId=@projectId AND partnerId=@partnerId";
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = con.CreateCommand()) {
+                try {
+                    con.Open();
+                    cmd.CommandText = queryProjectPartner;
+                    cmd.Parameters.Add(new SqlParameter("@projectId", SqlDbType.Int));
+                    cmd.Parameters.Add(new SqlParameter("@partnerId", SqlDbType.Int));
+
+                    cmd.Parameters["@projectId"].Value = projectId;
+                    cmd.Parameters["@partnerId"].Value = partnerId;
+                    cmd.ExecuteNonQuery();
+                } catch (Exception ex) {
+                    throw new Exception();
+                }
+            }
         }
 
+        public void gebruikerVoegtProjectToe(List<Project> projecten, Gebruiker g) {
+            using (IDbConnection conn = new SqlConnection(_connectionString)) {
+                conn.Open();
+                using (IDbTransaction trans = conn.BeginTransaction()) {
+                    try {
 
+                        string queryGebruiker = "INSERT INTO Gebruiker (naam, email, isAdmin) VALUES (@naam, @email, @isAdmin); SELECT SCOPE_IDENTITY();";
+                        int gebruikerId;
+
+                        int projectId;
+
+                        string queryProjectCombinatie = "INSERT INTO Project_Gebruiker (projectId, gebruikerId) VALUES (@projectId, @gebruikerId)";
+
+                        using (SqlCommand cmd1 = new SqlCommand(queryGebruiker, (SqlConnection)conn, (SqlTransaction)trans))
+                        using (SqlCommand cmd2 = new SqlCommand(queryProjectCombinatie, (SqlConnection)conn, (SqlTransaction)trans)) {
+                            cmd1.Parameters.AddWithValue("@naam", g.Naam);
+                            cmd1.Parameters.AddWithValue("@email", g.Email);
+                            cmd1.Parameters.AddWithValue("@isAdmin", g.IsBeheerder);
+                            gebruikerId = Convert.ToInt32(cmd1.ExecuteScalar());
+
+                            foreach (Project p in projecten) {
+                                projectId = _projectRepository.VoegProjectToe(p, conn, trans);
+                                cmd2.Parameters.Clear();
+                                cmd2.Parameters.AddWithValue("@projectId", projectId);
+                                cmd2.Parameters.AddWithValue("@gebruikerId", gebruikerId);
+                                cmd2.ExecuteNonQuery();
+                            }
+
+                        }
+                        trans.Commit();
+                    } catch (Exception ex) {
+                        trans.Rollback();
+                        throw;
+                    }
+                }
+            }
+
+
+        }
     }
 }

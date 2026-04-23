@@ -21,5 +21,11 @@ namespace ProjectbeheerBL.Domein
         public bool IsBezienswaardig { get; set; }
         public bool HeeftInfo { get; set; }
         public bool HeeftArchitecturaleWaarde { get; set; }
+
+        public void voegBouwfirmaToe(Bouwfirma firma) {
+            if (!Bouwfirmas.Contains(firma)) {
+                Bouwfirmas.Add(firma);
+            }
+        }
     }
 }

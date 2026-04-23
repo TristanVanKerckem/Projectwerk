@@ -25,5 +25,11 @@ namespace ProjectbeheerBL.Domein
         }
 
         public InnovatieWonen(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie) : base(titel, startDatum, beschrijving, status, locatie) { }
+
+        public void voegWoonvormTypeToe(WoonvormType type) {
+            if (!WoonvormTypes.Contains(type)) {
+                WoonvormTypes.Add(type);
+            }
+        }
     }
 }

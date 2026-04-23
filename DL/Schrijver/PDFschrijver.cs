@@ -9,48 +9,114 @@ using QuestPDF.Infrastructure;
 
 namespace ProjectbeheerDL.Schrijver {
 
-
-    public class PDFSchrijver  {
-        public PDFSchrijver() {
+    public class PDFSchrijver : IPDFschrijver
+    {
+        public PDFSchrijver()
+        {
             QuestPDF.Settings.License = LicenseType.Community;
         }
 
-        public Byte[] maakPDF(List<ProjectCombinatie> projecten) {
-
-            // Voor de naam van PDF bestand worden telkens de eerste 3 letters van de Titel van het Project genomen.
+        
+        public byte[] MaakPDF(List<ProjectCombinatie> projecten)
+        {
             string projectenComboNaam = "";
-            foreach (ProjectCombinatie project in projecten) {
-            string projectNaam = project.ProjectComboLijst[0].Titel;
-            string substringNaam = char.ToUpper(projectNaam[0]) + projectNaam.Substring(1, 2); // voorste letter in CAPS en dan nog 2 letters erna
-            
-            projectenComboNaam += substringNaam;
+            foreach (ProjectCombinatie project in projecten)
+            {
+                if (project.ProjectComboLijst.Any())
+                {
+                    string projectNaam = project.ProjectComboLijst[0].Titel;
+                    string substringNaam = char.ToUpper(projectNaam[0]) + projectNaam.Substring(1, 2);
+                    projectenComboNaam += substringNaam;
+                }
             }
 
-            var document = Document.Create(container => {
-                container.Page(pagina => {
+            var document = Document.Create(container =>
+            {
+                container.Page(pagina =>
+                {
                     pagina.Size(PageSizes.A4);
-                    pagina.Margin(72, Unit.Point); //Standaard pt marge voor documenten
+                    pagina.Margin(72, Unit.Point);
                     pagina.PageColor(Colors.White);
                     pagina.DefaultTextStyle(tekst => tekst.FontSize(12).FontFamily(Fonts.Verdana));
 
                     pagina.Header().Text("Overzicht Projecten").FontSize(25).SemiBold();
 
-                    pagina.Content().PaddingVertical(15).Column(col => {
-                        foreach (ProjectCombinatie project in projecten) {
-                            // invullen met de info die nodig is voor het overzicht vd projecten
+                    pagina.Content().PaddingVertical(15).Column(col =>
+                    {
+                        foreach (ProjectCombinatie project in projecten)
+                        {
+                            col.Item().PaddingBottom(10).Text($"Project: {project.ProjectComboLijst[0].Titel}");
+                            
                         }
                     });
 
-                    pagina.Footer().AlignRight().AlignBottom().Text(pagNr => {
+                    pagina.Footer().AlignRight().Text(pagNr =>
+                    {
+                        pagNr.Span("Pagina ");
                         pagNr.CurrentPageNumber();
                     });
                 });
             });
 
-            byte[] pdf = document.GeneratePdf(); // naam zou toegevoegd moeten worden aan de controller (nog uit te zoeken)
-
-            return pdf;
+            return document.GeneratePdf();
         }
 
+        
+        public byte[] MaakPDF(ProjectCombinatie project)
+        {
+            return MaakPDF(new List<ProjectCombinatie> { project });
+        }
+
+        public byte[] MaakPDF(List<Project> projecten)
+        {
+            
+            var combos = projecten.Select(p => new ProjectCombinatie { ProjectComboLijst = new List<Project> { p } }).ToList();
+            return MaakPDF(combos);
+        }
     }
+
+    //public class PDFSchrijver : IPDFschrijver
+    //{
+    //    public PDFSchrijver() {
+    //        QuestPDF.Settings.License = LicenseType.Community;
+    //    }
+
+    //    public Byte[] maakPDF(List<ProjectCombinatie> projecten) {
+
+    //        // Voor de naam van PDF bestand worden telkens de eerste 3 letters van de Titel van het Project genomen.
+    //        string projectenComboNaam = "";
+    //        foreach (ProjectCombinatie project in projecten) {
+    //        string projectNaam = project.ProjectComboLijst[0].Titel;
+    //        string substringNaam = char.ToUpper(projectNaam[0]) + projectNaam.Substring(1, 2); // voorste letter in CAPS en dan nog 2 letters erna
+
+    //        projectenComboNaam += substringNaam;
+    //        }
+
+    //        var document = Document.Create(container => {
+    //            container.Page(pagina => {
+    //                pagina.Size(PageSizes.A4);
+    //                pagina.Margin(72, Unit.Point); //Standaard pt marge voor documenten
+    //                pagina.PageColor(Colors.White);
+    //                pagina.DefaultTextStyle(tekst => tekst.FontSize(12).FontFamily(Fonts.Verdana));
+
+    //                pagina.Header().Text("Overzicht Projecten").FontSize(25).SemiBold();
+
+    //                pagina.Content().PaddingVertical(15).Column(col => {
+    //                    foreach (ProjectCombinatie project in projecten) {
+    //                        // invullen met de info die nodig is voor het overzicht vd projecten
+    //                    }
+    //                });
+
+    //                pagina.Footer().AlignRight().AlignBottom().Text(pagNr => {
+    //                    pagNr.CurrentPageNumber();
+    //                });
+    //            });
+    //        });
+
+    //        byte[] pdf = document.GeneratePdf(); // naam zou toegevoegd moeten worden aan de controller (nog uit te zoeken)
+
+    //        return pdf;
+    //    }
+
+    //}
 }
