@@ -9,6 +9,7 @@ namespace ProjectbeheerBL.Domein
 {
     public class Bouwfirma
     {
+        
         private string _naam;
         private string _email;
         private string _telefoonNummer;
@@ -49,6 +50,7 @@ namespace ProjectbeheerBL.Domein
             }
         }
 
+        public int Id { get; init; }
         public Bouwfirma(string naam, string email, string telefoonNummer)
         {
             Naam = naam;

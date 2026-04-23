@@ -21,7 +21,7 @@ namespace ProjectbeheerBL.Interfaces {
         List<Project> GeefProjectenMetFilters(string? type, string? wijk, ProjectStatus? status, DateTime? start, DateTime? eind, string? partner);
 
 
-        int VoegProjectToe(Project project, IDbConnection conn, IDbTransaction trans);
+        int VoegProjectToe(Project project, Partner? partner, Locatie? locPartner, List<string> rollen, IDbConnection conn, IDbTransaction trans);
 
         List<string> GeefBeschikbareFaciliteiten();
 
@@ -30,6 +30,10 @@ namespace ProjectbeheerBL.Interfaces {
 
        
         List<string> GeefWoonvormTypes();
+
+        bool BestaatBouwfirma(string naam, IDbConnection conn, IDbTransaction trans);
+
+        int? HaalBouwfirmaIdOp(string naam, IDbConnection con, IDbTransaction transaction);
 
     }
    
