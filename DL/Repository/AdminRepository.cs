@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using ProjectbeheerBL.Domein;
+using ProjectbeheerBL.Exeptions;
 using ProjectbeheerBL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,7 @@ namespace ProjectbeheerDL.Repository {
                     throw new Exception($"Database fout bij verwijderen project {projectId}: {ex.Message}", ex);
                 } catch (Exception ex) {
                     throw new Exception();
+                    //throw new Exception("Fout bij database operatie: " + ex.Message);
                 }
             }
         }

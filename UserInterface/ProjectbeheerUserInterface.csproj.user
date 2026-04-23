@@ -5,10 +5,19 @@
     <Compile Update="AanpassenPagina.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="DetailPartnerPagina.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="HomePagina.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="LocatieAanpassenPagina.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="LogIn.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="PartnerWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="ProjectDetail.xaml.cs">

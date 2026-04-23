@@ -1,4 +1,5 @@
 ﻿using ProjectbeheerBL.Domein;
+using ProjectbeheerBL.Domein.Enums;
 using ProjectbeheerBL.Exeptions;
 using ProjectbeheerBL.Interfaces;
 using System;
@@ -22,6 +23,9 @@ namespace ProjectbeheerBL.Beheerder
             _csvSchrijver = csvSchrijver;
         }
 
+        /// <summary>
+
+        /// </summary>
         // verder aanvullen voor controle op connectiestring & transactie
         public void VoegProjectToe(Project project, IDbConnection conn, IDbTransaction trans)
         {
@@ -30,6 +34,7 @@ namespace ProjectbeheerBL.Beheerder
                 throw new ProjectException("Project mag niet leeg zijn.");
             }
 
+            
             if (project is Stadsontwikkeling stads)
             {
                 foreach (var firma in stads.Bouwfirmas)
@@ -43,69 +48,77 @@ namespace ProjectbeheerBL.Beheerder
             _repo.VoegProjectToe(project, conn, trans);
         }
 
-        //public void ExporteerProjectenNaarCSV(string pad)
-        //{
-        //    try
-        //    {
-        //        List<ProjectCombinatie> projecten = _repo.GeefAlleProjecten();
-        //        if (projecten == null || projecten.Count == 0)
-        //        {
-        //            throw new ProjectException("Er zijn geen projecten om te exporteren.");
-        //        }
-        //        _csvSchrijver.MaakCSV(projecten, pad);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new ProjectException("Fout bij het exporteren van projecten naar CSV: " + ex.Message);
-        //    }
-        //}
+        /// <summary>
 
+        /// </summary>
+        public List<Project> FilterProjecten(string? type, string? wijk, ProjectStatus? status, DateTime? start, DateTime? eind, string? partner)
+        {
+            try
+            {
+                
+                return _repo.GeefProjectenMetFilters(type, wijk, status, start, eind, partner);
+            }
+            catch (Exception ex)
+            {
+                throw new ProjectException("Fout bij het filteren: " + ex.Message);
+            }
+        }
 
+        /// <summary>
+        
+        /// </summary>
+        public void ExporteerProjectenNaarCSV(string pad)
+        {
+            try
+            {
+                List<ProjectCombinatie> projecten = _repo.GeefAlleProjecten(); 
+                if (projecten == null || projecten.Count == 0)
+                {
+                    throw new ProjectException("Er zijn geen projecten om te exporteren."); 
+                }
+                _csvSchrijver.MaakCSV(projecten, pad); 
+            }
+            catch (Exception ex)
+            {
+                throw new ProjectException("Fout bij het exporteren naar CSV: " + ex.Message);
+            }
+        }
 
-        //public void MaakProjectFiche(int id, string pad)
-        //{
-        //    // Ophalen van projectcombinaties volgens de interface
-        //    var projecten = _repo.GeefAlleProjecten();
+        /// <summary>
+        
+        /// </summary>
+        public void MaakProjectFiche(int id, string pad)
+        {
+            var project = _repo.GeefProject(id); 
 
-        //    if (projecten == null || !projecten.Any(p => p.Id == id))
-        //    {
-        //        throw new ProjectException("Project niet gevonden.");
-        //    }
+            if (project == null)
+            {
+                throw new ProjectException("Project niet gevonden.");
+            }
 
-        //    try
-        //    {
-        //        // De interface IPDFschrijver verwacht een List<ProjectCombinatie>
-        //        // We geven de volledige lijst mee (of een gefilterde lijst)
-        //        byte[] pdfData = _pdfSchrijver.MaakPDF(projecten);
+            try
+            {
+                
+               
+                var projectLijst = new List<Project> { project };
+                
+                byte[] pdfData = _pdfSchrijver.MaakPDF(projectLijst);
 
-        //        // Schrijf de byte array naar een bestand op het opgegeven pad
-        //        System.IO.File.WriteAllBytes(pad, pdfData);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new ProjectException("Fout bij het maken van de projectfiche: " + ex.Message);
-        //    }
-        //}
+                System.IO.File.WriteAllBytes(pad, pdfData);
+            }
+            catch (Exception ex)
+            {
+                throw new ProjectException("Fout bij het maken van de projectfiche: " + ex.Message);
+            }
+        }
 
-
-        //public void MaakProjectFiche(int id, string pad)
-        //{
-        //    var project = _repo.GeefProject(id);
-        //    if (project == null)
-        //    {
-        //        throw new ProjectException("Project niet gevonden.");
-        //    }
-
-
-        //    try
-        //    {
-        //        _pdfSchrijver.MaakPDF(projecten);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new ProjectException("Fout bij het maken van de projectfiche: " + ex.Message);
-        //    }
-        //}
+        /// <summary>
+        //
+        /// </summary>
+        public List<ProjectCombinatie> GeefAlleProjecten()
+        {
+            return _repo.GeefAlleProjecten();
+        }
     }
+    
 }
