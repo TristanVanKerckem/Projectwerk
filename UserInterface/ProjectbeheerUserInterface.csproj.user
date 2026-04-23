@@ -2,10 +2,19 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Compile Update="AanmakenProjectPagina.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="AanpassenPagina.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="BouwfirmaAanmaken.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="DetailPartnerPagina.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="FaciliteitAanmakenWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="HomePagina.xaml.cs">

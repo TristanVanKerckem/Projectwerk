@@ -1,0 +1,29 @@
+﻿<Window x:Class="ProjectbeheerUserInterface.FaciliteitAanmakenWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjectbeheerUserInterface"
+        mc:Ignorable="d"
+        Title="FaciliteitAanmakenWindow" Height="150" Width="300"
+        WindowStartupLocation="CenterOwner">
+    <Grid>
+        <StackPanel Margin="10">
+            <TextBlock Text="Naam"/>
+            <TextBox x:Name="NaamBox" Margin="0,0,0,10"/>
+
+            <CheckBox x:Name="IsGeverfieerdCheck" Content="Is geverieerd: "/>
+            <DockPanel LastChildFill="False" Margin="0,10,0,0">
+                <Button Content="Annuleren"
+Click="Annuleren_Click"
+DockPanel.Dock="Left"
+Width="100"/>
+
+                <Button Content="Toevoegen"
+        Click="Toevoegen_Click"
+        DockPanel.Dock="Right"
+        Width="100"/>
+            </DockPanel>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -22,7 +22,7 @@ namespace ProjectbeheerUserInterface
         public string Wijk { get; private set; }
         public string Straat { get; private set; }
         public string Gemeente { get; private set; }
-        public string Postcode { get; private set; }
+        public int Postcode { get; set; }
         public string Huisnummer { get; private set; }
         public string Rol { get; private set; }
         public PartnerWindow()
@@ -37,7 +37,14 @@ namespace ProjectbeheerUserInterface
             Wijk = WijkBox.Text;
             Straat = StraatBox.Text;
             Gemeente = GemeenteBox.Text;
-            Postcode = PostcodeBox.Text;
+            if (int.TryParse(PostcodeBox.Text, out int postcode))
+            {
+                Postcode = postcode;
+            }
+            else
+            {
+                MessageBox.Show("Postcode moet een getal zijn");
+            }
             Huisnummer = HuisnummerBox.Text;
             Rol = RolBox.Text;
             this.DialogResult = true;

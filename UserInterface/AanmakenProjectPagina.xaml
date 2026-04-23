@@ -1,0 +1,257 @@
+﻿<Page x:Class="ProjectbeheerUserInterface.AanmakenProjectPagina"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ProjectbeheerUserInterface"
+      mc:Ignorable="d" 
+      d:DesignHeight="950" d:DesignWidth="800"
+      Title="AanmakenProjectPagina">
+
+    <Grid Margin="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Titel -->
+        <TextBlock Text="Titel:" Grid.Row="0"/>
+        <TextBox x:Name="TitelBox" Grid.Row="0" Grid.Column="1" Width="200" HorizontalAlignment="Left"/>
+
+        <!-- Beschrijving -->
+        <TextBlock Text="Beschrijving:" Grid.Row="1"/>
+        <TextBox x:Name="BeschrijvingBox" Grid.Row="1" Grid.Column="1" Width="200" HorizontalAlignment="Left"/>
+
+        <!-- Startdatum -->
+        <TextBlock Text="Startdatum:" Grid.Row="2"/>
+        <DatePicker x:Name="StartDatumPicker" Grid.Row="2" Grid.Column="1" Width="200" HorizontalAlignment="Left"/>
+
+        <TextBlock Text="Status:" Grid.Row="3"/>
+        <ComboBox x:Name="StatusCombo" Grid.Column="1" Grid.Row="3" Width="200" HorizontalAlignment="Left" />
+
+        <!-- Locatie -->
+        <TextBlock Text="Wijk:" Grid.Row="4"/>
+        <TextBox x:Name="WijkBox" Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left"/>
+
+        <TextBlock Text="Straat:" Grid.Row="5"/>
+        <TextBox x:Name="StraatBox" Grid.Row="5" Grid.Column="1" Width="200" HorizontalAlignment="Left"/>
+
+        <TextBlock Text="Gemeente:" Grid.Row="6"/>
+        <TextBox x:Name="GemeenteBox" Grid.Row="6" Grid.Column="1" Width="200" HorizontalAlignment="Left"/>
+
+        <TextBlock Text="Postcode:" Grid.Row="7"/>
+        <TextBox x:Name="PostcodeBox" Grid.Row="7" Grid.Column="1" Width="200" HorizontalAlignment="Left"/>
+
+        <TextBlock Text="Huisnummer:" Grid.Row="8"/>
+        <TextBox x:Name="HuisnummerBox" Grid.Row="8" Grid.Column="1" Width="200" HorizontalAlignment="Left"/>
+
+        <TextBlock Text="Partners:" Grid.Row="9"/>
+
+        <StackPanel Grid.Row="9" Grid.Column="1">
+            <TextBlock Text="{Binding Partner.Naam}" FontWeight="Bold"/>
+
+            <ItemsControl ItemsSource="{Binding Rollen}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+        <Button x:Name="PartnerButton"
+            Content = "Voeg Partner Toe"
+    Click="Partner_Click"
+    Width="200"
+    Margin="0,0,100,0"
+                Grid.Row="10" Grid.Column="1"/>
+
+        <!-- Keuze -->
+        <TextBlock Text="Type Project:" Grid.Row="11"/>
+
+        <StackPanel x:Name="TypePanel" Grid.Row="11" Grid.Column="1">
+            <CheckBox x:Name="GroeneRuimteRB"
+             Content="GroeneRuimte"
+             Checked="Type_Checked"
+                      Unchecked="Type_Checked"/>
+
+            <CheckBox x:Name="InnovatieRB"
+             Content="InnovatieWonen"
+             Checked="Type_Checked"
+                      Unchecked="Type_Checked"/>
+
+            <CheckBox x:Name="StadRB"
+             Content="Stadsontwikkeling"
+             Checked="Type_Checked"
+                      Unchecked="Type_Checked"/>
+        </StackPanel>
+        <Grid x:Name="GroeneRuimtePanel"
+      Grid.Row="12"
+      Grid.Column="1"
+      Visibility="Collapsed"
+      Margin="0,10,0,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <TextBlock Text="Oppervlakte:" Grid.Row="1" Grid.Column="0"/>
+            <TextBox x:Name="OppervlakteBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="200"/>
+
+            <TextBlock Text="Biodiversiteit:" Grid.Row="2" Grid.Column="0"/>
+            <TextBox x:Name="BiodiversiteitBox" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="200"/>
+
+            <TextBlock Text="Aantal wandelpaden:" Grid.Row="3" Grid.Column="0"/>
+            <TextBox x:Name="WandelpadenBox" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="200"/>
+
+            <TextBlock Text="Beschikbare faciliteiten:" Grid.Row="4" Grid.Column="0"/>
+            <TextBlock x:Name="FaciliteitenView" Text="{Binding BeschikbareFaciliteiten.Naam}" FontWeight="Bold" Visibility="Collapsed" Grid.Row="4" Grid.Column="1"/>
+
+
+            <Button x:Name="FaciliteitButton"
+        Content = "Voeg Faciliteit Toe"
+Click="Faciliteit_Click"
+Width="200"
+Margin="0,0,100,0"
+            Grid.Row="4" Grid.Column="1"/>
+
+            <TextBlock Text="In toeristische wandelroute:" Grid.Row="5" Grid.Column="0"/>
+            <CheckBox x:Name="ToeristischeRouteCheck" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left"/>
+
+            <TextBlock Text="Beoordeling:" Grid.Row="6" Grid.Column="0"/>
+            <TextBox x:Name="BeoordelingBox" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Width="200"/>
+        </Grid>
+
+        <Grid x:Name="InnovatiePanel"
+Grid.Row="13"
+              Grid.Column="1"
+Visibility="Collapsed"
+Margin="0,10,0,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <TextBlock Text="Aantal wooneenheden:" Grid.Row="1" Grid.Column="0"/>
+            <TextBox x:Name="AantalWooneenhedenBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="200"/>
+
+            <TextBlock Text="Woonvorm types:" Grid.Row="2" Grid.Column="0"/>
+            <TextBox x:Name="WoonvormTypesBox" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="200"/>
+
+            <TextBlock Text="Heeft rondleiding:" Grid.Row="3" Grid.Column="0"/>
+            <CheckBox x:Name="RondleidingCheck" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"/>
+
+            <TextBlock Text="Heeft showcase" Grid.Row="4" Grid.Column="0"/>
+            <CheckBox x:Name="ShowcaseCheck" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"/>
+
+            <TextBlock Text="Architectuurscore:" Grid.Row="5" Grid.Column="0"/>
+            <TextBox x:Name="ArchitectuurScoreBox" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="200"/>
+
+            <TextBlock Text="Heeft samenwerking" Grid.Row="6" Grid.Column="0"/>
+            <CheckBox x:Name="SamenwerkingCheck" Grid.Row="6" Grid.Column="1"/>
+
+        </Grid>
+        <Grid x:Name="StadsPanel"
+Grid.Row="14"
+              Grid.Column="1"
+Visibility="Collapsed"
+Margin="0,10,0,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Bouwfirma's:" Grid.Row="1" Grid.Column="0"/>
+            <TextBlock x:Name="BouwfirmaView" Text="{Binding Bouwfirma}" FontWeight="Bold" Visibility="Collapsed" Grid.Row="1" Grid.Column="1"/>
+            <Button x:Name="BouwfirmaButton"
+        Content = "Voeg Bouwfirma Toe"
+Click="Bouwfirma_Click"
+Width="200"
+Margin="0,0,100,0"
+            Grid.Row="1" Grid.Column="1"/>
+
+            <TextBlock Text="Vergunningsstatus:" Grid.Row="2" Grid.Column="0"/>
+            <ComboBox x:Name="VergunningCombo" Grid.Column="1" Grid.Row="2" Width="200" HorizontalAlignment="Left" />
+
+            <TextBlock Text="Toegankelijkheid:" Grid.Row="3" Grid.Column="0"/>
+            <ComboBox x:Name="ToegankelijkheidCombo" Grid.Column="1" Grid.Row="2" Width="200" HorizontalAlignment="Left" />
+
+            <TextBlock Text="Is bezienswaardig:" Grid.Row="4" Grid.Column="0"/>
+            <CheckBox x:Name="BezienswaardigCheck" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="200"/>
+
+            <TextBlock Text="Heeft info:" Grid.Row="5" Grid.Column="0"/>
+            <CheckBox x:Name="InfoCheck" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="200"/>
+
+            <TextBlock Text="Heeft architecturale waarde:" Grid.Row="6" Grid.Column="0"/>
+            <CheckBox x:Name="ArchitectuurWaardeCheck" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Width="200"/>
+        </Grid>
+
+        <!-- Knop -->
+        <Button Content="Opslaan"
+            Grid.Row="15"
+            Grid.Column="1"
+            Width="120"
+            Margin="0,10,0,0"
+            Click="Opslaan_Click"/>
+
+    </Grid>
+</Page>

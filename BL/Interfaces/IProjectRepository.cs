@@ -8,19 +8,7 @@ using System.Text;
 
 
 namespace ProjectbeheerBL.Interfaces {
-    //public interface IProjectRepository 
-    //{
-    //    //Project GeefProject(int id);
-    //    //List<Project> GeefAlleProjecten();
-    //    //void VoegProjectToe(Project project);
-    //    //Voeg hier methodes toe voor specifieke filters indien nodig
-
-
-    //    List<ProjectCombinatie> GeefProjectCombinaties();
-    //    ProjectCombinatie GeefProject(int id);
-    //    List<ProjectCombinatie> GeefAlleProjecten();
-    //    void VoegProjectToe(Project project);
-    //}
+    
     public interface IProjectRepository
     {
        
@@ -35,9 +23,14 @@ namespace ProjectbeheerBL.Interfaces {
 
         int VoegProjectToe(Project project, IDbConnection conn, IDbTransaction trans);
 
-        //Project GeefProject(int id); // moet nog ProjectCombinatie worden?
+        List<string> GeefBeschikbareFaciliteiten();
 
-        //List<Project> GeefAlleProjecten(); // Moet nog List van ProjectCombinatie worden
+        
+        List<string> GeefBouwfirmas();
+
+       
+        List<string> GeefWoonvormTypes();
+
     }
    
 }

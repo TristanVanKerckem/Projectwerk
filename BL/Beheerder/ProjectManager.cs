@@ -48,9 +48,7 @@ namespace ProjectbeheerBL.Beheerder
             _repo.VoegProjectToe(project, conn, trans);
         }
 
-        /// <summary>
 
-        /// </summary>
         public List<Project> FilterProjecten(string? type, string? wijk, ProjectStatus? status, DateTime? start, DateTime? eind, string? partner)
         {
             try
@@ -64,9 +62,6 @@ namespace ProjectbeheerBL.Beheerder
             }
         }
 
-        /// <summary>
-        
-        /// </summary>
         public void ExporteerProjectenNaarCSV(string pad)
         {
             try
@@ -84,37 +79,40 @@ namespace ProjectbeheerBL.Beheerder
             }
         }
 
-        /// <summary>
-        
-        /// </summary>
-        public void MaakProjectFiche(int id, string pad)
-        {
-            var project = _repo.GeefProject(id); 
 
-            if (project == null)
-            {
-                throw new ProjectException("Project niet gevonden.");
-            }
+        //public void MaakProjectFiche(int id, string pad)
+        //{
+        //    var project = _repo.GeefProject(id); 
 
-            try
-            {
+        //    if (project == null)
+        //    {
+        //        throw new ProjectException("Project niet gevonden.");
+        //    }
+
+        //    try
+        //    {
                 
                
-                var projectLijst = new List<Project> { project };
+        //        var projectLijst = new List<Project> { project };
                 
-                byte[] pdfData = _pdfSchrijver.MaakPDF(projectLijst);
+        //        byte[] pdfData = _pdfSchrijver.MaakPDF(projectLijst);
 
-                System.IO.File.WriteAllBytes(pad, pdfData);
-            }
-            catch (Exception ex)
-            {
-                throw new ProjectException("Fout bij het maken van de projectfiche: " + ex.Message);
-            }
+        //        System.IO.File.WriteAllBytes(pad, pdfData);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new ProjectException("Fout bij het maken van de projectfiche: " + ex.Message);
+        //    }
+        //}
+        public void MaakProjectFiche(List<ProjectCombinatie> projecten, string pad)
+        {
+
+            if (projecten == null || projecten.Count == 0) return;
+
+            _csvSchrijver.MaakCSV(projecten, pad);
         }
 
-        /// <summary>
-        //
-        /// </summary>
+
         public List<ProjectCombinatie> GeefAlleProjecten()
         {
             return _repo.GeefAlleProjecten();

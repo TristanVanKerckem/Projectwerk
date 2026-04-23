@@ -2,6 +2,7 @@
 using ProjectbeheerBL.Domein.Enums;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,7 +31,11 @@ namespace ProjectbeheerUserInterface
         }
         public void OnSubmit(object sender, EventArgs e)
         {
+            Projecten.ProjectComboLijst[0].Titel = TitelView.Text;
+            Projecten.ProjectComboLijst[0].Beschrijving = BeschrijvingView.Text;
+            Projecten.ProjectComboLijst[0].Locatie.Wijk = WijkView.Text;
 
+            NavigationService.Navigate(new ProjectDetail(Projecten));
         }
         private void Pas_Aan_Click(object sender, RoutedEventArgs e)
         {
@@ -52,16 +57,16 @@ namespace ProjectbeheerUserInterface
             {
                 view.Visibility = Visibility.Visible;
                 edit.Visibility = Visibility.Collapsed;
-                view.Text = edit.Text;
+                view.Text = edit.Text;                
             }
 
         }
         private void StartDatum_Click(object sender, RoutedEventArgs e)
         {
-            var projecten = (List<Project>)DataContext;
+            List<Project> projecten = (List<Project>)DataContext;
             Project project = projecten[0];
 
-            var button = (Button)sender;
+            Button button = (Button)sender;
             string field = button.Tag.ToString();
 
             TextBlock view = (TextBlock)this.FindName(field + "View");
@@ -81,7 +86,7 @@ namespace ProjectbeheerUserInterface
                 }
 
                 view.Text = project.StartDatum.ToString("dd/MM/yyyy");
-
+                Projecten.ProjectComboLijst[0].StartDatum = project.StartDatum;
                 view.Visibility = Visibility.Visible;
                 edit.Visibility = Visibility.Collapsed;
             }
@@ -100,7 +105,7 @@ namespace ProjectbeheerUserInterface
                 string wijk = window.Wijk;
                 string straat = window.Straat;
                 string gemeente = window.Gemeente;
-                string postcode = window.Postcode;
+                int postcode = window.Postcode;
                 string huisnummer = window.Huisnummer;
                 List<string> rollen = new List<string> { window.Rol };
                 Partner partner = new Partner(naam, email, project.Locatie);
@@ -124,7 +129,7 @@ namespace ProjectbeheerUserInterface
                 UpdateIfNotEmpty(window.Huisnummer, v => locatie.HuisNummer = v);
                 if (window.Postcode != 0)
                 {
-                    window.Postcode = locatie.Postcode;
+                    locatie.Postcode = window.Postcode;
                 }
                 Projecten.ProjectComboLijst[0].Locatie = locatie;
                 NavigationService.Navigate(new AanpassenPagina(Projecten));
