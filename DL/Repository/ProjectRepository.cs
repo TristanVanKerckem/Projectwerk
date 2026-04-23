@@ -6,37 +6,43 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-namespace ProjectbeheerDL.Repository
-{
-    public class ProjectRepo : IProjectRepository
-    {
+namespace ProjectbeheerDL.Repository {
+    public class ProjectRepo : IProjectRepository {
         private readonly string _connectionString;
 
-        public ProjectRepo(string connectionString)
-        {
+        public ProjectRepo(string connectionString) {
             _connectionString = connectionString;
         }
 
-
-        public void VoegProjectToe(Project project)
+        // returned int om onze ProjectId te kunnen ophalen in de GebruikerVoegtProjectToe methode in de AdminRepo
+        // gebruik maken van IDBConnection en IDBTransaction ipv van sqlConn & Trans --> Businesslaag moeten we gescheiden blijven houden
+        // wordt ook gebruikt bij de kindklassen voor consistent te blijven
+        // Ook interessante keuze voor uitbreiding/verandering --> repository is makkelijker herbruikbaar indien verandering van gebruikte server a.d.h.v. factories
+        public int VoegProjectToe(Project project, IDbConnection interfaceConn, IDbTransaction interfaceTrans) 
         {
-            if (project is Stadsontwikkeling s) VoegStadsOntwikkelingToe(s, project, s.Locatie);
-            else if (project is GroeneRuimte g) VoegGroeneRuimteToe(g, project, g.Locatie);
-            else if (project is InnovatieWonen i) VoegInnovatieWonenToe(i, project, i.Locatie);
+            int databaseId;
+            SqlConnection conn = (SqlConnection)interfaceConn;
+            SqlTransaction trans = (SqlTransaction)interfaceTrans;
+
+            if (project is Stadsontwikkeling s) databaseId = VoegStadsOntwikkelingToe(s, project, s.Locatie, s.Bouwfirmas, conn, trans);
+            else if (project is GroeneRuimte g) databaseId = VoegGroeneRuimteToe(g, project, g.Locatie, g.BeschikbareFaciliteiten, conn, trans);
+            else if (project is InnovatieWonen i) databaseId = VoegInnovatieWonenToe(i, project, i.Locatie, i.WoonvormTypes, conn, trans);
             else throw new Exception("Onbekend projecttype.");
+
+            return databaseId;
         }
 
         // Belangrijk om apart toe te voegen --> Je kan geen connectie openen als er al 1 geopend is, anders kunnen we geen check doen of er al algemene ProjectInfo in de Database ingevuld staat door een ander kindproject
-        public int VoegProjectInfoToe(Project p, Locatie l, SqlConnection conn, SqlTransaction trans) {
+        private int VoegProjectInfoToe(Project p, Locatie l, IDbConnection interfaceConn, IDbTransaction interfaceTrans) {
+            SqlConnection conn = (SqlConnection)interfaceConn;
+            SqlTransaction trans = (SqlTransaction)interfaceTrans;
+
             string queryProject = "INSERT INTO Project (titel, startDatum, beschrijving, status, locatieId) VALUES (@titel, @startDatum, @beschrijving, @status, @locatieId); SELECT SCOPE_IDENTITY();";
             // We gaan voor nu de Locatie al hier aanmaken, als het software project uitgewerkt wordt en we voegen Locatie toe voor een Partner best in aparte Repository
             // Op dit moment ook wordt er telkens een nieuwe Locatie aangemaakt, er wordt niet gecheckt of deze al in de database staat
             string queryLocatie = "INSERT INTO Locatie (wijk, straat, gemeente, postcode, huisnummer) VALUES (@wijk, @straat, @gemeente, @postcode, @huisnummer); SELECT SCOPE_IDENTITY();";
             using (SqlCommand cmd1 = new SqlCommand(queryProject, conn, trans))
             using (SqlCommand cmd2 = new SqlCommand(queryLocatie, conn, trans)) {
-                cmd1.CommandText = queryProject;
-                cmd2.CommandText = queryLocatie;
-
                 try {
                     int databaseLocatieId;
                     // Voeg Locatie Toe
@@ -47,7 +53,7 @@ namespace ProjectbeheerDL.Repository
                     cmd2.Parameters.AddWithValue("@postcode", l.Postcode);
                     cmd2.Parameters.AddWithValue("@huisnummer", l.HuisNummer);
 
-                    databaseLocatieId = Convert.ToInt32(cmd2.ExecuteScalar()); // kree
+                    databaseLocatieId = Convert.ToInt32(cmd2.ExecuteScalar());
                     // Voeg Project Toe
                     cmd1.Parameters.Clear();
                     cmd1.Parameters.AddWithValue("@titel", p.Titel);
@@ -56,17 +62,20 @@ namespace ProjectbeheerDL.Repository
                     cmd1.Parameters.AddWithValue("@status", p.Status);
                     cmd1.Parameters.AddWithValue("@locatieId", databaseLocatieId);
 
-       
+
                     return Convert.ToInt32(cmd1.ExecuteScalar());
                 } catch (Exception ex) {
-                    
+
                     throw new Exception();
                 }
             }
         }
 
         // Nodig voor te checken of ProjectInfo al is aangemaakt door een kindklasse van hetzelfde Project
-        public bool ProjectInfoBestaat(int projectId, SqlConnection conn, SqlTransaction trans) { //conn en trans meegeven, anders error door de connectie als je nieuwe start
+        private bool ProjectInfoBestaat(int projectId, IDbConnection interfaceConn, IDbTransaction interfaceTrans) { //conn en trans meegeven, anders error door de connectie als je nieuwe start
+            SqlConnection conn = (SqlConnection)interfaceConn;
+            SqlTransaction trans = (SqlTransaction)interfaceTrans;
+
             string query = "SELECT COUNT(1) FROM Project WHERE id = @projectId";
             using (SqlCommand cmd = new SqlCommand(query, conn, trans)) {
                 try {
@@ -80,130 +89,186 @@ namespace ProjectbeheerDL.Repository
             }
         }
 
-        public void VoegStadsOntwikkelingToe(Stadsontwikkeling s, Project p, Locatie l)
-        {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                using (SqlTransaction trans = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        int databaseProjectId;
+        private int VoegStadsOntwikkelingToe(Stadsontwikkeling s, Project p, Locatie l, List<Bouwfirma> bouwfirmas, IDbConnection interfaceConn, IDbTransaction interfaceTrans) {
+            SqlConnection conn = (SqlConnection)interfaceConn;
+            SqlTransaction trans = (SqlTransaction)interfaceTrans;
 
-                        // check of Project al bestaat
-                        bool projectBestaatInDataBank = ProjectInfoBestaat(p.Id, conn, trans);
+            try {
+                int databaseProjectId;
 
-                        // Toevoegen indien deze nog niet bestaat
-                        if (!projectBestaatInDataBank) {
-                            databaseProjectId = VoegProjectInfoToe(p, l, conn, trans); // return de id + vult Project verder aan
-                        } else {
-                            databaseProjectId = p.Id;
-                        }
-                        //int id = InvoegenBasisProject(s, conn, trans);
-                        string sql = @"INSERT INTO StadsOntwikkeling (verguningsStatus, archtitectueleWaarde, toegankelijkheid, bezienswaardigheid, info, projectId) 
-                                       VALUES (@verg,@arch, @toeg, @beziens, @info, @projectId)";
-                        using (SqlCommand cmd = new SqlCommand(sql, conn, trans)) {
-                            //cmd.Parameters.AddWithValue("@id", id);
-                            cmd.Parameters.AddWithValue("@verg", s.VergunningStatus);
-                            cmd.Parameters.AddWithValue("@toeg", s.Toegankelijkheid);
-                            cmd.Parameters.AddWithValue("@beziens", s.IsBezienswaardig);
-                            cmd.Parameters.AddWithValue("@info", s.HeeftInfo);
-                            cmd.Parameters.AddWithValue("@arch", s.HeeftArchitecturaleWaarde);
-                            cmd.Parameters.AddWithValue("@projectId", databaseProjectId);
+                // check of Project al bestaat
+                bool projectBestaatInDataBank = ProjectInfoBestaat(p.Id, conn, trans);
 
-                            cmd.ExecuteNonQuery();
-                        }
-                        trans.Commit();
-                    }
-                    catch { trans.Rollback(); throw; }
+                // Toevoegen indien deze nog niet bestaat
+                if (!projectBestaatInDataBank) {
+                    databaseProjectId = VoegProjectInfoToe(p, l, conn, trans); // return de id + vult Project verder aan
+                } else {
+                    databaseProjectId = p.Id;
                 }
-            }
+                //int id = InvoegenBasisProject(s, conn, trans);
+                string queryStadsOntwikkeling = @"INSERT INTO StadsOntwikkeling (verguningsStatus, archtitectueleWaarde, toegankelijkheid, bezienswaardigheid, info, projectId) 
+                                                          VALUES (@verg,@arch, @toeg, @beziens, @info, @projectId); SELECT SCOPE_IDENTITY();";
+                int stadsOntwikkelingId;
+
+                string queryBouwfirma = "INSERT INTO BouwFirma (naam, email, telefoon) VALUES (@naam, @email, @telefoon); SELECT SCOPE_IDENTITY();";
+                int bouwfirmaId;
+
+                string queryKoppeltabelStadBouw = "INSERT INTO Bouwfirma_Stadsontwikkeling (bouwfirmaid, stadsontwikkelingsid) VALUES (@bouwfirmaId, @stadsontwikkelingsId)";
+
+                using (SqlCommand cmd1 = new SqlCommand(queryStadsOntwikkeling, conn, trans))
+                using (SqlCommand cmd2 = new SqlCommand(queryBouwfirma, conn, trans))
+                using (SqlCommand cmd3 = new SqlCommand(queryKoppeltabelStadBouw, conn, trans)) {
+                    //cmd.Parameters.AddWithValue("@id", id);
+                    // Aanvullen Stadsontwikkeling
+                    cmd1.Parameters.AddWithValue("@verg", s.VergunningStatus);
+                    cmd1.Parameters.AddWithValue("@toeg", s.Toegankelijkheid);
+                    cmd1.Parameters.AddWithValue("@beziens", s.IsBezienswaardig);
+                    cmd1.Parameters.AddWithValue("@info", s.HeeftInfo);
+                    cmd1.Parameters.AddWithValue("@arch", s.HeeftArchitecturaleWaarde);
+                    cmd1.Parameters.AddWithValue("@projectId", databaseProjectId);
+                    stadsOntwikkelingId = Convert.ToInt32(cmd1.ExecuteScalar());
+
+                    // Aanvullen Bouwfirma
+                    foreach (Bouwfirma bouwfirma in bouwfirmas) {
+                        cmd2.Parameters.Clear(); // Belangrijk voor te kunnen loopen
+                        cmd2.Parameters.AddWithValue("@naam", bouwfirma.Naam);
+                        cmd2.Parameters.AddWithValue("@email", bouwfirma.Email);
+                        cmd2.Parameters.AddWithValue("@telefoon", bouwfirma.TelefoonNummer);
+                        bouwfirmaId = Convert.ToInt32(cmd2.ExecuteScalar());
+
+                        // Koppeltabel aanvullen tussen BF & GR
+                        cmd3.Parameters.Clear();
+                        cmd3.Parameters.AddWithValue("@bouwfirmaId", bouwfirmaId);
+                        cmd3.Parameters.AddWithValue("@stadsontwikkelingsId", stadsOntwikkelingId);
+                        cmd3.ExecuteNonQuery();
+                    }
+                }
+                
+                return databaseProjectId;
+            } catch { throw; }
+
         }
 
-        public void VoegGroeneRuimteToe(GroeneRuimte g, Project p, Locatie l)
-        {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                using (SqlTransaction trans = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        int databaseProjectId;
 
-                        // check of Project al bestaat
-                        bool projectBestaatInDataBank = ProjectInfoBestaat(p.Id, conn, trans);
+        private int VoegGroeneRuimteToe(GroeneRuimte g, Project p, Locatie l, List<BeschikbareFaciliteiten> faciliteiten, IDbConnection interfaceConn, IDbTransaction interfaceTrans) {
+            SqlConnection conn = (SqlConnection)interfaceConn;
+            SqlTransaction trans = (SqlTransaction)interfaceTrans;
 
-                        // Toevoegen indien deze nog niet bestaat
-                        if (!projectBestaatInDataBank) {
-                            databaseProjectId = VoegProjectInfoToe(p, l, conn, trans); // return de id + vult Project verder aan
-                        } else {
-                            databaseProjectId = p.Id;
-                        }
-                        //int id = InvoegenBasisProject(g, conn, trans);
-                        string sql = @"INSERT INTO GroeneRuimte (oppervlakte, biodiversiteit, aantalWandelpaden, inToeristischeWandelroute, beoordeling, projectId) 
-                                       VALUES (@opp, @bio, @wandel, @route, @beoordeling, @projectId)";
-                        using (SqlCommand cmd = new SqlCommand(sql, conn, trans)) {
-                            //cmd.Parameters.AddWithValue("@id", id);
-                            cmd.Parameters.AddWithValue("@opp", g.Oppervlakte);
-                            cmd.Parameters.AddWithValue("@bio", g.Biodiversiteit);
-                            cmd.Parameters.AddWithValue("@wandel", g.AantalWandelpaden);
-                            cmd.Parameters.AddWithValue("@route", g.IsInToeristWandelroute);
-                            cmd.Parameters.AddWithValue("@beoordeling", g.Beoordeling);
-                            cmd.Parameters.AddWithValue("@projectId", databaseProjectId);
+            try {
+                int databaseProjectId;
 
-                            cmd.ExecuteNonQuery();
-                            
-                        }
-                        trans.Commit();
-                    }
-                    catch { trans.Rollback(); throw; }
+                // check of Project al bestaat
+                bool projectBestaatInDataBank = ProjectInfoBestaat(p.Id, conn, trans);
+
+                // Toevoegen indien deze nog niet bestaat
+                if (!projectBestaatInDataBank) {
+                    databaseProjectId = VoegProjectInfoToe(p, l, conn, trans); // return de id + vult Project verder aan
+                } else {
+                    databaseProjectId = p.Id;
                 }
-            }
+                //int id = InvoegenBasisProject(g, conn, trans);
+                string queryGroeneRuimte = @"INSERT INTO GroeneRuimte (oppervlakte, biodiversiteit, aantalWandelpaden, inToeristischeWandelroute, beoordeling, projectId) 
+                                                     VALUES (@opp, @bio, @wandel, @route, @beoordeling, @projectId); SELECT SCOPE_IDENTITY();";
+                int groeneRuimteId;
+
+                string queryBeschikbareFaciliteit = "INSERT INTO BeschikbareFaciliteit (type, isGeverifieerd) VALUES (@type, @isGeverifieerd); SELECT SCOPE_IDENTITY();";
+                int faciliteitId;
+
+                string queryKoppeltabelGroenFac = "INSERT INTO GroeneRuimte_Faciliteit (groeneRuimteid, faciliteitId) VALUES (@groeneRuimteId, @faciliteitId)";
+
+                using (SqlCommand cmd1 = new SqlCommand(queryGroeneRuimte, conn, trans))
+                using (SqlCommand cmd2 = new SqlCommand(queryBeschikbareFaciliteit, conn, trans))
+                using (SqlCommand cmd3 = new SqlCommand(queryKoppeltabelGroenFac, conn, trans)) {
+                    //cmd.Parameters.AddWithValue("@id", id);
+                    // GroeneRuimte aanvullen
+                    cmd1.Parameters.AddWithValue("@opp", g.Oppervlakte);
+                    cmd1.Parameters.AddWithValue("@bio", g.Biodiversiteit);
+                    cmd1.Parameters.AddWithValue("@wandel", g.AantalWandelpaden);
+                    cmd1.Parameters.AddWithValue("@route", g.IsInToeristWandelroute);
+                    cmd1.Parameters.AddWithValue("@beoordeling", g.Beoordeling);
+                    cmd1.Parameters.AddWithValue("@projectId", databaseProjectId);
+                    groeneRuimteId = Convert.ToInt32(cmd1.ExecuteScalar()); // Zo vragen we de actuele id op
+
+                    // BeschikbareFaciliteiten aanvullen
+                    foreach (BeschikbareFaciliteiten faciliteit in faciliteiten) {
+                        cmd2.Parameters.Clear();
+                        cmd2.Parameters.AddWithValue("@type", faciliteit.Naam);
+                        cmd2.Parameters.AddWithValue("@isGeverifieerd", faciliteit.IsGeverifieerd);
+                        faciliteitId = Convert.ToInt32(cmd2.ExecuteScalar());
+
+                        // Koppeltabel aanvullen tussen BF & GR
+                        cmd3.Parameters.Clear();
+                        cmd3.Parameters.AddWithValue("@groeneRuimteId", groeneRuimteId);
+                        cmd3.Parameters.AddWithValue("@faciliteitId", faciliteitId);
+                        cmd3.ExecuteNonQuery();
+                    }
+
+                }
+
+                return databaseProjectId;
+            } catch { throw; }
+
+
         }
 
-        public void VoegInnovatieWonenToe(InnovatieWonen i, Project p, Locatie l)
-        {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                using (SqlTransaction trans = conn.BeginTransaction())
-                {
-                    try {
-                        int databaseProjectId;
-                        // check of Project al bestaat
-                        bool projectBestaatInDataBank = ProjectInfoBestaat(p.Id, conn, trans);
+        private int VoegInnovatieWonenToe(InnovatieWonen i, Project p, Locatie l, List<WoonvormType> woonvormTypes, IDbConnection interfaceConn, IDbTransaction interfaceTrans) {
+            SqlConnection conn = (SqlConnection)interfaceConn;
+            SqlTransaction trans = (SqlTransaction)interfaceTrans;
 
-                        // Toevoegen indien deze nog niet bestaat
-                        if (!projectBestaatInDataBank) {
-                            databaseProjectId = VoegProjectInfoToe(p, l, conn, trans); // return de id + vult Project verder aan
-                        } else {
-                            databaseProjectId = p.Id;
-                        }
+            try {
+                int databaseProjectId;
+                // check of Project al bestaat
+                bool projectBestaatInDataBank = ProjectInfoBestaat(p.Id, conn, trans);
 
-                        //int id = InvoegenBasisProject(i, conn, trans);
-                        string sql = @"INSERT INTO InnovatieWonen (aantalWooneenheden, rondleiding, showwoning, architectuurInnovatieScore, samenwerkingErfgoed, samenwerkingToerisme, projectId) 
-                                       VALUES (@aantal, @rond, @show, @score, @samenE, @samenT, @projectId)"; // !!!NOG AANPASSEN DAT ERFGOED EN TOERISME 1 BOOL ZIJN!!!
-
-
-                        using (SqlCommand cmd = new SqlCommand(sql, conn, trans)) {
-
-                            //cmd.Parameters.AddWithValue("@id", id);
-                            cmd.Parameters.AddWithValue("@aantal", i.AantalWooneenheden);
-                            cmd.Parameters.AddWithValue("@rond", i.HeeftRondleiding);
-                            cmd.Parameters.AddWithValue("@show", i.HeeftShowcase);
-                            cmd.Parameters.AddWithValue("@score", i.ArchitectuurScore);
-                            cmd.Parameters.AddWithValue("@samenE", i.HeeftSamenwerkingErfgoedOfToerisme);
-                            cmd.Parameters.AddWithValue("@samenT", i.HeeftSamenwerkingErfgoedOfToerisme);
-                            cmd.Parameters.AddWithValue("@projectId", databaseProjectId);
-
-                            cmd.ExecuteNonQuery();
-                        }
-                        trans.Commit();
-                    } catch { trans.Rollback(); throw; }
+                // Toevoegen indien deze nog niet bestaat
+                if (!projectBestaatInDataBank) {
+                    databaseProjectId = VoegProjectInfoToe(p, l, conn, trans); // return de id + vult Project verder aan
+                } else {
+                    databaseProjectId = p.Id;
                 }
-            }
+
+                //int id = InvoegenBasisProject(i, conn, trans);
+                string queryInnovatieWonen = @"INSERT INTO InnovatieWonen (aantalWooneenheden, rondleiding, showwoning, architectuurInnovatieScore, samenwerkingErfgoedOfToerisme, projectId) 
+                                                       VALUES (@aantal, @rond, @show, @score, @samen, @projectId); SELECT SCOPE_IDENTITY();";
+                int innovatieWonenId;
+
+                string queryWoonvormType = "INSERT INTO WoonvormType (naam, isGeverifieerd) VALUES (@naam, @isGeverifieerd); SELECT SCOPE_IDENTITY();";
+                int woonvormTypeId;
+
+                string queryKoppeltabelInnoWoon = "INSERT INTO WoonvormType_InnovatieWonen (woonvormTypeId, InnovatieWonenId) VALUES (@woonvormTypeId, @innovatieWonenId)";
+
+                using (SqlCommand cmd1 = new SqlCommand(queryInnovatieWonen, conn, trans))
+                using (SqlCommand cmd2 = new SqlCommand(queryWoonvormType, conn, trans))
+                using (SqlCommand cmd3 = new SqlCommand(queryKoppeltabelInnoWoon, conn, trans)) {
+
+                    //cmd.Parameters.AddWithValue("@id", id);
+                    // Innovatie Woning aanvullen
+                    cmd1.Parameters.AddWithValue("@aantal", i.AantalWooneenheden);
+                    cmd1.Parameters.AddWithValue("@rond", i.HeeftRondleiding);
+                    cmd1.Parameters.AddWithValue("@show", i.HeeftShowcase);
+                    cmd1.Parameters.AddWithValue("@score", i.ArchitectuurScore);
+                    cmd1.Parameters.AddWithValue("@samen", i.HeeftSamenwerkingErfgoedOfToerisme);
+                    cmd1.Parameters.AddWithValue("@projectId", databaseProjectId);
+                    innovatieWonenId = Convert.ToInt32(cmd1.ExecuteScalar());
+
+                    foreach (WoonvormType woonvormType in woonvormTypes) {
+                        cmd2.Parameters.Clear();
+                        cmd2.Parameters.AddWithValue("@naam", woonvormType.Naam);
+                        cmd2.Parameters.AddWithValue("@isGeverifieerd", woonvormType.IsGeverifieerd);
+                        woonvormTypeId = Convert.ToInt32(cmd2.ExecuteScalar());
+
+                        // Koppeltabel aanvullen tussen IW & WT
+                        cmd3.Parameters.Clear();
+                        cmd3.Parameters.AddWithValue("@innovatieWonenId", innovatieWonenId);
+                        cmd3.Parameters.AddWithValue("@woonvormTypeId", woonvormTypeId);
+                        cmd3.ExecuteNonQuery();
+                    }
+                }
+                
+                return databaseProjectId;
+            } catch { throw; }
+
+
         }
 
         //private int InvoegenBasisProject(Project p, SqlConnection conn, SqlTransaction trans)

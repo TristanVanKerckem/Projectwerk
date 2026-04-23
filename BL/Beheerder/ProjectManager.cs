@@ -4,6 +4,7 @@ using ProjectbeheerBL.Exeptions;
 using ProjectbeheerBL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -22,8 +23,11 @@ namespace ProjectbeheerBL.Beheerder
             _csvSchrijver = csvSchrijver;
         }
 
-        
-        public void VoegProjectToe(Project project)
+        /// <summary>
+
+        /// </summary>
+        // verder aanvullen voor controle op connectiestring & transactie
+        public void VoegProjectToe(Project project, IDbConnection conn, IDbTransaction trans)
         {
             if (project == null)
             {
@@ -41,7 +45,7 @@ namespace ProjectbeheerBL.Beheerder
                     }
                 }
             }
-            _repo.VoegProjectToe(project);
+            _repo.VoegProjectToe(project, conn, trans);
         }
 
 

@@ -63,6 +63,13 @@ namespace ProjectbeheerBL.Domein
                     _beoordeling = value;
             }
         }
+
+        public void VoegFaciliteitToe(BeschikbareFaciliteiten faciliteit) {
+            if (!BeschikbareFaciliteiten.Contains(faciliteit)) {
+                BeschikbareFaciliteiten.Add(faciliteit);
+            }
+        }
+
         public GroeneRuimte(string titel, DateTime startDatum, string beschrijving, ProjectStatus status, Locatie locatie, double oppervlakte, double biodiversiteit, int aantalWandelpaden, List<BeschikbareFaciliteiten> beschikbareFaciliteiten, bool isInToeristWandelroute, double beoordeling) : base(titel, startDatum, beschrijving, status, locatie) {
             Oppervlakte = oppervlakte;
             Biodiversiteit = biodiversiteit;
