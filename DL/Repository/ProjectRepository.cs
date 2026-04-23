@@ -497,32 +497,67 @@ namespace ProjectbeheerDL.Repository {
         }
 
 
-        
 
 
+
+        //public List<ProjectCombinatie> GeefAlleProjecten()
+        //{
+        //    List<ProjectCombinatie> resultaat = new List<ProjectCombinatie>();
+        //    using (SqlConnection conn = new SqlConnection(_connectionString))
+        //    {
+        //        string sql = "SELECT id FROM Project";
+        //        SqlCommand cmd = new SqlCommand(sql, conn);
+        //        conn.Open();
+        //        using (SqlDataReader r = cmd.ExecuteReader())
+        //        {
+        //            while (r.Read())
+        //            {
+        //                // We maken voor elk project een virtuele combinatie aan voor de UI
+        //                var project = GeefProject((int)r["id"]);
+        //                var combo = new ProjectCombinatie { Id = project.Id };
+        //                combo.ProjectComboLijst.Add(project);
+        //                resultaat.Add(combo);
+        //            }
+        //        }
+        //    }
+        //    return resultaat;
+        //}
         public List<ProjectCombinatie> GeefAlleProjecten()
         {
             List<ProjectCombinatie> resultaat = new List<ProjectCombinatie>();
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT id FROM Project";
+               
+                string sql = @"SELECT p.*, l.wijk, l.straat, l.gemeente, l.postcode, l.huisnummer 
+                       FROM Project p 
+                       JOIN Locatie l ON p.locatieId = l.id";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 conn.Open();
+
                 using (SqlDataReader r = cmd.ExecuteReader())
                 {
                     while (r.Read())
                     {
-                        // We maken voor elk project een virtuele combinatie aan voor de UI
+                       
                         var project = GeefProject((int)r["id"]);
-                        var combo = new ProjectCombinatie { Id = project.Id };
+
+                      
+                        var combo = new ProjectCombinatie
+                        {
+                            Id = project.Id
+                        };
+
+                        
                         combo.ProjectComboLijst.Add(project);
+
                         resultaat.Add(combo);
                     }
                 }
             }
             return resultaat;
         }
-
 
 
         public List<Project> GeefProjectenMetFilters(string? type, string? wijk, ProjectStatus? status, DateTime? start, DateTime? eind, string? partner)
