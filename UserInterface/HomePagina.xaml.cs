@@ -26,7 +26,7 @@ namespace ProjectbeheerUserInterface
         {
             
             InitializeComponent();
-            string connectionString = "Data Source=localhost\\SQLEXPRESS;Initial Catalog=Projectbeheer;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+            string connectionString = @"Data Source=localhost\SQLEXPRESS;Initial Catalog=Projectbeheer;Integrated Security=True;Trust Server Certificate=True";
             ProjectRepo repo = new ProjectRepo(connectionString);
             List<ProjectCombinatie> projectenGekregen = repo.GeefAlleProjecten();
             //List<ProjectCombinatie> projecten = new List<ProjectCombinatie>();
@@ -67,7 +67,7 @@ namespace ProjectbeheerUserInterface
             ProjectCombinatie groeneRuimte1 = new ProjectCombinatie(groeneRuimteProject);
             ProjectCombinatie stads = new ProjectCombinatie(stadsontwikkeling);
             
-            List<ProjectCombinatie> test = new List<ProjectCombinatie> { };
+            List<ProjectCombinatie> test = new List<ProjectCombinatie> { projectCombinatie,innovatie,groeneRuimte,groeneRuimte1,stads};
 
             DataGrid.ItemsSource = projectenGekregen;
         }

@@ -601,6 +601,7 @@ namespace ProjectbeheerDL.Repository
                         ProjectStatus status = (ProjectStatus)Enum.Parse(typeof(ProjectStatus), r["status"].ToString());
                         if (r["verguningsStatus"] != DBNull.Value)
                         {
+                            
                             Stadsontwikkeling projectResult = new Stadsontwikkeling(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), status, loc, null,
                                 (VergunningStatus)Enum.Parse(typeof(VergunningStatus), r["verguningsStatus"].ToString()),
                                 (Toegankelijkheid)Enum.Parse(typeof(Toegankelijkheid), r["toegankelijkheid"].ToString()),
