@@ -347,6 +347,66 @@ namespace ProjectbeheerDL.Repository {
             }
         }
 
+        public List<string> GeefBeschikbareFaciliteiten()
+        {
+            List<string> faciliteiten = new List<string>(); 
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT type FROM BeschikbareFaciliteit"; 
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        faciliteiten.Add(reader["type"].ToString()); 
+                    }
+                }
+            }
+            return faciliteiten;
+        }
+
+        public List<string> GeefBouwfirmas()
+        {
+            List<string> firmas = new List<string>();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT naam FROM Bouwfirma"; 
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        firmas.Add(reader["naam"].ToString());
+                    }
+                }
+            }
+            return firmas;
+        }
+
+        public List<string> GeefWoonvormTypes()
+        {
+            List<string> types = new List<string>();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT naam FROM WoonvormType ORDER BY naam ASC"; 
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        types.Add(reader["naam"].ToString());
+                    }
+                }
+            }
+            return types;
+        }
+
 
         public Project GeefProject(int id)
         {
