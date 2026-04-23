@@ -17,7 +17,7 @@ namespace ProjectbeheerDL.Repository {
         // returned int om onze ProjectId te kunnen ophalen in de GebruikerVoegtProjectToe methode in de AdminRepo
         // gebruik maken van IDBConnection en IDBTransaction ipv van sqlConn & Trans --> Businesslaag moeten we gescheiden blijven houden
         // wordt ook gebruikt bij de kindklassen voor consistent te blijven
-        // Ook interessante keuze voor uitbreiding/verandering --> repository is makkelijker herbruikbaar indien verandering van gebruikte server a.d.h.v. factories
+        // Ook interessante keuze voor uitbreiding/verandering --> repository is makkelijker herbruikbaar indien verandering van gebruikte server a.d.h.v. onze factories
         public int VoegProjectToe(Project project, IDbConnection interfaceConn, IDbTransaction interfaceTrans) 
         {
             int databaseId;
