@@ -9,5 +9,6 @@ namespace ProjectbeheerBL.Interfaces {
         void VerwijderProject(int projectId);
         void UpdateInformatieProject(Project project, ProjectCombinatie projecten);
         void VerwijderPartnerVanProject(Project project);
+        void gebruikerVoegtProjectToe(List<Project> projecten, Gebruiker g, Partner partner, Locatie? locPartner, List<string> rollen);
     }
 }
