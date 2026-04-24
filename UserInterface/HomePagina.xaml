@@ -30,6 +30,6 @@
             </DataGrid.Columns>
 
         </DataGrid>
-        <Button Content="Button" HorizontalAlignment="Left" Height="33" Margin="460,225,0,0" VerticalAlignment="Top" Width="139" Click="Project_Aanmaken_Click"/>
+        <Button Content="Project Aanmaken" HorizontalAlignment="Left" Height="33" Margin="460,225,0,0" VerticalAlignment="Top" Width="139" Click="Project_Aanmaken_Click"/>
     </Grid>
 </Page>

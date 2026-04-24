@@ -28,47 +28,8 @@ namespace ProjectbeheerUserInterface
             InitializeComponent();
             string connectionString = @"Data Source=Laptop_Tristan\SQLEXPRESS;Initial Catalog=Projectbeheer;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
             ProjectRepo repo = new ProjectRepo(connectionString);
-            List<ProjectCombinatie> projectenGekregen = repo.GeefAlleProjecten();
-            //List<ProjectCombinatie> projecten = new List<ProjectCombinatie>();
-            //foreach (ProjectCombinatie project in projectenGekregen)
-            //{
-            //    int id = project.Id;
-            //    ProjectCombinatie projectDeze = new ProjectCombinatie(repo.GeefProject(id));
-            //    projecten.Add(projectDeze);
-            //}
-            BeschikbareFaciliteiten faciliteit1 = new BeschikbareFaciliteiten(1, "Faciliteit1", true);
-            BeschikbareFaciliteiten faciliteit2 = new BeschikbareFaciliteiten(1, "Faciliteit2", true);
-            BeschikbareFaciliteiten faciliteit3 = new BeschikbareFaciliteiten(1, "Faciliteit3", true);
-            List<BeschikbareFaciliteiten> faciliteiten = new List<BeschikbareFaciliteiten>{faciliteit1,faciliteit2,faciliteit3};
-            Bouwfirma bouwfirma1 = new Bouwfirma("Bouwfirma1", "Example@gmail.com", "0471561847");
-            Bouwfirma bouwfirma2 = new Bouwfirma("Bouwfirma2", "Example@gmail.com", "0471561847");
-            Bouwfirma bouwfirma3 = new Bouwfirma("Bouwfirma3", "Example@gmail.com", "0471561847");
-            List<Bouwfirma> bouwfirmas = new List<Bouwfirma> { bouwfirma1, bouwfirma2, bouwfirma3 };
-            Locatie locatie = new Locatie(1,"Goeferdinge", "Waaienberg", "Geraardsbergen", 9500, "77C");
-            Partner partner1 = new Partner("Tristan","Tristan.Van.Kerckem@gmail.com",locatie);
-            Partner partner2 = new Partner("Laure", "ZIHDB", locatie);
-            
-            {
 
-            }
-
-            InnovatieWonen innovatieWonen = new InnovatieWonen("Titel", DateTime.Now, "Beschrijving", ProjectStatus.Afgerond, locatie, 2, true, true, 4.2, true);
-            GroeneRuimte groeneRuimteProject = new GroeneRuimte("TestProject", DateTime.Now, "Een testproject", ProjectStatus.Planning, locatie, 20, 8.3, 4, faciliteiten, true, 7);
-            Stadsontwikkeling stadsontwikkeling = new Stadsontwikkeling("Stad", DateTime.Now, "Stadbeschrijving", ProjectStatus.Uitvoering, locatie, bouwfirmas, VergunningStatus.Goedgekeurd, Toegankelijkheid.Gedeeltelijk, true, true, true);
-            List<Project> projectenInCombinatie = new List<Project> {innovatieWonen,groeneRuimteProject };
-            List<string> rollen = new List<string> {"Niks","Noppes" };
-
-            groeneRuimteProject.VoegPartnerToe(partner1,rollen);
-            groeneRuimteProject.VoegPartnerToe(partner2, rollen);
-
-            ProjectCombinatie projectCombinatie = new ProjectCombinatie(projectenInCombinatie);
-            ProjectCombinatie innovatie = new ProjectCombinatie(innovatieWonen);
-            ProjectCombinatie groeneRuimte = new ProjectCombinatie(groeneRuimteProject);
-            ProjectCombinatie groeneRuimte1 = new ProjectCombinatie(groeneRuimteProject);
-            ProjectCombinatie stads = new ProjectCombinatie(stadsontwikkeling);
-            
-            List<ProjectCombinatie> test = new List<ProjectCombinatie> { projectCombinatie,innovatie,groeneRuimte,groeneRuimte1,stads};
-
+            List<ProjectCombinatie> projectenGekregen = repo.GeefAlleProjecten();            
             DataGrid.ItemsSource = projectenGekregen;
         }
         public void Meer_Info_Click(object sender, EventArgs e)
