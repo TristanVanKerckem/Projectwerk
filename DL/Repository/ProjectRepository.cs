@@ -257,7 +257,7 @@ namespace ProjectbeheerDL.Repository
                 string queryKoppeltabelGroenFac = "INSERT INTO GroeneRuimte_Faciliteit (groeneRuimteid, faciliteitId) VALUES (@groeneRuimteId, @faciliteitId)";
 
                 using (SqlCommand cmd1 = new SqlCommand(queryGroeneRuimte, conn, trans))
-                //using (SqlCommand cmd2 = new SqlCommand(queryBeschikbareFaciliteit, conn, trans))     --> al ingevuld op dit moment
+                using (SqlCommand cmd2 = new SqlCommand(queryBeschikbareFaciliteit, conn, trans))
                 using (SqlCommand cmd3 = new SqlCommand(queryKoppeltabelGroenFac, conn, trans))
                 {
                     //cmd.Parameters.AddWithValue("@id", id);
@@ -273,10 +273,10 @@ namespace ProjectbeheerDL.Repository
                     // BeschikbareFaciliteiten aanvullen
                     foreach (BeschikbareFaciliteiten faciliteit in faciliteiten)
                     { // IN COMMENT GEZET WANT VOOR NU ZETTEN WE EEN AANTAL VASTE WAARDEN IN DATABANK DIE NIET VERANDEREN
-                        //cmd2.Parameters.Clear();
-                        //cmd2.Parameters.AddWithValue("@type", faciliteit.Naam);
-                        //cmd2.Parameters.AddWithValue("@isGeverifieerd", faciliteit.IsGeverifieerd);
-                        //faciliteitId = Convert.ToInt32(cmd2.ExecuteScalar());
+                        cmd2.Parameters.Clear();
+                        cmd2.Parameters.AddWithValue("@type", faciliteit.Naam);
+                        cmd2.Parameters.AddWithValue("@isGeverifieerd", faciliteit.IsGeverifieerd);
+                        faciliteitId = Convert.ToInt32(cmd2.ExecuteScalar());
 
                         // Koppeltabel aanvullen tussen BF & GR
                         cmd3.Parameters.Clear();
@@ -636,7 +636,6 @@ namespace ProjectbeheerDL.Repository
                 {
                     while (r.Read())
                     {
-                        if (!r.Read()) return null;
 
                         Locatie loc = new Locatie(
                             (int)r["locatieId"],
@@ -650,6 +649,7 @@ namespace ProjectbeheerDL.Repository
                         ProjectStatus status = (ProjectStatus)Enum.Parse(typeof(ProjectStatus), r["status"].ToString());
                         if (r["verguningsStatus"] != DBNull.Value)
                         {
+                            
                             Stadsontwikkeling projectResult = new Stadsontwikkeling(r["titel"].ToString(), (DateTime)r["startDatum"], r["beschrijving"].ToString(), status, loc, null,
                                 (VergunningStatus)Enum.Parse(typeof(VergunningStatus), r["verguningsStatus"].ToString()),
                                 (Toegankelijkheid)Enum.Parse(typeof(Toegankelijkheid), r["toegankelijkheid"].ToString()),
