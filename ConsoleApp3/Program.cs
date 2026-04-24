@@ -15,6 +15,6 @@ public class Program
         using SqlCommand cmd = new SqlCommand(sql, conn);
         int count = (int)cmd.ExecuteScalar();
 
-        Console.WriteLine("Aantal projecten: " + count);
+        Console.WriteLine("Aantal projecte: " + count);
     }
 }
