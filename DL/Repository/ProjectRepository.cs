@@ -177,7 +177,7 @@ namespace ProjectbeheerDL.Repository
                     databaseProjectId = VoegProjectInfoToe(p, l, partner, locPartner, rollen, conn, trans); // return de id + vult Project verder aan
                     p.Id = databaseProjectId;
                 } else {
-                    databaseProjectId = GetProjectIdByTitel(p.Titel, conn, trans);
+                    databaseProjectId = GetProjectIdByTitel(p.Titel, conn , trans);
                 }
                 //int id = InvoegenBasisProject(s, conn, trans);
                 string queryStadsOntwikkeling = @"INSERT INTO StadsOntwikkeling (verguningsStatus, archtitectueleWaarde, toegankelijkheid, bezienswaardigheid, info, projectId) 
@@ -751,8 +751,10 @@ namespace ProjectbeheerDL.Repository
             }
             return gefilterdeLijst;
         }
-        private int GetProjectIdByTitel(string titel, SqlConnection conn, SqlTransaction trans)
+        public int GetProjectIdByTitel(string titel, IDbConnection interfaceConn, IDbTransaction interfaceTrans)
         {
+            SqlConnection conn = (SqlConnection)interfaceConn;
+            SqlTransaction trans = (SqlTransaction)interfaceTrans;
             string query = "SELECT id FROM Project WHERE titel = @titel";
 
             using (SqlCommand cmd = new SqlCommand(query, conn, trans))

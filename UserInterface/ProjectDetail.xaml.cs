@@ -44,5 +44,9 @@ namespace ProjectbeheerUserInterface
             var window = new DetailPartnerPagina(partner, rollen);
             window.Show();
         }
+        private void Keer_Terug(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new HomePagina());
+        }
     }
 }

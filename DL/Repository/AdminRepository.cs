@@ -64,7 +64,7 @@ namespace ProjectbeheerDL.Repository {
             }
         }
 
-        public void UpdateInformatieProject(Project project, Partner? partner, Locatie? partnerLocatie, List<string> rollen, List <BeschikbareFaciliteiten> facil, List<Bouwfirma> bouwfirmas, List<WoonvormType> woontypes, ProjectCombinatie projecten) {
+        public void UpdateInformatieProject(Project project, List<string> rollen, ProjectCombinatie projecten, string titel) {
             string queryProject = "UPDATE Project SET titel=@titel, startDatum=@startDatum, beschrijving=@beschrijving, status=@status WHERE id=@id";
             string queryProjectPartner = "INSERT INTO ProjectPartner (rol, projectId, partnerId) VALUES (@rol, @projectId, @partnerId)";
             string queryInnoWonen = "UPDATE InnovatieWonen SET aantalWooneenheden=@aantalWooneenheden, rondleiding=@rondleiding, showwoning=@showwoning, architectuurInnovatieScore=@architectuurInnovatieScore, samenwerkingErfgoedOfToerisme=@samenwerkingErfgoedOfToerisme WHERE projectId=@projectId";
@@ -129,6 +129,9 @@ namespace ProjectbeheerDL.Repository {
 
                 try {
                     // Update Project
+                    
+                            ProjectRepo repo = new ProjectRepo(_connectionString);
+                    project.Id = repo.GetProjectIdByTitel(titel, con, transaction);
                     cmd1.Parameters.Clear();
                     cmd1.Parameters.AddWithValue("@titel", project.Titel);
                     cmd1.Parameters.AddWithValue("@startDatum", project.StartDatum);
@@ -137,35 +140,35 @@ namespace ProjectbeheerDL.Repository {
                     cmd1.Parameters.AddWithValue("@id", project.Id);
                     cmd1.ExecuteNonQuery();
 
-                    if (partner != null && partnerLocatie != null) {
-                        int vestigingPartnerId;
-                        // Update Vestiging partner --> Wordt enkel toegevoegd, oude data blijft bestaan
-                        cmd8.Parameters.Clear();
-                        cmd8.Parameters.AddWithValue("@wijk", partnerLocatie.Wijk);
-                        cmd8.Parameters.AddWithValue("@straat", partnerLocatie.Straat);
-                        cmd8.Parameters.AddWithValue("@gemeente", partnerLocatie.Gemeente);
-                        cmd8.Parameters.AddWithValue("@postcode", partnerLocatie.Postcode);
-                        cmd8.Parameters.AddWithValue("@huisnummer", partnerLocatie.HuisNummer);
-                        vestigingPartnerId = Convert.ToInt32(cmd8.ExecuteScalar());
+                    //if (partner != null && partnerLocatie != null) {
+                    //    int vestigingPartnerId;
+                    //    // Update Vestiging partner --> Wordt enkel toegevoegd, oude data blijft bestaan
+                    //    cmd8.Parameters.Clear();
+                    //    cmd8.Parameters.AddWithValue("@wijk", partnerLocatie.Wijk);
+                    //    cmd8.Parameters.AddWithValue("@straat", partnerLocatie.Straat);
+                    //    cmd8.Parameters.AddWithValue("@gemeente", partnerLocatie.Gemeente);
+                    //    cmd8.Parameters.AddWithValue("@postcode", partnerLocatie.Postcode);
+                    //    cmd8.Parameters.AddWithValue("@huisnummer", partnerLocatie.HuisNummer);
+                    //    vestigingPartnerId = Convert.ToInt32(cmd8.ExecuteScalar());
 
-                        int partnerId;
-                        // Update Partner --> Oude data blijft bestaan
-                        cmd7.Parameters.Clear();
-                        cmd7.Parameters.AddWithValue("@naam", partner.Naam);
-                        cmd7.Parameters.AddWithValue("@email", partner.Email);
-                        cmd7.Parameters.AddWithValue("@locatieId", vestigingPartnerId);
-                        partnerId = Convert.ToInt32(cmd7.ExecuteScalar());
+                    //    int partnerId;
+                    //    // Update Partner --> Oude data blijft bestaan
+                    //    cmd7.Parameters.Clear();
+                    //    cmd7.Parameters.AddWithValue("@naam", partner.Naam);
+                    //    cmd7.Parameters.AddWithValue("@email", partner.Email);
+                    //    cmd7.Parameters.AddWithValue("@locatieId", vestigingPartnerId);
+                    //    partnerId = Convert.ToInt32(cmd7.ExecuteScalar());
 
-                        // Update ProjectPartners
-                        VerwijderPartnersVanProject(project.Id, con, transaction);
-                        foreach (string rol in rollen) {
-                                cmd2.Parameters.Clear();
-                                cmd2.Parameters.AddWithValue("@partnerId", partnerId);
-                                cmd2.Parameters.AddWithValue("@projectId", project.Id);
-                                cmd2.Parameters.AddWithValue("@rol", rol);
-                                cmd2.ExecuteNonQuery();
-                        }
-                    }
+                    //    // Update ProjectPartners
+                    //    VerwijderPartnersVanProject(project.Id, con, transaction);
+                    //    foreach (string rol in rollen) {
+                    //            cmd2.Parameters.Clear();
+                    //            cmd2.Parameters.AddWithValue("@partnerId", partnerId);
+                    //            cmd2.Parameters.AddWithValue("@projectId", project.Id);
+                    //            cmd2.Parameters.AddWithValue("@rol", rol);
+                    //            cmd2.ExecuteNonQuery();
+                    //    }
+                    //}
 
                     // Update Locatie Project
                     cmd6.Parameters.Clear();
@@ -178,87 +181,87 @@ namespace ProjectbeheerDL.Repository {
                     cmd6.ExecuteNonQuery();
 
                     //Update KindProjecten
-                    foreach (Project kind in projecten.ProjectComboLijst) {
-                        if (kind is InnovatieWonen) {
-                            //Update InnoWonen
-                            InnovatieWonen inno = (InnovatieWonen)kind;
-                            cmd3.Parameters.Clear();
-                            cmd3.Parameters.AddWithValue("@aantalWooneenheden", inno.AantalWooneenheden);
-                            cmd3.Parameters.AddWithValue("@rondleiding", inno.HeeftRondleiding);
-                            cmd3.Parameters.AddWithValue("@showwoning", inno.HeeftShowcase);
-                            cmd3.Parameters.AddWithValue("@architectuurInnovatieScore", inno.ArchitectuurScore);
-                            cmd3.Parameters.AddWithValue("@samenwerkingErfgoedOfToerisme", inno.HeeftSamenwerkingErfgoedOfToerisme);
-                            cmd3.Parameters.AddWithValue("@projectId", project.Id);
-                            cmd3.ExecuteNonQuery();
+                    //foreach (Project kind in projecten.ProjectComboLijst) {
+                    //    if (kind is InnovatieWonen) {
+                    //        //Update InnoWonen
+                    //        InnovatieWonen inno = (InnovatieWonen)kind;
+                    //        cmd3.Parameters.Clear();
+                    //        cmd3.Parameters.AddWithValue("@aantalWooneenheden", inno.AantalWooneenheden);
+                    //        cmd3.Parameters.AddWithValue("@rondleiding", inno.HeeftRondleiding);
+                    //        cmd3.Parameters.AddWithValue("@showwoning", inno.HeeftShowcase);
+                    //        cmd3.Parameters.AddWithValue("@architectuurInnovatieScore", inno.ArchitectuurScore);
+                    //        cmd3.Parameters.AddWithValue("@samenwerkingErfgoedOfToerisme", inno.HeeftSamenwerkingErfgoedOfToerisme);
+                    //        cmd3.Parameters.AddWithValue("@projectId", project.Id);
+                    //        cmd3.ExecuteNonQuery();
 
-                            // Update WoonvormTypeKoppeltabel
-                            verwijderWoonvormTypesVanProject(inno.Id, con, transaction);
-                            foreach (WoonvormType type in woontypes) {
-                                cmd13.Parameters.Clear();
-                                cmd13.Parameters.AddWithValue("@woonvormTypeId", type.Id);
-                                cmd13.Parameters.AddWithValue("@innovatieWonenId", inno.Id);
-                                cmd13.ExecuteNonQuery();
-                            }
+                    //        // Update WoonvormTypeKoppeltabel
+                    //        //verwijderWoonvormTypesVanProject(inno.Id, con, transaction);
+                    //        //foreach (WoonvormType type in woontypes) {
+                    //        //    cmd13.Parameters.Clear();
+                    //        //    cmd13.Parameters.AddWithValue("@woonvormTypeId", type.Id);
+                    //        //    cmd13.Parameters.AddWithValue("@innovatieWonenId", inno.Id);
+                    //        //    cmd13.ExecuteNonQuery();
+                    //        //}
 
-                        } else if (kind is GroeneRuimte) {
-                            // Update GroeneRuimte
-                            GroeneRuimte groen = (GroeneRuimte)kind;
-                            cmd4.Parameters.Clear();
-                            cmd4.Parameters.AddWithValue("@oppervlakte", groen.Oppervlakte);
-                            cmd4.Parameters.AddWithValue("@biodiversiteit", groen.Biodiversiteit);
-                            cmd4.Parameters.AddWithValue("@aantalWandelpaden", groen.AantalWandelpaden);
-                            cmd4.Parameters.AddWithValue("@inToeristischeWandelroute", groen.IsInToeristWandelroute);
-                            cmd4.Parameters.AddWithValue("@beoordeling", groen.Beoordeling);
-                            cmd4.Parameters.AddWithValue("@projectId", project.Id);
-                            cmd4.ExecuteNonQuery();
+                    //    } else if (kind is GroeneRuimte) {
+                    //        // Update GroeneRuimte
+                    //        GroeneRuimte groen = (GroeneRuimte)kind;
+                    //        cmd4.Parameters.Clear();
+                    //        cmd4.Parameters.AddWithValue("@oppervlakte", groen.Oppervlakte);
+                    //        cmd4.Parameters.AddWithValue("@biodiversiteit", groen.Biodiversiteit);
+                    //        cmd4.Parameters.AddWithValue("@aantalWandelpaden", groen.AantalWandelpaden);
+                    //        cmd4.Parameters.AddWithValue("@inToeristischeWandelroute", groen.IsInToeristWandelroute);
+                    //        cmd4.Parameters.AddWithValue("@beoordeling", groen.Beoordeling);
+                    //        cmd4.Parameters.AddWithValue("@projectId", project.Id);
+                    //        cmd4.ExecuteNonQuery();
 
-                            // Update Koppeltabel GroeneRuimte_faciliteiten
-                            verwijderFaciliteitenVanProject(groen.Id, con, transaction);
+                    //        // Update Koppeltabel GroeneRuimte_faciliteiten
+                    //        verwijderFaciliteitenVanProject(groen.Id, con, transaction);
 
-                            foreach (BeschikbareFaciliteiten faciliteit in facil) {
-                                cmd12.Parameters.Clear();
-                                cmd12.Parameters.AddWithValue("@groeneRuimteId", groen.Id);
-                                cmd12.Parameters.AddWithValue("@faciliteitId", faciliteit.Id);
-                                cmd12.ExecuteNonQuery();
-                            }
+                    //        //foreach (BeschikbareFaciliteiten faciliteit in facil) {
+                    //        //    cmd12.Parameters.Clear();
+                    //        //    cmd12.Parameters.AddWithValue("@groeneRuimteId", groen.Id);
+                    //        //    cmd12.Parameters.AddWithValue("@faciliteitId", faciliteit.Id);
+                    //        //    cmd12.ExecuteNonQuery();
+                    //        //}
                             
 
-                        } else {
-                            // Update StadsOntw
-                            Stadsontwikkeling stad = (Stadsontwikkeling)kind;
-                            cmd5.Parameters.Clear();
-                            cmd5.Parameters.AddWithValue("@vergunningsStatus", stad.VergunningStatus);
-                            cmd5.Parameters.AddWithValue("@architectueleWaarde", stad.HeeftArchitecturaleWaarde);
-                            cmd5.Parameters.AddWithValue("@toegankelijkheid", stad.Toegankelijkheid);
-                            cmd5.Parameters.AddWithValue("@bezienswaardigheid", stad.IsBezienswaardig);
-                            cmd5.Parameters.AddWithValue("@info", stad.HeeftInfo);
-                            cmd5.Parameters.AddWithValue("@projectId", project.Id);
-                            cmd5.ExecuteNonQuery();
+                    //    } else {
+                    //        // Update StadsOntw
+                    //        Stadsontwikkeling stad = (Stadsontwikkeling)kind;
+                    //        cmd5.Parameters.Clear();
+                    //        cmd5.Parameters.AddWithValue("@vergunningsStatus", stad.VergunningStatus);
+                    //        cmd5.Parameters.AddWithValue("@architectueleWaarde", stad.HeeftArchitecturaleWaarde);
+                    //        cmd5.Parameters.AddWithValue("@toegankelijkheid", stad.Toegankelijkheid);
+                    //        cmd5.Parameters.AddWithValue("@bezienswaardigheid", stad.IsBezienswaardig);
+                    //        cmd5.Parameters.AddWithValue("@info", stad.HeeftInfo);
+                    //        cmd5.Parameters.AddWithValue("@projectId", project.Id);
+                    //        cmd5.ExecuteNonQuery();
 
-                            // Update BouwFirmas
-                            verwijderBouwfirmasVanProject(stad.Id, con, transaction);
-                            int databaseBouwfirmaId;
-                            foreach (Bouwfirma bouwfirma in bouwfirmas) {
-                                if (!_projectRepository.BestaatBouwfirma(bouwfirma.Naam, con, transaction)) {
-                                    cmd10.Parameters.Clear(); // Belangrijk voor te kunnen loopen
-                                    cmd10.Parameters.AddWithValue("@naam", bouwfirma.Naam);
-                                    cmd10.Parameters.AddWithValue("@email", bouwfirma.Email);
-                                    cmd10.Parameters.AddWithValue("@telefoon", bouwfirma.TelefoonNummer);
-                                    databaseBouwfirmaId = Convert.ToInt32(cmd10.ExecuteScalar());
-                                } else {
-                                    databaseBouwfirmaId = (int)_projectRepository.HaalBouwfirmaIdOp(bouwfirma.Naam, con, transaction);
-                                }
+                    //        // Update BouwFirmas
+                    //        verwijderBouwfirmasVanProject(stad.Id, con, transaction);
+                    //        int databaseBouwfirmaId;
+                    //        //foreach (Bouwfirma bouwfirma in bouwfirmas) {
+                    //        //    if (!_projectRepository.BestaatBouwfirma(bouwfirma.Naam, con, transaction)) {
+                    //        //        cmd10.Parameters.Clear(); // Belangrijk voor te kunnen loopen
+                    //        //        cmd10.Parameters.AddWithValue("@naam", bouwfirma.Naam);
+                    //        //        cmd10.Parameters.AddWithValue("@email", bouwfirma.Email);
+                    //        //        cmd10.Parameters.AddWithValue("@telefoon", bouwfirma.TelefoonNummer);
+                    //        //        databaseBouwfirmaId = Convert.ToInt32(cmd10.ExecuteScalar());
+                    //        //    } else {
+                    //        //        databaseBouwfirmaId = (int)_projectRepository.HaalBouwfirmaIdOp(bouwfirma.Naam, con, transaction);
+                    //        //    }
 
-                                // Koppeltabel aanvullen tussen BF & SO
-                                cmd11.Parameters.Clear();
-                                cmd11.Parameters.AddWithValue("@bouwfirmaId", databaseBouwfirmaId);
-                                cmd11.Parameters.AddWithValue("@stadsontwikkelingsId", stad.Id);
-                                cmd11.ExecuteNonQuery();
-                            }
-                        }
+                    //        //    // Koppeltabel aanvullen tussen BF & SO
+                    //        //    cmd11.Parameters.Clear();
+                    //        //    cmd11.Parameters.AddWithValue("@bouwfirmaId", databaseBouwfirmaId);
+                    //        //    cmd11.Parameters.AddWithValue("@stadsontwikkelingsId", stad.Id);
+                    //        //    cmd11.ExecuteNonQuery();
+                    //        //}
+                    //    }
 
                         
-                    }
+                    //}
                     transaction.Commit();
                 } catch (Exception ex) {
                     transaction.Rollback();

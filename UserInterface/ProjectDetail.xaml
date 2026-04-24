@@ -96,6 +96,9 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        <Button Content="Keer terug"
+                HorizontalAlignment="Left" Height="28" Margin="142,85,0,0" Grid.Row="8" VerticalAlignment="Top" Width="112"
+Click="Keer_Terug" Grid.Column="1"/>
         <Button Grid.Column="1" Content="Aanpassen" HorizontalAlignment="Left" Height="28" Margin="259,85,0,0" Grid.Row="8" VerticalAlignment="Top" Width="112" Click="Aanpassen_Click"/>
     </Grid>
     <Page.Resources>

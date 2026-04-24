@@ -1,5 +1,7 @@
 ﻿using ProjectbeheerBL.Domein;
 using ProjectbeheerBL.Domein.Enums;
+using ProjectbeheerBL.Interfaces;
+using ProjectbeheerDL.Repository;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +24,8 @@ namespace ProjectbeheerUserInterface
     public partial class AanpassenPagina : Page
     {
         public ProjectCombinatie Projecten { get; set; }
+        public Partner NieuwePartner { get; set; }
+        public List<string> NieuweRollen { get; set; }
         public AanpassenPagina(ProjectCombinatie projectCombinatie)
         {
             Projecten = projectCombinatie;
@@ -31,10 +35,17 @@ namespace ProjectbeheerUserInterface
         }
         public void OnSubmit(object sender, EventArgs e)
         {
+
+            string connectionString = @"Data Source=Laptop_Tristan\SQLEXPRESS;Initial Catalog=Projectbeheer;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+
+            IProjectRepository repo = new ProjectRepo(connectionString);
+            AdminRepository adminRepo = new AdminRepository(connectionString, repo);
+            string titel = Projecten.ProjectComboLijst[0].Titel;
             Projecten.ProjectComboLijst[0].Titel = TitelView.Text;
             Projecten.ProjectComboLijst[0].Beschrijving = BeschrijvingView.Text;
             Projecten.ProjectComboLijst[0].Locatie.Wijk = WijkView.Text;
-
+            Project project = Projecten.ProjectComboLijst[0];
+            adminRepo.UpdateInformatieProject(project, NieuweRollen, Projecten, titel);
             NavigationService.Navigate(new ProjectDetail(Projecten));
         }
         private void Pas_Aan_Click(object sender, RoutedEventArgs e)
@@ -57,7 +68,7 @@ namespace ProjectbeheerUserInterface
             {
                 view.Visibility = Visibility.Visible;
                 edit.Visibility = Visibility.Collapsed;
-                view.Text = edit.Text;                
+                view.Text = edit.Text;
             }
 
         }
@@ -109,8 +120,11 @@ namespace ProjectbeheerUserInterface
                 string huisnummer = window.Huisnummer;
                 List<string> rollen = new List<string> { window.Rol };
                 Partner partner = new Partner(naam, email, project.Locatie);
-                project.VoegPartnerToe(partner, rollen);
-                Partners.Items.Refresh();  
+                NieuwePartner = partner;
+                NieuweRollen = rollen;
+                Projecten.ProjectComboLijst[0].VoegPartnerToe(partner, rollen);
+                NavigationService.Navigate(new AanpassenPagina(Projecten));
+
             }
         }
         private void Locatie_Click(object sender, RoutedEventArgs e)
@@ -139,6 +153,10 @@ namespace ProjectbeheerUserInterface
         {
             if (!string.IsNullOrWhiteSpace(newValue))
                 setAction(newValue);
+        }
+        private void Keer_Terug(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new HomePagina());
         }
     }
 }
