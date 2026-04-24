@@ -15,12 +15,14 @@ namespace ProjectbeheerBL.Beheerder
         private readonly IProjectRepository _repo;
         private readonly IPDFschrijver _pdfSchrijver;
         private readonly ICSVschrijver _csvSchrijver;
+        private readonly IAdminRepository _adminRepo;
 
-        public ProjectManager(IProjectRepository repo, IPDFschrijver pdfSchrijver, ICSVschrijver csvSchrijver)
+        public ProjectManager(IProjectRepository repo, IPDFschrijver pdfSchrijver, ICSVschrijver csvSchrijver, IAdminRepository adminrepo)
         {
             _repo = repo;
             _pdfSchrijver = pdfSchrijver;
             _csvSchrijver = csvSchrijver;
+            _adminRepo = adminrepo;
         }
 
         /// <summary>
@@ -46,6 +48,63 @@ namespace ProjectbeheerBL.Beheerder
                 }
             }
             _repo.VoegProjectToe(project, partner, locPartner, rollen, conn, trans);
+        }
+
+
+        public void MaakProjectenAan(List<Project> projecten, Gebruiker gebruiker, Partner? partner, Locatie? locPartner, List<string> rollen) {
+
+            if (projecten == null || projecten.Count == 0)
+                throw new ProjectException("Er moet minstens één project worden meegegeven.");
+
+            if ((rollen == null || rollen.Count == 0) && partner != null)
+                throw new ProjectPartnerException("Er moet minstens één rol worden opgegeven per partner.");
+
+            foreach (Project p in projecten) {
+                if (p is Stadsontwikkeling stads && (stads.Bouwfirmas == null || stads.Bouwfirmas.Count == 0)) {
+                    throw new StadsontwikkelingException($"Project {p.Titel} is een stadsontwikkeling en moet minstens één bouwfirma hebben.");
+                }
+            }
+
+            try {
+                _adminRepo.gebruikerVoegtProjectToe(projecten, gebruiker, partner, locPartner, rollen);
+            } catch (ProjectException) { // zorgt dat de originele fout wordt opgeslagen en verder gegaan, zorgt ook dat de originele "stack trace" wordt behouden
+                throw;
+            } catch (Exception ex) {
+                throw new ProjectException("Er is een fout opgetreden bij het opslaan in de database.", ex);
+            }
+        }
+
+        public void PasProjectAan(ProjectCombinatie projecten, Partner? partner, Locatie? locPartner, List<string> rollen) {
+            if ((projecten.ProjectComboLijst == null || projecten.ProjectComboLijst.Count < 1))
+                throw new ProjectException("Er moet minstens één project al bestaan.");
+
+            if ((rollen == null || rollen.Count == 0) && partner != null)
+                throw new ProjectPartnerException("Er moet minstens één rol worden opgegeven per partner.");
+
+            foreach (Project p in projecten.ProjectComboLijst) {
+                if (p is Stadsontwikkeling stads && (stads.Bouwfirmas == null || stads.Bouwfirmas.Count == 0)) {
+                    throw new StadsontwikkelingException($"Er moet minstens één bouwfirma zijn per stadsontwikkelingsproject.");
+                }
+            }
+
+            try {
+                _adminRepo.UpdateInformatieProject(projecten.ProjectComboLijst.First(),projecten); // Projectinfo binnen onze combo klassen is voor alle projecten hierin hetzelfde, dus nemen we de eerste
+            } catch (ProjectException) { // zorgt dat de originele fout wordt opgeslagen en verder gegaan, zorgt ook dat de originele "stack trace" wordt behouden
+                throw;
+            } catch (Exception ex) {
+                throw new ProjectException("Er is een fout opgetreden bij het opslaan van de nieuwe data in de database.", ex);
+            }
+        }
+
+        public void VerwijderProject(int projectId) {
+
+            try {
+                _adminRepo.VerwijderProject(projectId);
+            } catch (ProjectException) { // zorgt dat de originele fout wordt opgeslagen en verder gegaan, zorgt ook dat de originele "stack trace" wordt behouden
+                throw;
+            } catch (Exception ex) {
+                throw new ProjectException("Er is een fout opgetreden bij het opslaan van de nieuwe data in de database.", ex);
+            }
         }
 
 
