@@ -51,7 +51,8 @@ namespace ProjectbeheerDL.Repository
             using (SqlCommand cmd2 = new SqlCommand(queryLocatie, conn, trans))
             using (SqlCommand cmd3 = new SqlCommand(queryPartner, conn, trans))
             using (SqlCommand cmd4 = new SqlCommand(queryProjectPartner, conn, trans)) {
-                try {
+                try
+                {
                     int databaseLocatieId_Project;
                     int databaseProjectId;
                     int databaseLocatieId_Partner;
@@ -76,7 +77,8 @@ namespace ProjectbeheerDL.Repository
                     databaseProjectId = Convert.ToInt32(cmd1.ExecuteScalar());
 
                     // Voeg Partner,Vestiging Partner & Rol(len) Toe
-                    if (partner != null && locPartner != null) {
+                    if (partner != null && locPartner != null)
+                    {
                         // Vestiging
                         cmd2.Parameters.Clear();
                         cmd2.Parameters.AddWithValue("@wijk", locPartner.Wijk);
@@ -94,7 +96,8 @@ namespace ProjectbeheerDL.Repository
                         databasePartnerId = Convert.ToInt32(cmd3.ExecuteScalar());
 
                         // ProjectPartner met rol
-                        foreach (string rol in rollen) {
+                        foreach (string rol in rollen)
+                        {
                             cmd4.Parameters.Clear();
                             cmd4.Parameters.AddWithValue("@rol", rol);
                             cmd4.Parameters.AddWithValue("@projectId", databaseProjectId);
@@ -103,11 +106,12 @@ namespace ProjectbeheerDL.Repository
                         }
                     }
                     return databaseProjectId;
+                }
                 } catch (Exception ex) {
 
-                    throw new Exception();
-                }
+                throw new Exception();
             }
+        }
         }
 
         // Nodig voor te checken of ProjectInfo al is aangemaakt door een kindklasse van hetzelfde Project
@@ -281,7 +285,7 @@ namespace ProjectbeheerDL.Repository
                         // Koppeltabel aanvullen tussen BF & GR
                         cmd3.Parameters.Clear();
                         cmd3.Parameters.AddWithValue("@groeneRuimteId", groeneRuimteId);
-                        cmd3.Parameters.AddWithValue("@faciliteitId", faciliteit.Id); // Indien we toch waarden toevoegen in een latere versie --> faciliteitId hier laten
+                        cmd3.Parameters.AddWithValue("@faciliteitId", faciliteitId); // Indien we toch waarden toevoegen in een latere versie --> faciliteitId hier laten
                         cmd3.ExecuteNonQuery();
                     }
 
